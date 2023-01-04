@@ -25,7 +25,7 @@
             </tr>
             <tr>
                 <th>Poster</th>
-                <td>{{ series.poster }}</td>
+                <td> <img src='{{ path('app_poster_show', {'id': series.id}) }}' >  </td>
             </tr>
             <tr>
                 <th>Director</th>

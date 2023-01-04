@@ -53,6 +53,12 @@ class SeriesController extends AbstractController
         ]);
     }
 
+    #[Route('/poster/{id}', name: 'app_poster_show', methods: ['GET', 'POST'])]
+    public function shows(Series $series): Response
+    {
+        return new Response(stream_get_contents($series->getPoster()), 200, array('Content-Type' => 'image/png'));
+    }
+
     #[Route('/{id}/edit', name: 'app_series_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Series $series, EntityManagerInterface $entityManager): Response
     {
