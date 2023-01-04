@@ -55,5 +55,58 @@ class ExternalRating
      */
     private $source;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function setValue(string $value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getVotes(): ?int
+    {
+        return $this->votes;
+    }
+
+    public function setVotes(?int $votes): self
+    {
+        $this->votes = $votes;
+
+        return $this;
+    }
+
+    public function getSeries(): ?Series
+    {
+        return $this->series;
+    }
+
+    public function setSeries(?Series $series): self
+    {
+        $this->series = $series;
+
+        return $this;
+    }
+
+    public function getSource(): ?ExternalRatingSource
+    {
+        return $this->source;
+    }
+
+    public function setSource(?ExternalRatingSource $source): self
+    {
+        $this->source = $source;
+
+        return $this;
+    }
+
 
 }

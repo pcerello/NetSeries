@@ -7,12 +7,12 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Actor
+ * Genre
  *
- * @ORM\Table(name="actor")
+ * @ORM\Table(name="genre")
  * @ORM\Entity
  */
-class Actor
+class Genre
 {
     /**
      * @var int
@@ -33,10 +33,10 @@ class Actor
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Series", inversedBy="actor")
-     * @ORM\JoinTable(name="actor_series",
+     * @ORM\ManyToMany(targetEntity="Series", inversedBy="genre")
+     * @ORM\JoinTable(name="genre_series",
      *   joinColumns={
-     *     @ORM\JoinColumn(name="actor_id", referencedColumnName="id")
+     *     @ORM\JoinColumn(name="genre_id", referencedColumnName="id")
      *   },
      *   inverseJoinColumns={
      *     @ORM\JoinColumn(name="series_id", referencedColumnName="id")

@@ -38,5 +38,34 @@ class Season
      */
     private $series;
 
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getNumber(): ?int
+    {
+        return $this->number;
+    }
+
+    public function setNumber(int $number): self
+    {
+        $this->number = $number;
+
+        return $this;
+    }
+
+    public function getSeries(): ?Series
+    {
+        return $this->series;
+    }
+
+    public function setSeries(?Series $series): self
+    {
+        $this->series = $series;
+
+        return $this;
+    }
+
 
 }

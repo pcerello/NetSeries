@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -61,6 +62,71 @@ class Rating
      * })
      */
     private $user;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getValue(): ?int
+    {
+        return $this->value;
+    }
+
+    public function setValue(int $value): self
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): self
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getDate(): ?\DateTimeInterface
+    {
+        return $this->date;
+    }
+
+    public function setDate(\DateTimeInterface $date): self
+    {
+        $this->date = $date;
+
+        return $this;
+    }
+
+    public function getSeries(): ?Series
+    {
+        return $this->series;
+    }
+
+    public function setSeries(?Series $series): self
+    {
+        $this->series = $series;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
 
 
 }
