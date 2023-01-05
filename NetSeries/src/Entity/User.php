@@ -252,4 +252,9 @@ class User
         return $this;
     }
 
+    public function getUserIdentifier(): string { return $this->getEmail(); }
+
+    public function getRoles(): array { return ['ROLE_USER']; }
+    
+    public function eraseCredentials() { }
 }
