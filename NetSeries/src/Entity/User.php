@@ -2,9 +2,7 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -71,7 +69,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private $userId;
 
     /**
-     * @var \Country
+     * @var \Country|null
      *
      * @ORM\ManyToOne(targetEntity="Country")
      * @ORM\JoinColumns({
