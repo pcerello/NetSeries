@@ -105,9 +105,9 @@ class Series
      * @var \Seasons
      *
      * @ORM\OneToMany(targetEntity="Season", mappedBy="series")
+     * @ORM\OrderBy({"number" = "ASC"})
      */
     private $seasons;
-
 
     /**
      * @var \Doctrine\Common\Collections\Collection

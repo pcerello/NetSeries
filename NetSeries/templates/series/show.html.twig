@@ -8,20 +8,12 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ series.id }}</td>
-            </tr>
-            <tr>
                 <th>Title</th>
                 <td>{{ series.title }}</td>
             </tr>
             <tr>
                 <th>Plot</th>
                 <td>{{ series.plot }}</td>
-            </tr>
-            <tr>
-                <th>Imdb</th>
-                <td>{{ series.imdb }}</td>
             </tr>
             <tr>
                 <th>Poster</th>
@@ -48,9 +40,9 @@
                 <td>{{ series.yearEnd }}</td>
             </tr>
             <tr>
-                <ul><th>Season
+                <th><ul>Season : 
                 {% for season in series.seasons %} 
-                    <li> {{season.number}} </li>
+                    {{ season.number }}
                 {% endfor %}
                 </th>
                 </ul>
