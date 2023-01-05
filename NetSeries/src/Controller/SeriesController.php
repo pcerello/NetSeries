@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Season;
 use App\Entity\Series;
 use App\Form\SeriesType;
 use Doctrine\ORM\EntityManagerInterface;
@@ -24,6 +25,7 @@ class SeriesController extends AbstractController
         
         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
             ->getQuery();
+
 
         $appointments = $paginator->paginate(
             $allAppointmentsQuery,
