@@ -40,12 +40,18 @@
                 <td>{{ series.yearEnd }}</td>
             </tr>
             <tr>
-                <th><ul>Season : 
-                {% for season in series.seasons %} 
-                    {{ season.number }}
+                <th>
+                {% for seasonNumber, episodes in episodesBySeason %}
+                    Season {{ seasonNumber }}:
+                    <ul>
+                        {% for episode in episodes %}
+                            <li>{{ episode.title }}</li>
+                        {% endfor %}
+                    </ul>
                 {% endfor %}
+                
                 </th>
-                </ul>
+                
             </tr>
         </tbody>
     </table>

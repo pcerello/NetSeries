@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Season;
 use App\Entity\Series;
 use App\Form\SeriesType;
+use App\Repository\EpisodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,6 +17,15 @@ use Knp\Component\Pager\PaginatorInterface;
 #[Route('/series')]
 class SeriesController extends AbstractController
 {
+    private $episodeRepository;
+
+    public function __construct(EpisodeRepository $episodeRepository, EntityManagerInterface $entityManager)
+    {
+        $this->episodeRepository = $episodeRepository;
+    }
+
+
+
     #[Route('/', name: 'app_series_index', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
@@ -61,8 +71,16 @@ class SeriesController extends AbstractController
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
     public function show(Series $series): Response
     {
+
+        $seasons = $series->getSeasons();
+        $episodesBySeason = [];
+        foreach ($seasons as $season) {
+            $episodesBySeason[$season->getNumber()] = $this->episodeRepository->findBySeason($season->getId());
+
+        }
         return $this->render('series/show.html.twig', [
             'series' => $series,
+            'episodesBySeason' => $episodesBySeason,
         ]);
     }
 
