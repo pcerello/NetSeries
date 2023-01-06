@@ -45,7 +45,11 @@
                     Season {{ seasonNumber }}:
                     <ul>
                         {% for episode in episodes %}
-                            <li>{{ episode.title }}</li>
+                            <li>{{ episode.title }}
+                            {% if app.user %}
+                                <a href="{{ path('app_episode_view', {'id': episode.id}) }}">Ajouter à ma liste</a>
+                            {% endif %} 
+                            </li>
                         {% endfor %}
                     </ul>
                 {% endfor %}
