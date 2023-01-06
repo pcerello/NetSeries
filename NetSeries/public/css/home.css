@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter');
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    font-size: 100%;
+    vertical-align: baseline;
+    background: transparent;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    color: #2E2E2E;
+    background: url('../images/background.png') no-repeat center center fixed; 
+    background-size: cover;
+}
+
+div.wrapper {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid green;
+    width: 60%;
+}
+
+h1.title {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 48px;
+    line-height: 40px;
+}
+
+h1.title span {
+    background-image: linear-gradient(to left, #78AEEF, #C588DE, #F889C5, #FDD081, #FFA0B7);
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+}
+
+div.wrapper p {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 24px;
+    margin-top: 20px;
+}
+
+div.wrapper p span {
+    font-weight: 600;
+    color: #4399FF;
+}
+
+div.search_section {
+    background: rgba(250, 250, 250, 0.46);
+    box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(5px);
+    /* Note: backdrop-filter has minimal browser support */
+
+    border-radius: 40px;
+}   
