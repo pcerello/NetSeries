@@ -117,20 +117,4 @@ class SeriesController extends AbstractController
 
         return $this->redirectToRoute('app_series_index');
     }
-
-    #[Route('/followed', name: 'app_series_followed', methods: ['GET'])]
-
-    public function followed(EntityManagerInterface $entityManager): Response
-    {
-        /** @var \App\Entity\User */
-        $user = $this->getUser();
-
-        $followedSeries = $user->getSeries();
-
-        return $this->render('series/followed.html.twig', [
-            '' => $followedSeries,
-    ]);
-    }
-
-    
 }
