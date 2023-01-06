@@ -15,14 +15,11 @@
 
         <div id="menu">
             <div id="logo">
-                <img src={{ asset('css/Logo.png') }} alt="ACME logo">
-                <strong><span>Net</span></strong>Series
+                <a href=""><img src={{ asset('css/Logo.png') }} alt="ACME logo"></a>
+                <a href=""><strong><span>Net</span></strong>Series</a>
             </div>
 
             <div id="buttons">
-                <div class="button">
-                    Home
-                </div>
 
                 {% if app.user %}
                 [{{ app.user.email }}]
@@ -31,12 +28,12 @@
                 </div>
 
                 {% else %}
-                <div class="button" id="signUp">
-                    <a href="{{  path('app_register')  }}">Sign up now !</a>
-                </div>
-                
                 <div class="button">
                     <a href="{{  path('app_login')  }}">Login</a>
+                </div>
+
+                <div class="button" id="signUp">
+                    <a href="{{  path('app_register')  }}">Sign up now !</a>
                 </div>
                 {% endif %}
             </div>
