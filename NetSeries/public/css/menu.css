@@ -1,0 +1,72 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@700&display=swap');
+
+#menu {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1.5px solid black;
+    padding-bottom: 0.4em;
+    transition: 0.5s;
+    font-family: 'poppins', sans-serif;
+    font-weight:400;
+}
+
+#logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+#buttons {
+    display: flex;
+    flex-direction: row;
+}
+  
+#menu a {
+    text-decoration: none;
+    color: black;
+}
+  
+#menu .button:hover {
+    
+    transition: 0.5s;
+}
+  
+#menu .button:hover {
+    border-radius: 6px;
+}
+  
+.button {
+    height: 100%;
+    width: 100%;
+    display: inline;
+    text-align: center;
+    margin-right: 1.5em;
+}
+
+
+#signUp {
+    background-color: #4399FF;
+    border-radius: 6px;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+    transition: 0.5s;
+}
+
+#signUp a {
+    color: white;
+
+}
+
+#signUp:hover {
+
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color: #64aaff;
+    transition: 0.5s;
+}
+
+img {
+    height: 60px;
+    width: 60px;
+}
