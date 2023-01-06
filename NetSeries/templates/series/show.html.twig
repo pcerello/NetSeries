@@ -1,44 +1,39 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+{{ parent() }}
+    <link href={{ asset('css/series.css') }} rel="stylesheet">
+{% endblock %}
+
 {% block title %}Series{% endblock %}
 
 {% block body %}
     <h1>Series</h1>
 
+    <div id="infos">
+        <div id="titlePoster">
+            <img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'>
+
+            <p>Titre {{ series.title }}</p>
+        </div>
+        <div id="infoSerie">
+            <p>Description : {{ series.plot }}</p>
+
+            <p>Director : {{ series.Director }}</p>
+
+            <p>Award(s) : {{ series.awards }}</p>
+
+            <p>Year start : {{ series.yearStart }}</p>
+
+            <p>Year end : {{ series.yearEnd }}</p>
+
+            <p>Trailer</p>
+            <iframe width="560" height="315" src="{{ series.youtubeTrailer }}" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
     <table class="table">
         <tbody>
-            <tr>
-                <th>Title</th>
-                <td>{{ series.title }}</td>
-            </tr>
-            <tr>
-                <th>Plot</th>
-                <td>{{ series.plot }}</td>
-            </tr>
-            <tr>
-                <th>Poster</th>
-                <td> <img src='{{ path('app_poster_show', {'id': series.id}) }}' >  </td>
-            </tr>
-            <tr>
-                <th>Director</th>
-                <td>{{ series.director }}</td>
-            </tr>
-            <tr>
-                <th>YoutubeTrailer</th>
-                <td>{{ series.youtubeTrailer }}</td>
-            </tr>
-            <tr>
-                <th>Awards</th>
-                <td>{{ series.awards }}</td>
-            </tr>
-            <tr>
-                <th>YearStart</th>
-                <td>{{ series.yearStart }}</td>
-            </tr>
-            <tr>
-                <th>YearEnd</th>
-                <td>{{ series.yearEnd }}</td>
-            </tr>
+
             <tr>
                 <th>
                 {% for seasonNumber, episodes in episodesBySeason %}
@@ -53,9 +48,9 @@
                         {% endfor %}
                     </ul>
                 {% endfor %}
-                
+
                 </th>
-                
+
             </tr>
         </tbody>
     </table>
