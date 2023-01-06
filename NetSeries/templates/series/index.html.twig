@@ -1,33 +1,32 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+{{ parent() }}
+    <link href={{ asset('css/series.css') }} rel="stylesheet">
+{% endblock %}
+
 {% block title %}Series index{% endblock %}
 
 {% block body %}
     <h1>Series index</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Poster</th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="series">
         {% for series in series %}
-            <tr>
-                <td>{{ series.title }}</td>
-                <td> <img src='{{ path('app_poster_show', {'id': series.id}) }}' >  </td>
-                <td>
+            <div class="serie">
+                <div class="imgSerie">
+                    <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
+                </div>
+                <div class="titleSerie">
+                    {{ series.title }}
+                </div>
+                <div class="showSerie">
                     <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
+                </div>
+            </div>
         {% endfor %}
-        </tbody>
-    </table>
+    </div>
+
+    
     <div class="navigation">
         {{ knp_pagination_render(series) }}
     </div>
