@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes séries suivi{% endblock %}
+
+{% block body %}
+    {% if user.series is empty %}
+    <p>Vous ne suivez aucune série.</p>
+    {% else %}
+        <ul>
+            {% for series in followedseries %}
+                <li>{{ series.title }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+
+{% endblock %}

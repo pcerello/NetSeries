@@ -13,15 +13,20 @@
             </tr>
         </thead>
         <tbody>
+        <a href="{{ path('app_series_followed') }}">Voir mes séries</a>
         {% for series in series %}
             <tr>
                 <td>{{ series.title }}</td>
                 <td> <img src='{{ path('app_poster_show', {'id': series.id}) }}' >  </td>
+                
                 <td>
                     <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
-                    <a href="{{ path('follow_series', {'id': series.id}) }}">Ajouter à ma liste</a>
-                                    
+                    {% if app.user %}
+                        <a href="{{ path('follow_series', {'id': series.id}) }}">Ajouter à ma liste</a>
+                    {% endif %}    
+                            
                 </td>
+                
                 
             </tr>
         {% else %}
@@ -34,7 +39,6 @@
     <div class="navigation">
         {{ knp_pagination_render(series) }}
     </div>
-    <a href="{{ path('app_series_new') }}">Create new</a>
 
     
 {% endblock %}
