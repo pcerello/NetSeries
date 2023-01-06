@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}NetSeries | Welcome{% endblock %}
 
 {% block stylesheets %}
     <link href="{{ asset('css/home.css') }}" rel="stylesheet" />
@@ -10,14 +10,16 @@
     <div class="wrapper">
         <h1 class="title">Explore with us the <span>wonderful</span> world of series and animes.</h1>
         <p>Have you ever gotten lost in your viewing experience because you started a multitude of series without ever finishing them? Next time, use NetSeries!</p> 
-        <br>
         <p>NetSeries is <span>the solution</span> to keep tracking the series that you've already seen, the ones you're currently watching and the ones you've completed!</p>
+        <div class="buttons">
+            <a href="{{ path('app_register') }}" class="button1">START BINGE WATCHIN' <img src="{{ asset('images/icons/start-button.svg') }}"></a>
+            <a href="" class="button2"><img src="{{ asset('images/icons/gitlab.svg') }}"></a>
+            <a href="" class="button2"><img src="{{ asset('images/icons/twitter.svg') }}"></a>
+        </div>
     </div>
-    <div class="search_section">
-        <h2>Search for a series</h2>
+    <div class="search_section">    
         <form action="" method="GET">
-            <input type="text" name="search" placeholder="Search for a series" />
-            <button type="submit">Search</button>
+            <input type="text" name="search" placeholder="Search something..." />
         </form>
     </div>
 {% endblock %}
