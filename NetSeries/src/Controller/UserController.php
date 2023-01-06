@@ -21,6 +21,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
         // if the user is logged in and is admin accessed by the isAdmin() method of User.php, show the user list
+        /** @var \App\Entity\User */
         $user = $this->getUser();
 
         if ($user->isAdmin()) {

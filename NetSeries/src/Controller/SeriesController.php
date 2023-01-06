@@ -2,10 +2,11 @@
 
 namespace App\Controller;
 
-use App\Entity\Season;
+use App\Entity\Episode;
 use App\Entity\Series;
 use App\Form\SeriesType;
 use App\Repository\EpisodeRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -118,4 +119,19 @@ class SeriesController extends AbstractController
 
         return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/view/{id}', name: 'app_episode_view', methods: ['GET', 'POST'])]
+    public function view(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+        /** @var \App\Entity\Episode */
+        $episodes = $entityManager->getRepository(Episode::class)->find($request->get('id'));
+        $user->addEpisode($episodes);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+
+
 }
