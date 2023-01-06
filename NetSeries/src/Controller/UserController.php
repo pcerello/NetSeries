@@ -16,13 +16,24 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(EntityManagerInterface $entityManager): Response
     {
-        $users = $entityManager
-            ->getRepository(User::class)
-            ->findAll();
+        // if the user is not logged in, redirect to the login page
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+        // if the user is logged in and is admin accessed by the isAdmin() method of User.php, show the user list
+        $user = $this->getUser();
 
-        return $this->render('user/index.html.twig', [
-            'users' => $users,
-        ]);
+        if ($user->isAdmin()) {
+            $users = $entityManager
+                ->getRepository(User::class)
+                ->findAll();
+
+            return $this->render('user/index.html.twig', [
+                'users' => $users,
+            ]);
+        }
+        // if the user is logged in but is not admin, redirect to the homepage
+        return $this->redirectToRoute("app_series_index");
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
@@ -78,6 +89,24 @@ class UserController extends AbstractController
             $entityManager->remove($user);
             $entityManager->flush();
         }
+
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/user/promote/{id}', name: 'app_user_promote', methods: ['GET'])]
+    public function promote(User $user, EntityManagerInterface $entityManager): Response
+    {
+        $user->setAdmin(true);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/user/demote/{id}', name: 'app_user_demote', methods: ['GET'])]
+    public function demote(User $user, EntityManagerInterface $entityManager): Response
+    {
+        $user->setAdmin(false);
+        $entityManager->flush();
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }

@@ -28,6 +28,12 @@ block body %}
       <td>{{ user.country }}</td>
       <td>
         <a href="">Incarnate</a>
+        {% if user.admin == false %}
+        <a href="user/promote/{{ user.id }}">Promote</a>
+        {% else %}
+        <a href="user/demote/{{ user.id }}">Demote</a>
+        {% endif %}
+
       </td>
     </tr>
     {% else %}
