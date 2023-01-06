@@ -19,7 +19,10 @@
                 <td> <img src='{{ path('app_poster_show', {'id': series.id}) }}' >  </td>
                 <td>
                     <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
+                    <a href="{{ path('follow_series', {'id': series.id}) }}">Ajouter à ma liste</a>
+                                    
                 </td>
+                
             </tr>
         {% else %}
             <tr>
@@ -32,4 +35,6 @@
         {{ knp_pagination_render(series) }}
     </div>
     <a href="{{ path('app_series_new') }}">Create new</a>
+
+    
 {% endblock %}

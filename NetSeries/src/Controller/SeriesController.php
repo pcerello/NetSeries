@@ -10,19 +10,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\Persistence\ManagerRegistry;
 
 use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/series')]
 class SeriesController extends AbstractController
 {
+
     #[Route('/', name: 'app_series_index', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
-            
+
         $appointmentsRepository = $entityManager->getRepository(Series::class);
 
-        
+
         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
             ->getQuery();
 
@@ -39,7 +41,7 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new (Request $request, EntityManagerInterface $entityManager): Response
     {
         $series = new Series();
         $form = $this->createForm(SeriesType::class, $series);
@@ -93,11 +95,26 @@ class SeriesController extends AbstractController
     #[Route('/{id}', name: 'app_series_delete', methods: ['POST'])]
     public function delete(Request $request, Series $series, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$series->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $series->getId(), $request->request->get('_token'))) {
             $entityManager->remove($series);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/suivre/{id}', name:'follow_series', methods: ['GET', 'POST'])]
+    public function follow(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+
+        $series = $entityManager->getRepository(Series::class)->find($request->get('id'));
+
+        $user->addSeries($series);
+        
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_series_index');
     }
 }
