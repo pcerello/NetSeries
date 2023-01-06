@@ -6,31 +6,61 @@
 
     <div class="login-box">
         <h1>Register</h1>
-
-         <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
-        <input type="email" value="" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="Username">    
-    </div>
+         
 
         {{ form_start(registrationForm) }}
         <div class="input-group mb-3">
-            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
-        {{ form_row(registrationForm.name) }}
-        </div>
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.country) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
+        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
+        {{ form_row(registrationForm.name , {
+            attr: {
+            placeholder: 'Name'
+
+        }
         }) }}
+        </div>
+
+
+        <div class="input-group mb-3">
+        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">✉️</span></div>
+        {{ form_row(registrationForm.email, {
+            attr: {
+            placeholder: 'Email'
+
+        }
+        }) }}
+
+        </div>
+
+        <div class="input-group mb-3">
+        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🌎</span></div>
+        {{ form_row(registrationForm.country,{            
+            attr: {
+                placeholder: 'Country'
+        }
+    }) }}
+        </div>
+
+        <div class="input-group mb-3">
+        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🔐</span></div>
+        {{ form_row(registrationForm.plainPassword, {
+            attr: {
+                placeholder: 'Password'
+                
+            }
+            
+        }) }}
+        </div>
+
+        
+       
         {{ form_row(registrationForm.agreeTerms) }}
+        <button class="btn btn-lg btn-primary" type="submit" id="btn-register">Create new account</button>
         {{ form_end(registrationForm) }}
 
-        <button class="btn btn-lg btn-primary" type="submit" id="btn-register">Register</button>
+        
 
         </div>
-
-
-
+    </div>
 {% endblock %}
 {% block stylesheets %}
 {{ parent() }}
