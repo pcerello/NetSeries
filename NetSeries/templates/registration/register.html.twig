@@ -3,17 +3,37 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
 
-    {{ form_start(registrationForm) }}
+    <div class="login-box">
+        <h1>Register</h1>
+
+         <div class="input-group mb-3">
+        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
+        <input type="email" value="" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="Username">    
+    </div>
+
+        {{ form_start(registrationForm) }}
+        <div class="input-group mb-3">
+            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
         {{ form_row(registrationForm.name) }}
+        </div>
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.country) }}
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
         {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_end(registrationForm) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+        <button class="btn btn-lg btn-primary" type="submit" id="btn-register">Register</button>
+
+        </div>
+
+
+
+{% endblock %}
+{% block stylesheets %}
+{{ parent() }}
+<link href={{ asset('css/login.css') }} rel="stylesheet">
+
 {% endblock %}
