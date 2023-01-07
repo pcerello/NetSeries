@@ -9,12 +9,30 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/ykadri/Bureau/CoursBUTS3/SAEAPart2/s3.01_equipe6/NetSeries/src/Controller/FollowedSeriesController.php'|file_link(0) }}">src/Controller/FollowedSeriesController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/ykadri/Bureau/CoursBUTS3/SAEAPart2/s3.01_equipe6/NetSeries/templates/followed_series/index.html.twig'|file_link(0) }}">templates/followed_series/index.html.twig</a></code></li>
-    </ul>
+    
+
+    {% if series is empty %}
+        Pas de séries suivies.
+    {% else %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Titre</th>
+                    <th>Poster</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for series in series %}
+                    <tr>
+                        <td>{{ series.title }}</td>
+                        <td><img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'></td>
+                        <td><a href="{{ path('unfollow_series', {'id': series.id}) }}">Ne plus suivre</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+
 </div>
 {% endblock %}

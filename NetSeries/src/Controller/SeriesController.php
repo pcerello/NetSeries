@@ -148,4 +148,21 @@ class SeriesController extends AbstractController
 
         return $this->redirectToRoute('app_series_index');
     }
+
+    #[Route('/unfollow/{id}', name:'unfollow_series', methods: ['GET', 'POST'])]
+    public function unfollow(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+
+        $series = $entityManager->getRepository(Series::class)->find($request->get('id'));
+
+        $user->removeSeries($series);
+        
+        $entityManager->flush();
+
+        return $this->redirectToRoute('app_followed_series');
+    }
+
+    
 }

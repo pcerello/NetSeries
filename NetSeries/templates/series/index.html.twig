@@ -10,6 +10,11 @@
 {% block body %}
     <h1>Series index</h1>
 
+
+    {% if app.user %}
+        <a href="{{ path('app_followed_series') }}">Voir mes séries suivies</a>
+    {% endif %}
+
     <div class="series">
         {% for series in series %}
             <div class="serie">
@@ -23,7 +28,7 @@
                     <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
                 </div>
                 {% if app.user %}
-                    <a href="{{ path('follow_series', {'id': series.id}) }}">Ajouter à ma liste</a>
+                    <a href="{{ path('follow_series', {'id': series.id}) }}">Suivre</a>
                 {% endif %}
 
             </div>

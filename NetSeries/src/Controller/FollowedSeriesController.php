@@ -21,10 +21,10 @@ class FollowedSeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
+        $seriesFollowed = $user->getSeries();
         
-
         return $this->render('followed_series/index.html.twig', [
-            'controller_name' => 'FollowedSeriesController',
+            'series' => $seriesFollowed,
         ]);
     }
 }
