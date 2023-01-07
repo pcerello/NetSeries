@@ -15,27 +15,36 @@
     <h1>My list of followed series</h1>
     <br>
 
+    {# On regarde si l'utilisateur possède des séries qu'il a suivi, si non alors on affiche un message #}
     {% if series is empty %}
         Pas de séries suivies.
     {% else %}
         <table>
             <thead>
                 <tr>
+                    {# Afffiche le titre de la séries #}
                     <th>Titre</th>
+                    {# Afffiche le poser de la séries #}
                     <th>Poster</th>
                 </tr>
             </thead>
             <tbody>
                 {% for series in series %}
                     <tr>
+                        {# Afffiche le titre de la séries #}
                         <td>{{ series.title }}</td>
+                        {# Afffiche le poser de la séries #}
                         <td><img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'></td>
+                        {# Affiche un lien pour ne plus suivre cette série #}
                         <td><a href="{{ path('unfollow_series', {'id': series.id}) }}">Ne plus suivre </a></td>
+                        {# Affiche un lien pour afficher la page de détail de la série #}
                         <td><a href="{{ path('app_series_show', {'id': series.id}) }}">show </a></td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
+
+        {# Permet de mettre en place la pagination des séries suivi#}
         <div class="navigation">
             {{ knp_pagination_render(series) }}
         </div>
