@@ -11,23 +11,32 @@
     <h1>Series index</h1>
 
 
+    {# Si un utilisateur est connecté, affichage d'un lien vers les séries suivies #}
     {% if app.user %}
         <a href="{{ path('app_followed_series') }}">Voir mes séries suivies</a>
     {% endif %}
 
     <div class="series">
+
+        {# On parcours tout les séries existant de la base de donnée#}
         {% for series in series %}
             <div class="serie">
                 <div class="imgSerie">
+                    {# Affichage du poster de la série #}  
                     <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
                 </div>
                 <div class="titleSerie">
+                    {# Affichage du titre de la série #}
                     {{ series.title }}
                 </div>
                 <div class="showSerie">
+                    {# Lien vers la page de détail de la série #}
                     <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
                 </div>
+
+                {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
                 {% if app.user %}
+                    {# On vérifie si l'utilisateur est un administrateur #}
                     {% if app.user.isFollowing(series) %}
                         <p>Suivie</p>
                     {% else %}
@@ -39,7 +48,7 @@
         {% endfor %}
     </div>
 
-    
+    {# Permet de mettre en place la pagination des séries #}
     <div class="navigation">
         {{ knp_pagination_render(series) }}
     </div>
