@@ -12,10 +12,12 @@
 
     <div id="infos">
         <div id="titlePoster">
+            {# On affiche le poster de la série #}
             <img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'>
 
             <p>Titre {{ series.title }}</p>
         </div>
+        {# On affiche les informations sur la série choisis #}
         <div id="infoSerie">
             <p>Description : {{ series.plot }}</p>
 
@@ -36,16 +38,24 @@
 
             <tr>
                 <th>
+                {# On parcourt les saisons et leurs épisodes #}
                 {% for seasonNumber, episodes in episodesBySeason %}
                     Season {{ seasonNumber }}:
                     <ul>
+                        {# On parcourt les épisodes de la saison #}
                         {% for episode in episodes %}
+                            {# On affiche le titre de l'épisode #}
                             <li>{{ episode.title }}
-                            {{ episode.id }}
+
+                            {# On regarde si un utilisateur est connecté #}
                             {% if app.user %}
+
+                                {# On regarde si cet utilisateur est un administrateur #}
                                 {% if app.user.isView(episode) %}
+                                    {# Permet d'enlever vu un épisode choisis #}
                                     : Vu,  <a href="{{ path('app_episode_remove_view', {'id1': episode.id, 'id2': series.id}) }}">Enlever vue</a>
                                 {% else %}
+                                    {# Permet de mettre vu un épisode choisis#}
                                     <a href="{{ path('app_episode_view', {'id1': episode.id, 'id2': series.id}) }}">Marquer comme vus</a>
                                 {% endif %}
                             
@@ -62,5 +72,6 @@
         </tbody>
     </table>
 
+    {# Permet de revenir à la page où il y a toute les séries #}
     <a href="{{ path('app_series_index') }}">back to list</a>
 {% endblock %}
