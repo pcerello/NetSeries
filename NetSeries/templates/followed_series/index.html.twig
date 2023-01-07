@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FollowedSeriesController!{% endblock %}
+{% block title %}My list of followed series{% endblock %}
 
 {% block body %}
 <style>
@@ -8,9 +8,12 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
+
+
 <div class="example-wrapper">
 
-    
+    <h1>My list of followed series</h1>
+    <br>
 
     {% if series is empty %}
         Pas de séries suivies.
@@ -27,7 +30,8 @@
                     <tr>
                         <td>{{ series.title }}</td>
                         <td><img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'></td>
-                        <td><a href="{{ path('unfollow_series', {'id': series.id}) }}">Ne plus suivre</a></td>
+                        <td><a href="{{ path('unfollow_series', {'id': series.id}) }}">Ne plus suivre </a></td>
+                        <td><a href="{{ path('app_series_show', {'id': series.id}) }}">show </a></td>
                     </tr>
                 {% endfor %}
             </tbody>

@@ -28,7 +28,11 @@
                     <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
                 </div>
                 {% if app.user %}
-                    <a href="{{ path('follow_series', {'id': series.id}) }}">Suivre</a>
+                    {% if app.user.isFollowing(series) %}
+                        <p>Suivie</p>
+                    {% else %}
+                        <a href="{{ path('follow_series', {'id': series.id}) }}">Suivre</a>
+                    {% endif %}
                 {% endif %}
 
             </div>

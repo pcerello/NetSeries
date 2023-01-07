@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/serieSuivi')]
+#[Route('/followedSeries')]
 class FollowedSeriesController extends AbstractController
 {
     #[Route('/', name: 'app_followed_series')]

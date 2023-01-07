@@ -235,6 +235,18 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     }
 
     /**
+     * Vérifie si l'utilisateur suit la série donnée.
+     *
+     * @param Series $series La série à vérifier
+     *
+     * @return bool True si l'utilisateur suit la série, false sinon
+     */
+    public function isFollowing(Series $series)
+    {
+        return $this->series->contains($series);
+    }
+
+    /**
      * @return Collection<int, Episode>
      */
     public function getEpisode(): Collection
