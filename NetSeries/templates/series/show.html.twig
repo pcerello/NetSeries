@@ -44,7 +44,7 @@
                             {{ episode.id }}
                             {% if app.user %}
                                 {% if app.user.isView(episode) %}
-                                    : Vu
+                                    : Vu,  <a href="{{ path('app_episode_remove_view', {'id1': episode.id, 'id2': series.id}) }}">Enlever vue</a>
                                 {% else %}
                                     <a href="{{ path('app_episode_view', {'id1': episode.id, 'id2': series.id}) }}">Marquer comme vus</a>
                                 {% endif %}
