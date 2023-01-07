@@ -97,18 +97,26 @@ class UserController extends AbstractController
     #[Route('/user/promote/{id}', name: 'app_user_promote', methods: ['GET'])]
     public function promote(User $user, EntityManagerInterface $entityManager): Response
     {
+        # Met la variable admin à vrai pour que l'utilisateur soit un admin
         $user->setAdmin(true);
-        $entityManager->flush();
 
+        # Met à jour la base de données
+        $entityManager->flush();
+        
+        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/user/demote/{id}', name: 'app_user_demote', methods: ['GET'])]
     public function demote(User $user, EntityManagerInterface $entityManager): Response
     {
+        # Met la variable admin à faux pour que l'utilisateur soit plus un admin
         $user->setAdmin(false);
+
+        # Met à jour la base de données
         $entityManager->flush();
 
+        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 }
