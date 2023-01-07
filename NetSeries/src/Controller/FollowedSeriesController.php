@@ -6,11 +6,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use App\Entity\Series;
+
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Knp\Component\Pager\PaginatorInterface;
+
+
 #[Route('/followedSeries')]
 class FollowedSeriesController extends AbstractController
 {
     #[Route('/', name: 'app_followed_series')]
-    public function index(): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
         // if the user is not logged in, redirect to the login page
         if (!$this->getUser()) {
@@ -22,9 +29,19 @@ class FollowedSeriesController extends AbstractController
         $user = $this->getUser();
 
         $seriesFollowed = $user->getSeries();
+
+        $seriesFollowedPaginated = $paginator->paginate(
+            $seriesFollowed,
+            $request->query->getInt('page', 1), /*page number*/
+            5 /*limit per page*/
+        );
         
         return $this->render('followed_series/index.html.twig', [
-            'series' => $seriesFollowed,
+            'series' => $seriesFollowedPaginated,
         ]);
     }
+
+    
+
+    
 }
