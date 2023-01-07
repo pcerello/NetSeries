@@ -153,7 +153,7 @@ class SeriesController extends AbstractController
         
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_series_show');
+        return $this->redirectToRoute('app_series_index');
     }
 
     #[Route('/unfollow/{id}', name:'unfollow_series', methods: ['GET', 'POST'])]
