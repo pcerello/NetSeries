@@ -23,11 +23,19 @@
 
             <div id="buttons">
 
+                {% if app.user.isAdmin() %}
+                    <div class="button">
+                        <a href="{{  path('app_user_index')  }}">User list</a>
+                    </div>
+                {% endif %}
+
                 {% if app.user %}
                 [{{ app.user.email }}]
                 <div class="button">
                     <a href="{{  path('app_logout')  }}">Logout</a>
                 </div>
+
+                
 
                 {% else %}
                 <div class="button">
