@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Repository\EpisodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use App\Controller\Request;
 
 class EpisodeController extends AbstractController
 {
@@ -28,4 +29,5 @@ class EpisodeController extends AbstractController
             'episodes' => $episodes,
         ]);
     }
+
 }

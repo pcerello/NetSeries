@@ -41,9 +41,16 @@
                     <ul>
                         {% for episode in episodes %}
                             <li>{{ episode.title }}
+                            {{ episode.id }}
                             {% if app.user %}
-                                <a href="{{ path('app_episode_view', {'id': episode.id}) }}">Ajouter à ma liste</a>
+                                {% if app.user.isView(episode) %}
+                                    : Vu
+                                {% else %}
+                                    <a href="{{ path('app_episode_view', {'id1': episode.id, 'id2': series.id}) }}">Marquer comme vus</a>
+                                {% endif %}
+                            
                             {% endif %} 
+                                
                             </li>
                         {% endfor %}
                     </ul>

@@ -122,16 +122,23 @@ class SeriesController extends AbstractController
         return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/view/{id}', name: 'app_episode_view', methods: ['GET', 'POST'])]
+    #[Route('/view/{id1}/{id2}', name: 'app_episode_view', methods: ['GET', 'POST'])]
     public function view(EntityManagerInterface $entityManager, Request $request): Response
     {
         /** @var \App\Entity\User */
         $user = $this->getUser();
+
         /** @var \App\Entity\Episode */
-        $episodes = $entityManager->getRepository(Episode::class)->find($request->get('id'));
+        $episodes = $entityManager->getRepository(Episode::class)->find($request->get('id1'));
+        
         $user->addEpisode($episodes);
+
+        $series = $entityManager->getRepository(Series::class)->find($request->get('id2'));
+
         $entityManager->flush();
-        return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
+
+        
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/suivre/{id}', name:'follow_series', methods: ['GET', 'POST'])]
@@ -146,7 +153,7 @@ class SeriesController extends AbstractController
         
         $entityManager->flush();
 
-        return $this->redirectToRoute('app_series_index');
+        return $this->redirectToRoute('app_series_show');
     }
 
     #[Route('/unfollow/{id}', name:'unfollow_series', methods: ['GET', 'POST'])]

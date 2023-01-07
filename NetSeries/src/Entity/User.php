@@ -270,6 +270,19 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this;
     }
 
+    /**
+     * Vérifie si l'utilisateur à vu la l'épisode donnée.
+     *
+     * @param Episode $series La série à vérifier
+     *
+     * @return bool True si l'utilisateur a vu l'épisode, false sinon
+     */
+    public function isView(Episode $episode)
+    {
+        return $this->episode->contains($episode);
+    }
+
+
     public function getUserIdentifier(): string { return $this->getEmail(); }
 
     public function getRoles(): array { return ['ROLE_USER']; }
