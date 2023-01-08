@@ -124,6 +124,13 @@ class Series
     private $genre = array();
 
     /**
+     * @var \ExternalRating|null
+     *
+     * @ORM\OneToOne(targetEntity="ExternalRating", mappedBy="series")
+     */
+    private $externalRating;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -382,6 +389,18 @@ class Series
                 $season->setSeries(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getExternalRating(): ?ExternalRating
+    {
+        return $this->externalRating;
+    }
+
+    public function setExternalRating(?ExternalRating $externalRating): self
+    {
+        $this->externalRating = $externalRating;
 
         return $this;
     }
