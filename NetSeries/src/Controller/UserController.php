@@ -119,40 +119,4 @@ class UserController extends AbstractController
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
-
-    #[Route('/user/incarne/{idUserChoisis}', name: 'app_user_incarne', methods: ['GET'])]
-    public function incarne(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        /** @var \App\Entity\User */
-        $user = $this->getUser();
-
-        /** @var \App\Entity\User */
-        $userIncarne = $entityManager->getRepository(User::class)->find($request->get('idUserChoisis'));
-
-        $user->setUtilisateurIncarner($userIncarne);
-
-        # Met à jour la base de données
-        $entityManager->flush();
-
-        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
-        return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/user/incarne/{idUserChoisis}', name: 'app_user_incarne', methods: ['GET'])]
-    public function desincarne(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        /** @var \App\Entity\User */
-        $user = $this->getUser();
-
-        /** @var \App\Entity\User */
-        $userIncarne = $entityManager->getRepository(User::class)->find($request->get('idUserChoisis'));
-
-        $user->setUtilisateurIncarner(NULL);
-
-        # Met à jour la base de données
-        $entityManager->flush();
-
-        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
-        return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
-    }
 }

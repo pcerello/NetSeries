@@ -113,11 +113,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private $episode = array();
 
     /**
-     * @var User|null;
-     */
-    private User $utilisateurIncarner;
-
-    /**
      * Constructor
      */
     public function __construct()
@@ -286,17 +281,6 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     {
         return $this->episode->contains($episode);
     }
-
-    public function getUtilisateurIncarner()
-    {
-        return $this->utilisateurIncarner;
-    }
-
-    public function setUtilisateurIncarner(User $user)
-    {
-        $this->utilisateurIncarner = $user;
-    }
-
 
     public function getUserIdentifier(): string { return $this->getEmail(); }
 
