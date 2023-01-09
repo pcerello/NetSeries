@@ -30,13 +30,13 @@
                     {% endif %}
 
                     {# On test si un administrateur est en train d'incarner un utilisateur#}
-                    {% if is_granted('ROLE_PREVIOUS_ADMIN') %}s
+                    {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
                         {# On affiche qui il incarne #}
                         <p>J'incarne : {{ app.user.email }}</p>
 
                         {# On ajoute le bouton 'désincarné' pour se désincarné d'un utilisateur #}
                         <div class="button">
-                            <a class="dropdown-item" href="{{ path('app_home', {'_switch_user': '_exit'}) }}">Désincarné</a> 
+                            <a class="dropdown-item" href="{{ path('app_user_index', {'_switch_user': '_exit'}) }}">Désincarné</a> 
                         </div>
                     {% endif %}
                     
@@ -45,8 +45,6 @@
                     <div class="button">
                         <a href="{{  path('app_logout')  }}">Logout</a>
                     </div>
-
-                    
 
                     {% else %}
                     <div class="button">

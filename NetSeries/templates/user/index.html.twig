@@ -27,7 +27,7 @@ block body %}
       <td>{{ user.admin ? "Oui" : "Non" }}</td>
       <td>{{ user.country }}</td>
       <td>
-        <a href="">Incarnate</a>
+        <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate</a>
         {% if user.admin == false %}
         <a href="user/promote/{{ user.id }}">Promote</a>
         {% else %}
