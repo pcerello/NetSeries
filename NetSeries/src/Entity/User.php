@@ -282,10 +282,22 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this->episode->contains($episode);
     }
 
-
     public function getUserIdentifier(): string { return $this->getEmail(); }
 
-    public function getRoles(): array { return ['ROLE_USER']; }
+    /**
+     * Méthode qui va donner le role d'un utilisateur selon 
+     * si il est administrateur ou non
+     * 
+     * @return array La liste des roles de l'utilisateur
+     */
+    public function getRoles(): array { 
+        //Si est admin
+        if ($this->isAdmin()){
+            //Alors son role est un admin
+            return ['ROLE_ADMIN'];
+        } 
+        //Sinon un simple utilisateur
+        return ['ROLE_USER']; }
     
     public function eraseCredentials() { }
 }

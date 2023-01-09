@@ -22,29 +22,38 @@
 
             <div id="buttons">
 
-            {% if app.user %}
-                {% if app.user.isAdmin() %}
+                {% if app.user %}
+                    {% if app.user.isAdmin() %}
+                        <div class="button">
+                            <a href="{{  path('app_user_index')  }}">User list</a>
+                        </div>
+                    {% endif %}
+
+                    {# On test si un administrateur est en train d'incarner un utilisateur#}
+                    {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                        {# On affiche qui il incarne #}
+                        <p>J'incarne : {{ app.user.email }}</p>
+
+                        {# On ajoute le bouton 'désincarné' pour se désincarné d'un utilisateur #}
+                        <div class="button">
+                            <a class="dropdown-item" href="{{ path('app_user_index', {'_switch_user': '_exit'}) }}">Désincarné</a> 
+                        </div>
+                    {% endif %}
+                    
+                    
+                    [{{ app.user.email }}]
                     <div class="button">
-                        <a href="{{  path('app_user_index')  }}">User list</a>
+                        <a href="{{  path('app_logout')  }}">Logout</a>
                     </div>
-                {% endif %}
 
-                
-                [{{ app.user.email }}]
-                <div class="button">
-                    <a href="{{  path('app_logout')  }}">Logout</a>
-                </div>
+                    {% else %}
+                    <div class="button">
+                        <a href="{{  path('app_login')  }}">Login</a>
+                    </div>
 
-                
-
-                {% else %}
-                <div class="button">
-                    <a href="{{  path('app_login')  }}">Login</a>
-                </div>
-
-                <div class="button" id="signUp">
-                    <a href="{{  path('app_register')  }}">Sign up now !</a>
-                </div>
+                    <div class="button" id="signUp">
+                        <a href="{{  path('app_register')  }}">Sign up now !</a>
+                    </div>
                 {% endif %}
             </div>
         </div>
