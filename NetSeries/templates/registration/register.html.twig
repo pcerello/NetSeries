@@ -9,55 +9,55 @@
          
 
         {{ form_start(registrationForm) }}
-        <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
-        {{ form_row(registrationForm.name , {
-            attr: {
-            placeholder: 'Name'
+            <div class="input-group mb-3">
+            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
+            {{ form_row(registrationForm.name , {
+                attr: {
+                placeholder: 'Name'
 
-        }
-        }) }}
-        </div>
-
-
-        <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">✉️</span></div>
-        {{ form_row(registrationForm.email, {
-            attr: {
-            placeholder: 'Email'
-
-        }
-        }) }}
-
-        </div>
-
-        <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🌎</span></div>
-        {{ form_row(registrationForm.country,{            
-            attr: {
-                placeholder: 'Country'
-        }
-    }) }}
-        </div>
-
-        <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🔐</span></div>
-        {{ form_row(registrationForm.plainPassword, {
-            attr: {
-                placeholder: 'Password'
-                
             }
-            
-        }) }}
-        </div>
+            }) }}
+            </div>
+
+
+            <div class="input-group mb-3">
+            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">✉️</span></div>
+            {{ form_row(registrationForm.email, {
+                attr: {
+                placeholder: 'Email'
+
+            }
+            }) }}
+
+            </div>
+
+            <div class="input-group mb-3">
+            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🌎</span></div>
+            {{ form_row(registrationForm.country,{            
+                attr: {
+                    placeholder: 'Country'
+            }}) }}
+            </div>
+
+            <div class="input-group mb-3">
+            <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🔐</span></div>
+            {{ form_row(registrationForm.plainPassword, {
+                attr: {
+                    placeholder: 'Password'
+                    
+                }
+                
+            }) }}
+            </div>
 
         
-       
-        {{ form_row(registrationForm.agreeTerms) }}
-        <button class="btn btn-lg btn-primary" type="submit" id="btn-register">Create new account</button>
+            {{ form_row(registrationForm.agreeTerms) }}
+
+        <script src='https://www.google.com/recaptcha/api.js'></script>
+            <div class="g-recaptcha" data-sitekey="6LcYB-QjAAAAADIxaEfhTLc18oxHprJcRwmOWAbw"></div>
+            <button class="btn btn-lg btn-primary" type="submit" id="btn-register">Create new account</button>
         {{ form_end(registrationForm) }}
 
-        
 
         </div>
     </div>
