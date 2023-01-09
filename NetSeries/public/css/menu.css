@@ -85,3 +85,9 @@ img {
     height: 65px;
     width: 65px;
 }
+
+@media only screen and (max-width: 500px) {
+    #buttons {
+        flex-direction: column;
+    }
+}

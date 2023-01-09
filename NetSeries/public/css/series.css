@@ -51,3 +51,13 @@
     flex-direction: column;
     margin-bottom: 1rem;
 }
+
+@media only screen and (max-width: 500px) {
+    .series {
+        flex-direction: column;
+    }
+
+    #infos {
+        flex-direction: column;
+    }
+}
