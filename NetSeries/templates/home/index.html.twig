@@ -3,7 +3,7 @@
 {% block title %}NetSeries | Welcome{% endblock %}
 
 {% block stylesheets %}
-        <link href="{{ asset('css/home.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/home.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block body %}
@@ -19,9 +19,18 @@
             </div>
         </div>
         <div class="search_section">    
-            <form action="" method="GET">
-                <input type="text" name="search" placeholder="Search something..." />
-            </form>
+                {% for series in random_series %}
+                <a href="{{ path('app_series_show', {'id': series.id}) }}" class="series">
+                    <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
+                    <div class="description">
+                        <h6>{{ series.title }}</h6>
+                        <div>
+                            <h6>IMDb</h6>
+                            <p><img src="{{ asset('images/icons/star-rating.svg') }}">{{ series.externalRating.value }}</p>
+                        </div>
+                    </div>
+                </a>
+                {% endfor %}
         </div>
     </div>
 {% endblock %}

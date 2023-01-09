@@ -81,7 +81,7 @@ body {
     transition: 0.5s;
 }
 
-img {
+#menu img {
     height: 65px;
     width: 65px;
 }
