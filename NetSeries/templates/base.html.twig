@@ -28,7 +28,7 @@
             
             <div id="buttons">
 
-            {# On test si un utilisateur est incarné et on affiche qui est incarné par l'administrateur #}
+            
             
             {% if app.user %}
                 {% if app.user.isAdmin() %}
@@ -37,14 +37,17 @@
                     </div>
                 {% endif %}
 
-                <p>J'incarne : {{ app.user.email }}</p>
+                {# On test si un administrateur est en train d'incarner un utilisateur#}
+                {% if is_granted('ROLE_PREVIOUS_ADMIN') %}s
+                    {# On affiche qui il incarne #}
+                    <p>J'incarne : {{ app.user.email }}</p>
 
-                <div class="button">
-                {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
-                    <a class="dropdown-item" href="{{ path('app_home', {'_switch_user': '_exit'}) }}">Désincarné</a> 
-                    
+                    {# On ajoute le bouton 'désincarné' pour se désincarné d'un utilisateur #}
+                    <div class="button">
+                        <a class="dropdown-item" href="{{ path('app_home', {'_switch_user': '_exit'}) }}">Désincarné</a> 
+                    </div>
                 {% endif %}
-                </div>
+                
                 
                 [{{ app.user.email }}]
                 <div class="button">
