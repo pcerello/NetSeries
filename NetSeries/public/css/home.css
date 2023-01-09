@@ -10,17 +10,13 @@
     background: transparent;
 }
 
-body {
-    min-height: 100vh;
+div.content {
     display: flex;
+    min-height: 80vh;
     flex-direction: row;
     align-items: center;
     justify-content: center;
-    color: #2E2E2E;
-    background: url('../images/background.png') no-repeat center center fixed; 
-    background-size: cover;
     justify-content: space-evenly;
-
 }
 
 div.wrapper {
@@ -136,7 +132,7 @@ div.search_section input[name="search"] {
     background: url(../images/icons/search.svg) #FFFFFF no-repeat scroll 14px;
     margin: 30px 0px;
     padding-left: 50px;
-    width: 80%;
+    width: 100%;
     height: 30px;
     border: 0.5px solid #909090;
     border-radius: 10px;
