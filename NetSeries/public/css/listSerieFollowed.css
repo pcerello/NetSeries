@@ -1,0 +1,74 @@
+h1{
+    text-align: center;
+    margin: 2rem;
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+
+.series {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+}
+
+
+.serie {
+    width: 9em;
+    height: 17em;
+    text-align: center;
+    font-weight: bold;
+    color: #000000;
+    margin: 1em;
+    font-size: 1em;
+    background: rgba(247, 247, 247, 0.432);
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.serie:hover {
+    background: rgba(247, 247, 247, 0.815);
+}
+
+img#posterShow {
+    width: 7em;
+    height: 11em;
+    border-radius: 16px;
+}
+
+.serie>a {
+    text-decoration: none;
+    color: #000000;
+}
+
+
+.notFollowed a{
+    /*make a circle border*/
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgb(85, 80, 80);
+    padding: 0.5rem;
+    border-radius: 40px;
+    text-decoration: none;
+    color: black;
+}
+
+
+.notFollowed a:hover {
+    background-color: #3a3838;
+    color: white;
+    filter: invert(1);
+}
+
+.notFollowed a img{
+    width: 1.5em;
+    height: 1.5em;
+}
