@@ -42,7 +42,6 @@ class RatingController extends AbstractController
 
         $form = $this->createForm(RatingType::class, $rating);
 
-        //5 user yay    10 breaking bad
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
