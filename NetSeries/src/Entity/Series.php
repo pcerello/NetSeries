@@ -344,6 +344,17 @@ class Series
         return $this->genre;
     }
 
+    public function getStringGenre():string
+    {
+        $res ="";
+
+        foreach ($this->genre as $g) {
+            $res= $res.$g->__toString()." | ";
+        }
+        $res = substr($res, 0, -2);
+        return $res;
+    }
+
     public function addGenre(Genre $genre): self
     {
         if (!$this->genre->contains($genre)) {
@@ -403,6 +414,11 @@ class Series
         $this->externalRating = $externalRating;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        return $this->title;
     }
 
 }

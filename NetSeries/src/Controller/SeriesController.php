@@ -35,14 +35,33 @@ class SeriesController extends AbstractController
     {
         // Récupère le repository des séries
         $appointmentsRepository = $entityManager->getRepository(Series::class);
+        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+        ->orderBy('search.title', 'ASC')
+        ->where('search.title LIKE :search')
+        ->setParameter('search', '%' . $request->query->get('search') . '%')
+        ->getQuery();
+        $catvalue = $request->query->get('category');
+        switch ($catvalue) {
+            case 'title':
+                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+                    ->orderBy('search.title', 'ASC')
+                    ->where('search.title LIKE :search')
+                    ->setParameter('search', '%' . $request->query->get('search') . '%')
+                    ->getQuery();
+                break;
+            case 'genre':
+                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+                    ->orderBy('search.title', 'ASC')
+                    ->join('search.genre', 'genre')
+                    ->where('search.genre LIKE :search')
+                    ->setParameter('search', '%' . $request->query->get('search') . '%')
+                    ->getQuery();
+                break;
+        }
 
         // Crée une requête pour sélectionner toutes les séries
-        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-            ->orderBy('search.title', 'ASC')
-            ->where('search.title LIKE :search')
-            ->setParameter('search', '%' . $request->query->get('search') . '%')
-            ->getQuery();
-        
+
+
 
         // Pagination des résultats (5 séries par pages maximum)
         $appointments = $paginator->paginate(
@@ -55,6 +74,7 @@ class SeriesController extends AbstractController
             'series' => $appointments,
         ]);
     }
+
 
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -231,12 +251,11 @@ class SeriesController extends AbstractController
     #[Route('/search',  name: 'app_series_search', methods: ['GET'])]
     public function search(Request $request, PaginatorInterface $paginator, ManagerRegistry $doctrine)
     {
-        
-        
+
+
 
         return $this->render('series/index.html.twig', [
             'series' => $series,
         ]);
     }
-
 }
