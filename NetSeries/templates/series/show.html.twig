@@ -39,6 +39,27 @@
             <iframe width="560" height="315" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
+
+    <form action="{{ path('') }}" method="get">
+        <textarea id="commentBox" minlength="5" maxlength="200" placeholder="Add a comment (optionnal)"></textarea>
+        <select name="pets" id="pet-select" required>
+            <option value="">--Please choose a note--</option>
+
+            <option value="star">1</option>
+            <option value="star">2</option>
+            <option value="star">3</option>
+            <option value="star">4</option>
+            <option value="star">5</option>
+            <option value="star">6</option>
+            <option value="star">7</option>
+            <option value="star">8</option>
+            <option value="star">9</option>
+            <option value="star">10</option>
+
+            <input type="submit" value="Envoyer la réponse">
+        </select>
+    </form>
+
     <table class="table">
         <tbody>
 
