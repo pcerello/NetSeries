@@ -5,9 +5,12 @@ namespace App\Controller;
 use App\Entity\Episode;
 use App\Entity\Season;
 use App\Entity\Series;
+use App\Entity\Rating;
+use App\Entity\User;
 use App\Form\SeriesType;
 use App\Repository\EpisodeRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,17 +78,29 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
-    public function show(Series $series): Response
+    public function show(Series $series, EntityManagerInterface $em, Request $request): Response
     {
-
         $seasons = $series->getSeasons();
         $episodesBySeason = [];
+
+        $user = $this->getUser(); // Récupérer l'utilisateur courant
+        $series = $em->getRepository(Series::class)->find($request->get('id'));
+        $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+
+        if ($rating) {
+            $userHasRated = true;
+        } else {
+            $userHasRated = false;
+        }
+
         foreach ($seasons as $season) {
             $episodesBySeason[$season->getNumber()] = $this->episodeRepository->findBySeason($season->getId());
         }
+
         return $this->render('series/show.html.twig', [
             'series' => $series,
             'episodesBySeason' => $episodesBySeason,
+            'userHasRated' => $userHasRated,
         ]);
     }
 
@@ -224,17 +239,6 @@ class SeriesController extends AbstractController
 
         # Redirige vers la page où il y a toute les séries suivi
         return $this->redirectToRoute('app_followed_series');
-    }
-
-    #[Route('/search',  name: 'app_series_search', methods: ['GET'])]
-    public function search(Request $request, PaginatorInterface $paginator, ManagerRegistry $doctrine)
-    {
-        
-        
-
-        return $this->render('series/index.html.twig', [
-            'series' => $series,
-        ]);
     }
 
 }

@@ -39,6 +39,7 @@
             <iframe width="560" height="315" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
+
     <table class="table">
         <tbody>
 
@@ -77,6 +78,15 @@
             </tr>
         </tbody>
     </table>
+
+    {% if app.user %}
+        {# On test si l'utilisateur à déjà mis un commentaire/appréciation/critique sur cette séries #}
+        {% if userHasRated %}
+            <p>You already put an appreciation on this series</p>
+        {% else %}
+            <a href="{{ path('app_rating_new', {'idSerie' : series.id}) }}">Add a comment of the serie</a>
+        {% endif %}
+    {% endif %}
 
     {# Permet de revenir à la page où il y a toute les séries #}
     <a href="{{ path('app_series_index') }}">back to list</a>

@@ -300,4 +300,9 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return ['ROLE_USER']; }
     
     public function eraseCredentials() { }
+
+    public function __toString()
+    {
+        return $this->getEmail();
+    }
 }

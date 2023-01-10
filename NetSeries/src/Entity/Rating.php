@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -32,7 +33,7 @@ class Rating
     /**
      * @var string|null
      *
-     * @ORM\Column(name="comment", type="text", length=0, nullable=true)
+     * @ORM\Column(name="comment", type="text", length=300, nullable=true)
      */
     private $comment;
 
@@ -44,7 +45,7 @@ class Rating
     private $date;
 
     /**
-     * @var \Series
+     * @var \Series|null
      *
      * @ORM\ManyToOne(targetEntity="Series")
      * @ORM\JoinColumns({
@@ -54,7 +55,7 @@ class Rating
     private $series;
 
     /**
-     * @var \User
+     * @var \User|null
      *
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumns({
@@ -62,6 +63,11 @@ class Rating
      * })
      */
     private $user;
+
+    public function __construct()
+    {
+        $this->date = new DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -127,6 +133,4 @@ class Rating
 
         return $this;
     }
-
-
 }
