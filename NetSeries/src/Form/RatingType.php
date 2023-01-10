@@ -29,7 +29,7 @@ class RatingType extends AbstractType
                 '9' => 9,
                 '10' => 10,
             ],
-            'constraints' => [new Choice(['choices' => [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]])]
+            'constraints' => [new Choice(['choices' => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]])]
         ])
             ->add('comment');
     }
