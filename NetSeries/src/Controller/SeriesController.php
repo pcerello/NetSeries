@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Episode;
+use App\Entity\Season;
 use App\Entity\Series;
 use App\Form\SeriesType;
 use App\Repository\EpisodeRepository;
@@ -52,7 +53,7 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
-    public function new (Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $series = new Series();
         $form = $this->createForm(SeriesType::class, $series);
@@ -79,7 +80,6 @@ class SeriesController extends AbstractController
         $episodesBySeason = [];
         foreach ($seasons as $season) {
             $episodesBySeason[$season->getNumber()] = $this->episodeRepository->findBySeason($season->getId());
-
         }
         return $this->render('series/show.html.twig', [
             'series' => $series,
@@ -129,14 +129,28 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-         # Récupère l'épisode avec l'ID passé en paramètre de l'URL
+        # Récupère l'épisode avec l'ID passé en paramètre de l'URL
         /** @var \App\Entity\Episode */
         $episodes = $entityManager->getRepository(Episode::class)->find($request->get('id1'));
-        
-        # Ajoute l'épisode choisis à la liste des épisodes vus par l'utilisateur
-        $user->addEpisode($episodes);
+        # si l'episode précédent n'est pas vu, on l'ajoute à la liste des épisodes vus jusqu'au premier épisode de la saison
+        # get all seasons before current season
 
-        # Récupère la série avec l'ID passé en paramètre de l'URL
+        $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $episodes->getSeason(), 'number' => range(1, $episodes->getNumber())]);
+        foreach ($episodes as $episode) {
+            $user->addEpisode($episode);
+        }
+        # get 1 epiosde from the episodes array
+        $exepisode = $episodes[0];
+        $seasons = $entityManager->getRepository(Season::class)->findBy(['series' => $request->get('id2'), 'number' => range(1, $exepisode->getSeason()->getNumber() - 1)]);
+        foreach ($seasons as $season) {
+
+            $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $season]);
+            foreach ($episodes as $episode) {
+                $user->addEpisode($episode);
+            }
+        }
+
+
         $series = $entityManager->getRepository(Series::class)->find($request->get('id2'));
 
         # Met à jour la base de données
@@ -156,7 +170,7 @@ class SeriesController extends AbstractController
         # Récupère l'épisode avec l'ID passé en paramètre de l'URL
         /** @var \App\Entity\Episode */
         $episodes = $entityManager->getRepository(Episode::class)->find($request->get('id1'));
-        
+
         # Supprime l'épisode de la liste des épisodes vus par l'utilisateur
         $user->removeEpisode($episodes);
 
@@ -170,7 +184,7 @@ class SeriesController extends AbstractController
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/suivre/{id}', name:'follow_series', methods: ['GET', 'POST'])]
+    #[Route('/suivre/{id}', name: 'follow_series', methods: ['GET', 'POST'])]
     public function follow(EntityManagerInterface $entityManager, Request $request): Response
     {
         # Récupère l'utilisateur connecté courant
@@ -182,7 +196,7 @@ class SeriesController extends AbstractController
 
         # Ajoute la série à la liste des séries suivies par l'utilisateur
         $user->addSeries($series);
-        
+
         # Met à jour la base de données
         $entityManager->flush();
 
@@ -190,7 +204,7 @@ class SeriesController extends AbstractController
         return $this->redirectToRoute('app_series_index');
     }
 
-    #[Route('/unfollow/{id}', name:'unfollow_series', methods: ['GET', 'POST'])]
+    #[Route('/unfollow/{id}', name: 'unfollow_series', methods: ['GET', 'POST'])]
     public function unfollow(EntityManagerInterface $entityManager, Request $request): Response
     {
         # Récupère l'utilisateur connecté courant
@@ -202,13 +216,11 @@ class SeriesController extends AbstractController
 
         # Supprime la série de la liste des séries suivies par l'utilisateur
         $user->removeSeries($series);
-        
+
         # Met à jour la base de données
         $entityManager->flush();
 
         # Redirige vers la page où il y a toute les séries suivi
         return $this->redirectToRoute('app_followed_series');
     }
-
-    
 }

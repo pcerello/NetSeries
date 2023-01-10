@@ -49,15 +49,15 @@
                         {# On parcourt les épisodes de la saison #}
                         {% for episode in episodes %}
                             {# On affiche le titre de l'épisode #}
-                            <li>{{ episode.title }}
+                            <li>Episode {{ episode.number }} - {{ episode.title }}
 
                             {# On regarde si un utilisateur est connecté #}
                             {% if app.user %}
 
-                                {# On regarde si cet utilisateur est un administrateur #}
+                                {# On regarde si cet utilisateur a vu l'épisode #}
                                 {% if app.user.isView(episode) %}
                                     {# Permet d'enlever vu un épisode choisis #}
-                                    : Vu,  <a href="{{ path('app_episode_remove_view', {'id1': episode.id, 'id2': series.id}) }}">Enlever vue</a>
+                                    <span>: Vu,  </span><a href="{{ path('app_episode_remove_view', {'id1': episode.id, 'id2': series.id}) }}">Enlever vue</a>
                                 {% else %}
                                     {# Permet de mettre vu un épisode choisis#}
                                     <a href="{{ path('app_episode_view', {'id1': episode.id, 'id2': series.id}) }}">Marquer comme vus</a>
