@@ -1,0 +1,148 @@
+
+.box__auth{
+    background: #FFFFFF;
+    opacity: 1;
+    border: 0.5px solid #909090;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 40px;
+    width: 400px;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #909090;
+}
+
+#menu {
+    display: none;
+}
+
+p {
+    margin-top: 25px;
+}
+
+a.logo p strong {
+    font-weight: normal;
+}
+
+a.logo {
+    text-decoration: none;
+    color: #2E2E2E;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 10px 0;
+    font-size: 30px;
+}
+
+a.logo img {
+    width: 100px;
+    height: 100px;
+}
+
+.box__auth h1{
+    text-align: center;
+    color: #2E2E2E;
+    font-size: 22px;
+    margin-top: 10px;
+    
+}
+
+.box__auth * {
+    margin: 10px 0;
+}
+
+.button__auth {
+    /* in center*/
+    display: block;
+    margin: 0 auto;
+    font-size: 1em;
+    margin-top: 20px;
+    background: #4399FF;
+    border-radius: 40px;
+    border: none;
+    color: white;
+    padding: 5px 30px;
+    text-decoration: none;
+}
+
+#label__register, #label__login {
+    color: #2E2E2E;
+    font-size: 14px;
+}
+
+.box__auth input, select {
+    display: block;
+    width: 100%;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 0.5px solid #909090;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: #909090;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    padding-left: 55px;
+}
+
+input[placeholder="Name"] {
+    background: url(../images/icons/user.svg) no-repeat scroll 14px;
+}
+
+input[placeholder="Email"] {
+    background: url(../images/icons/email.svg) no-repeat scroll 14px;
+}
+
+input[placeholder="Password"] {
+    background: url(../images/icons/password.svg) no-repeat scroll 14px;
+}
+
+select {
+    background: url(../images/icons/country.svg) no-repeat scroll 14px 5px;
+    padding: 0.375rem 3.6rem;
+    padding-left: 55px;
+}
+
+
+
+input[type=text]:focus, input[type=password]:focus, select:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-form-control-bg);
+    border-color: var(--bs-primary);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+input:focus svg path {
+    fill: var(--bs-primary);
+}
+
+div.checkbox__terms div {
+    gap: 10px;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: center;
+    align-items: center;
+}
+    
+label{
+    font-size: 0.9em;
+    font-weight: 500;
+    color: #333; 
+}
+
+input[type=checkbox] {
+    display: inline;
+    width: auto;
+    box-shadow: none;
+    margin: 0;
+}
+
+.form-control::-webkit-input-placeholder {
+    color: #909090;
+  }
+
+

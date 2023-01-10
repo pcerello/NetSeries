@@ -3,7 +3,7 @@
 {% block title %}NetSeries | Welcome{% endblock %}
 
 {% block stylesheets %}
-        <link href="{{ asset('css/home.css') }}" rel="stylesheet" />
+    <link href="{{ asset('css/home.css') }}" rel="stylesheet" />
 {% endblock %}
 
 {% block body %}
@@ -13,15 +13,30 @@
             <p>Have you ever gotten lost in your viewing experience because you started a multitude of series without ever finishing them? Next time, use NetSeries!</p> 
             <p>NetSeries is <span>the solution</span> to keep tracking the series that you've already seen, the ones you're currently watching and the ones you've completed!</p>
             <div class="buttons">
-                <a href="{{ path('app_series_index') }}" class="button1">START BINGE WATCHIN' <img src="{{ asset('images/icons/start-button.svg') }}"></a>
+                <a href="{{ path('app_series_index') }}" class="button1">START BINGE WATCHIN'
+                    <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="17.5" cy="17.5" r="16" stroke="white" stroke-width="3"/>
+                        <path d="M25 15.7679C26.3333 16.5377 26.3333 18.4623 25 19.2321L15.25 24.8612C13.9167 25.631 12.25 24.6688 12.25 23.1292L12.25 11.8708C12.25 10.3312 13.9167 9.36898 15.25 10.1388L25 15.7679Z" fill="white"/>
+                    </svg>
+                </a>
                 <a href="" class="button2"><img src="{{ asset('images/icons/gitlab.svg') }}"></a>
                 <a href="" class="button2"><img src="{{ asset('images/icons/twitter.svg') }}"></a>
             </div>
         </div>
-        <div class="search_section">    
-            <form action="" method="GET">
-                <input type="text" name="search" placeholder="Search something..." />
-            </form>
+        <div class="search_section"> 
+            <h5>Recommendations</h2>  
+            {% for series in random_series %}
+            <a href="{{ path('app_series_show', {'id': series.id}) }}" class="series">
+                <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
+                <div class="description">
+                    <h6>{{ series.title }}</h6>
+                    <div>
+                        <h6>IMDb</h6>
+                        <p><img src="{{ asset('images/icons/star-rating.svg') }}">{{ series.externalRating.value }}</p>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
         </div>
     </div>
 {% endblock %}
