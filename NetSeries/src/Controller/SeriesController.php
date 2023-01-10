@@ -48,7 +48,7 @@ class SeriesController extends AbstractController
         $appointments = $paginator->paginate(
             $allAppointmentsQuery,
             $request->query->getInt('page', 1),
-            
+            12
         );
 
         return $this->render('series/index.html.twig', [

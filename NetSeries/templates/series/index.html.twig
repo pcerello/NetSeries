@@ -8,7 +8,10 @@
 {% block title %}Series index{% endblock %}
 
 {% block body %}
-    <h1>Series index</h1>
+    <h1>Series List</h1>
+    <div class="navigation">
+        {{ knp_pagination_render(series) }}
+    </div>
 
     {# Barre de recherche #}
     <form action="{{ path('app_series_index') }}" method="get">
@@ -20,7 +23,7 @@
 
     {# Si un utilisateur est connecté, affichage d'un lien vers les séries suivies #}
     {% if app.user %}
-        <a href="{{ path('app_followed_series') }}">Voir mes séries suivies</a>
+        <a class ="followed" href="{{ path('app_followed_series') }}">See my followed series</a>
     {% endif %}
 
     <div class="series">
@@ -28,6 +31,8 @@
         {# On parcours tout les séries existant de la base de donnée#}
         {% for series in series %}
             <div class="serie">
+                <a class = "linkSerie" href="{{ path('app_series_show', {'id': series.id}) }}">
+                    <div class="boxSerie">
                 <div class="imgSerie">
                     {# Affichage du poster de la série #}  
                     <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
@@ -36,21 +41,29 @@
                     {# Affichage du titre de la série #}
                     {{ series.title }}
                 </div>
-                <div class="showSerie">
-                    {# Lien vers la page de détail de la série #}
-                    <a href="{{ path('app_series_show', {'id': series.id}) }}">show</a>
+
+                <div class="notes">
+                    <p>IMDB :</p>
+                    {# Affichage de la note moyenne de la série #}
+                    <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                    <p> {{ series.externalRating.value}}</p>
                 </div>
+
+                    {# Lien vers la page de détail de la série #}
+                  
+                
 
                 {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
                 {% if app.user %}
                     {# On vérifie si l'utilisateur est un administrateur #}
                     {% if app.user.isFollowing(series) %}
-                        <p>Suivie</p>
+                        <span class="eye" ><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
                     {% else %}
-                        <a href="{{ path('follow_series', {'id': series.id}) }}">Suivre</a>
+                        <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
                     {% endif %}
                 {% endif %}
-
+            </div>
+            </a>  
             </div>
         {% endfor %}
     </div>

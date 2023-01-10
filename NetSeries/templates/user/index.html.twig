@@ -44,6 +44,11 @@ block body %}
   </tbody>
 </table>
 
+{# Permet de mettre en place la pagination des utilisateurs #}
+<div class="navigation">
+    {{ knp_pagination_render(users) }}
+</div>
+
 {% endblock %} {% block stylesheets %}
 {{ parent() }}
 <link
