@@ -79,11 +79,13 @@
         </tbody>
     </table>
 
-    {# On test si l'utilisateur à déjà mis un commentaire/appréciation/critique sur cette séries #}
-    {% if userHasRated %}
-        <p>You already put an appreciation on this series</p>
-    {% else %}
-        <a href="{{ path('app_rating_new', {'idSerie' : series.id}) }}">Add a comment of the serie</a>
+    {% if app.user %}
+        {# On test si l'utilisateur à déjà mis un commentaire/appréciation/critique sur cette séries #}
+        {% if userHasRated %}
+            <p>You already put an appreciation on this series</p>
+        {% else %}
+            <a href="{{ path('app_rating_new', {'idSerie' : series.id}) }}">Add a comment of the serie</a>
+        {% endif %}
     {% endif %}
 
     {# Permet de revenir à la page où il y a toute les séries #}
