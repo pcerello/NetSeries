@@ -10,11 +10,13 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+use Knp\Component\Pager\PaginatorInterface;
+
 #[Route('/user')]
 class UserController extends AbstractController
 {
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
         // if the user is not logged in, redirect to the login page
         if (!$this->getUser()) {
@@ -25,12 +27,23 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         if ($user->isAdmin()) {
-            $users = $entityManager
-                ->getRepository(User::class)
-                ->findAll();
+
+            // Récupère le repository des séries
+            $appointmentsRepository = $entityManager->getRepository(User::class);
+
+            // Crée une requête pour sélectionner toutes les séries
+            $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
+                ->getQuery();
+
+            // Pagination des résultats (5 séries par pages maximum)
+            $appointments = $paginator->paginate(
+                $allAppointmentsQuery,
+                $request->query->getInt('page', 1),
+                10
+            );
 
             return $this->render('user/index.html.twig', [
-                'users' => $users,
+                'users' => $appointments,
             ]);
         }
         // if the user is logged in but is not admin, redirect to the homepage
