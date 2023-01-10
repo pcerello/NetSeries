@@ -35,6 +35,12 @@ class UserController extends AbstractController
             $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
                 ->getQuery();
 
+            $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+                ->orderBy('search.email', 'ASC')
+                ->where('search.email LIKE :search')
+                ->setParameter('search', '%' . $request->query->get('search') . '%')
+                ->getQuery();
+
             // Pagination des résultats (5 séries par pages maximum)
             $appointments = $paginator->paginate(
                 $allAppointmentsQuery,
