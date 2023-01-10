@@ -113,12 +113,20 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private $episode = array();
 
     /**
+     * @var \Rating|null
+     *
+     * @ORM\OneToMany(targetEntity="Rating", mappedBy="user")
+     */
+    private $ratings;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->ratings = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -304,5 +312,35 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     public function __toString()
     {
         return $this->getEmail();
+    }
+
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatings(): Collection
+    {
+        return $this->ratings;
+    }
+
+    public function addRating(Rating $rating): self
+    {
+        if (!$this->ratings->contains($rating)) {
+            $this->ratings->add($rating);
+            $rating->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRating(Rating $rating): self
+    {
+        if ($this->ratings->removeElement($rating)) {
+            // set the owning side to null (unless already changed)
+            if ($rating->getUser() === $this) {
+                $rating->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
