@@ -40,26 +40,6 @@
         </div>
     </div>
 
-    <form action="{{ path('') }}" method="get">
-        <textarea id="commentBox" minlength="5" maxlength="200" placeholder="Add a comment (optionnal)"></textarea>
-        <select name="pets" id="pet-select" required>
-            <option value="">--Please choose a note--</option>
-
-            <option value="star">1</option>
-            <option value="star">2</option>
-            <option value="star">3</option>
-            <option value="star">4</option>
-            <option value="star">5</option>
-            <option value="star">6</option>
-            <option value="star">7</option>
-            <option value="star">8</option>
-            <option value="star">9</option>
-            <option value="star">10</option>
-
-            <input type="submit" value="Envoyer la réponse">
-        </select>
-    </form>
-
     <table class="table">
         <tbody>
 
@@ -98,6 +78,8 @@
             </tr>
         </tbody>
     </table>
+
+    <a href="{{ path('app_rating_new', {'idSerie' : series.id}) }}">Add a comment of the serie</a>
 
     {# Permet de revenir à la page où il y a toute les séries #}
     <a href="{{ path('app_series_index') }}">back to list</a>
