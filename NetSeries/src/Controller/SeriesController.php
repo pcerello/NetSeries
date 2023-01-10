@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\Persistence\ManagerRegistry;
 
 use Knp\Component\Pager\PaginatorInterface;
-
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 #[Route('/series')]
 class SeriesController extends AbstractController
@@ -37,14 +37,18 @@ class SeriesController extends AbstractController
         $appointmentsRepository = $entityManager->getRepository(Series::class);
 
         // Crée une requête pour sélectionner toutes les séries
-        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
+        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+            ->orderBy('search.title', 'ASC')
+            ->where('search.title LIKE :search')
+            ->setParameter('search', '%' . $request->query->get('search') . '%')
             ->getQuery();
+        
 
         // Pagination des résultats (5 séries par pages maximum)
         $appointments = $paginator->paginate(
             $allAppointmentsQuery,
             $request->query->getInt('page', 1),
-            5
+            
         );
 
         return $this->render('series/index.html.twig', [
@@ -223,4 +227,16 @@ class SeriesController extends AbstractController
         # Redirige vers la page où il y a toute les séries suivi
         return $this->redirectToRoute('app_followed_series');
     }
+
+    #[Route('/search',  name: 'app_series_search', methods: ['GET'])]
+    public function search(Request $request, PaginatorInterface $paginator, ManagerRegistry $doctrine)
+    {
+        
+        
+
+        return $this->render('series/index.html.twig', [
+            'series' => $series,
+        ]);
+    }
+
 }
