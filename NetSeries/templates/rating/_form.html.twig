@@ -1,4 +1,18 @@
 {{ form_start(form) }}
     {{ form_widget(form) }}
+        <select name="pets" id="pet-select" required>
+            <option value="">--Please choose a note--</option>
+
+            <option value="star">1</option>
+            <option value="star">2</option>
+            <option value="star">3</option>
+            <option value="star">4</option>
+            <option value="star">5</option>
+            <option value="star">6</option>
+            <option value="star">7</option>
+            <option value="star">8</option>
+            <option value="star">9</option>
+            <option value="star">10</option>
+        </select>
     <button class="btn">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

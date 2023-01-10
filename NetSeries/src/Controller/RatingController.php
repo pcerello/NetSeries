@@ -30,6 +30,8 @@ class RatingController extends AbstractController
     {
         $rating = new Rating();
         $form = $this->createForm(RatingType::class, $rating);
+
+        
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
