@@ -92,10 +92,10 @@ div.buttons a.button1 {
     margin-right: 30px;
 }
 
-div.buttons a.button1 img {
+div.buttons a.button1 svg {
     width: 30px;
     height: 30px;
-    margin-right: 2px;
+    margin-right: 3px;
 }
 
 div.buttons a.button2 img {
@@ -113,19 +113,42 @@ div.buttons a.button2 {
     margin: -30px;
 }
 
+div.buttons a:hover {
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    background-color: white;
+    transition: 0.2s;
+    color: #2E2E2E;
+}
+
+div.buttons a:hover svg circle {
+    stroke: #2E2E2E;
+}
+
+div.buttons a:hover svg path {
+    fill: #2E2E2E;
+}
+
 div.search_section {
-    background: rgba(250, 250, 250, 0.46);
+    background: rgba(255    , 255, 255, 1);
     box-shadow: 3px 4px 10px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(5px);
     /* Note: backdrop-filter has minimal browser support */
 
-    border-radius: 40px;
+    border-radius: 30px;
     width: 20%;
-    height: 400px;
+    height: 450px;
 
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+}
+
+div.search_section h5 {
+    font-family: 'Inter';
+    font-size: 20px;
+    line-height: 24px;
+    text-align: center;
+    color: #2E2E2E;
 }
 
 a.series {
@@ -137,6 +160,12 @@ a.series {
     width: 80%;
     margin: 0 10%;
     color: #2E2E2E;
+}
+
+a.series:hover {
+    background: rgba(125, 125, 125, 0.2);
+    border-radius: 10px;
+    transition: 0.2s;
 }
 
 a.series > * {

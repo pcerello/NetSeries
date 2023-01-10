@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}NetSeries | Login{% endblock %}
 
 {% block body %}
 <form method="post">
@@ -14,29 +14,32 @@
         </div>
     {% endif %}
 
+    <a href="{{ path('app_home') }}"class="logo">
+        <img src={{ asset('images/logo.png') }} alt="logo">
+        <p id="logo_text" href="{{  path('app_home')  }}"><strong><span>Net</span></strong>Series</p>
+    </a>
 
+    <div class="box__auth">
 
-    <div class="login-box">
+        <h1 class="h3 mb-3 font-weight-normal">Welcome back, binger !</h1>
 
-    <h1 class="h3 mb-3 font-weight-normal">Welcome back, binger !</h1>
+        <div class="mb-3">
+            <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="Email">    
+        </div>
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
-        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus placeholder="Username">    
-    </div>
+        <div class="mb-3">
+            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="Password">
+        </div>
+        
+        <input type="hidden" name="_csrf_token"
+            value="{{ csrf_token('authenticate') }}"
+        >  
 
-    <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🔐</span></div>
-        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required placeholder="Password">
-    </div>
-    
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >  
+        <a class="button__auth" type="submit">
+            Login
+        </a>
 
-    <button class="btn btn-lg btn-primary" id="btn-login" type="submit">
-        Login
-    </button>
+        <a href="{{ path('app_register') }}" id="label__register">First time here ? Create new account.</a>
     </div>
 
 </form>
@@ -44,6 +47,6 @@
 
 {% block stylesheets %}
 {{ parent() }}
-<link href={{ asset('css/login.css') }} rel="stylesheet">
+<link href={{ asset('css/login2.css') }} rel="stylesheet">
 
 {% endblock %}

@@ -1,68 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}NetSeries | Register{% endblock %}
 
 {% block body %}
+<form method="post">
+    <a href="{{ path('app_home') }}"class="logo">
+        <img src={{ asset('images/logo.png') }} alt="logo">
+        <p id="logo_text" href="{{  path('app_home')  }}"><strong><span>Net</span></strong>Series</p>
+    </a>
 
-    <div class="login-box">
-        <h1>Register</h1>
+    <div class="box__auth">
+        <h1 class="h3 mb-3 font-weight-normal">Welcome, new binger !</h1>
          
-
         {{ form_start(registrationForm) }}
-        <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🙂</span></div>
+        <div class="mb-3">
         {{ form_row(registrationForm.name , {
             attr: {
-            placeholder: 'Name'
-
-        }
+                placeholder: 'Name',
+                class: 'form-control'
+            }
         }) }}
         </div>
 
-
-        <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">✉️</span></div>
+        <div class="mb-3">
         {{ form_row(registrationForm.email, {
             attr: {
-            placeholder: 'Email'
-
-        }
+                placeholder: 'Email',
+                class: 'form-control'
+            }
         }) }}
 
         </div>
 
-        <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🌎</span></div>
+        <div class="mb-3">
+            {{ form_row(registrationForm.plainPassword, {
+                attr: {
+                    placeholder: 'Password',
+                    class: 'form-control test'
+                    
+                }
+            }) }}
+            </div>
+
+        <div class="mb-3">
         {{ form_row(registrationForm.country,{            
             attr: {
-                placeholder: 'Country'
-        }
-    }) }}
-        </div>
-
-        <div class="input-group mb-3">
-        <div class="input-group-prepend"><span class="input-group-text" aria-label="arobase">🔐</span></div>
-        {{ form_row(registrationForm.plainPassword, {
-            attr: {
-                placeholder: 'Password'
-                
+                placeholder: 'Country',
             }
-            
         }) }}
         </div>
-
-        
        
-        {{ form_row(registrationForm.agreeTerms) }}
-        <button class="btn btn-lg btn-primary" type="submit" id="btn-register">Create new account</button>
+        <div class="mb-3 checkbox__terms">
+            {{ form_row(registrationForm.agreeTerms) }}
+        </div>
+
+        <button class="button__auth" type="submit">Create new account</button>
         {{ form_end(registrationForm) }}
 
-        
+        <a href="{{ path('app_login') }}" id="label__login">Already have an account ? Login.</a>
 
         </div>
     </div>
+</form>
 {% endblock %}
 {% block stylesheets %}
 {{ parent() }}
-<link href={{ asset('css/login.css') }} rel="stylesheet">
+<link href={{ asset('css/login2.css') }} rel="stylesheet">
 {% endblock %}
