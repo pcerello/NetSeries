@@ -4,51 +4,53 @@
 
 {% block body %}
 <style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    .example-wrapper {
+        margin: 1em auto;
+        max-width: 800px;
+        width: 95%;
+        font: 18px/1.5 sans-serif;
+    }
+
+    .example-wrapper code {
+        background: #F5F5F5;
+        padding: 2px 6px;
+    }
 </style>
 
 
 
 <div class="example-wrapper">
-
     <h1>My list of followed series</h1>
-    <br>
 
     {# On regarde si l'utilisateur possède des séries qu'il a suivi, si non alors on affiche un message #}
     {% if series is empty %}
-        Pas de séries suivies.
+    No series followed
     {% else %}
-        <table>
-            <thead>
-                <tr>
-                    {# Afffiche le titre de la séries #}
-                    <th>Titre</th>
-                    {# Afffiche le poser de la séries #}
-                    <th>Poster</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for series in series %}
-                    <tr>
-                        {# Afffiche le titre de la séries #}
-                        <td>{{ series.title }}</td>
-                        {# Afffiche le poser de la séries #}
-                        <td><img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'></td>
-                        {# Affiche un lien pour ne plus suivre cette série #}
-                        <td><a href="{{ path('unfollow_series', {'id': series.id}) }}">Ne plus suivre </a></td>
-                        {# Affiche un lien pour afficher la page de détail de la série #}
-                        <td><a href="{{ path('app_series_show', {'id': series.id}) }}">show </a></td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        {# Permet de mettre en place la pagination des séries suivi#}
-        <div class="navigation">
-            {{ knp_pagination_render(series) }}
+    <div class="series">
+        {% for series in series %}
+        {# Afffiche le poser de la séries #}
+        <div class="serie">
+            <a href="{{ path('app_series_show', {'id': series.id}) }}"><img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'>
+                <p class="seriesTitle">{{ series.title }}</p>
+            </a>
+            <div class="notFollowed">
+                <a href="{{ path('unfollow_series', {'id': series.id}) }}"><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></a>
+            </div>
         </div>
-    {% endif %}
+        {# Affiche un lien pour ne plus suivre cette série #}
+        {% endfor %}
+    </div>
+    </table>
 
+    {# Permet de mettre en place la pagination des séries suivi#}
+    <div class="navigation">
+        {{ knp_pagination_render(series) }}
+    </div>
+    {% endif %}
 </div>
+{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href={{ asset('css/listSerieFollowed.css') }} rel="stylesheet">
 {% endblock %}
