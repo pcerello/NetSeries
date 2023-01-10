@@ -9,6 +9,8 @@
 
 {% block body %}
     <h1>Series</h1>
+    {# Permet de revenir à la page où il y a toute les séries #}
+    <a href="{{ path('app_series_index') }}">back to list</a>
 
     <div id="infos">
         <div id="titlePoster">
@@ -47,7 +49,7 @@
                         {# On parcourt les épisodes de la saison #}
                         {% for episode in episodes %}
                             {# On affiche le titre de l'épisode #}
-                            <li>{{ episode.title }}
+                            <li> Episode {{ episode.number }} - {{ episode.title }} 
 
                             {# On regarde si un utilisateur est connecté #}
                             {% if app.user %}
