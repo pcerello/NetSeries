@@ -218,7 +218,6 @@ span.eye img{
     color: black;
 }
 iframe {
-    height: auto;
     width: 97%;
 }
 @media only screen and (max-width: 1100px) {

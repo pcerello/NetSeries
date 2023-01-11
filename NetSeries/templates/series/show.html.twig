@@ -17,24 +17,24 @@
             {# On affiche le poster de la série #}
             <img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'>
 
-            <p>Titre {{ series.title }}</p>
+            <h3>Title : {{ series.title }}</h3>
         </div>
         {# On affiche les informations sur la série choisis #}
         <div id="infoSerie">
-            <p>Description : {{ series.plot }}</p>
+            <p><b>Description :</b> {{ series.plot }}</p>
 
-            <p>Director : {{ series.Director }}</p>
+            <p><b>Director :</b> {{ series.Director }}</p>
 
-            <p>Award(s) : {{ series.awards }}</p>
+            <p><b>Award(s) :</b> {{ series.awards }}</p>
 
-            <p>Year start : {{ series.yearStart }}</p>
+            <p><b>Year start :</b> {{ series.yearStart }}</p>
 
-            <p>Year end : {{ series.yearEnd }}</p>
+            <p><b>Year end :</b> {{ series.yearEnd }}</p>
 
-            <p>Trailer</p>
-
-            <p> Note : {{ series.externalRating.value }} </p>
+            <p> <b>Note :</b> {{ series.externalRating.value }} </p>
             {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
+
+            <p><b>Trailer :</b></p>
 
             <iframe width="560" height="315" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
