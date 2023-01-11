@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+{{ parent() }}
+    <link href={{ asset('css/ficheUtilisateur.css') }} rel="stylesheet">
+{% endblock %}
+
 {% block title %}User{% endblock %}
 
 {% block body %}
@@ -19,7 +24,7 @@
         </tbody>
     </table>
 
-    <h2> Sa liste de séries qui regarde </h2>
+    <h2> Series that {{user.name}} watches </h2>
     <table class="table">
         <thead>
             <tr>
@@ -30,7 +35,7 @@
         <tbody>
              {% for serie in seriesFollowed %}
                 <tr>
-                    <td>{{ serie.poster }}</td>
+                    <td><img id="posterShow" src='{{ path('app_poster_show', {'id': serie.id }) }}'></td>
                     <td>{{ serie.title }}</td>
                 </tr>
             {% endfor %}
@@ -41,6 +46,8 @@
     <div class="navigation">
         {{ knp_pagination_render(seriesFollowed) }}
     </div>
+
+    <h2> Critic and notes that {{user.name}} has put </h2>
 
     <table class="table">
         <thead>
@@ -54,9 +61,9 @@
         <tbody>
              {% for rating in ratings %}
                 <tr>
-                    <td>{{ rating.series.poster }}</td>
+                    <td><img id="posterShow" src='{{ path('app_poster_show', {'id': rating.series.id }) }}'></td>
                     <td>{{ rating.series.title }}</td>
-                    <td>{{ rating.value }}</td>
+                    <td>{{ (rating.value)/2 }}/5</td>
                     <td>{{ rating.comment }}</td>
                 </tr>
             {% endfor %}
