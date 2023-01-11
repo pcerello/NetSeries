@@ -3,12 +3,17 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Rating;
+use App\Entity\Series;
 use App\Form\UserType;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -18,42 +23,40 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
-        // if the user is not logged in, redirect to the login page
-        if (!$this->getUser()) {
-            return $this->redirectToRoute('app_login');
-        }
         // if the user is logged in and is admin accessed by the isAdmin() method of User.php, show the user list
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        if ($user->isAdmin()) {
-
-            // Récupère le repository des séries
-            $appointmentsRepository = $entityManager->getRepository(User::class);
-
-            // Crée une requête pour sélectionner toutes les séries
-            $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
-                ->getQuery();
-
-            $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                ->orderBy('search.email', 'ASC')
-                ->where('search.email LIKE :search')
-                ->setParameter('search', '%' . $request->query->get('search') . '%')
-                ->getQuery();
-
-            // Pagination des résultats (5 séries par pages maximum)
-            $appointments = $paginator->paginate(
-                $allAppointmentsQuery,
-                $request->query->getInt('page', 1),
-                10
-            );
-
-            return $this->render('user/index.html.twig', [
-                'users' => $appointments,
-            ]);
+        if (!$user){
+            return $this->redirectToRoute('app_login');
         }
+
+        // Récupère le repository des séries
+        $appointmentsRepository = $entityManager->getRepository(User::class);
+
+        // Crée une requête pour sélectionner toutes les séries
+        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
+            ->getQuery();
+
+        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+            ->orderBy('search.email', 'ASC')
+            ->where('search.email LIKE :search')
+            ->setParameter('search', '%' . $request->query->get('search') . '%')
+            ->getQuery();
+
+        // Pagination des résultats (5 séries par pages maximum)
+        $appointments = $paginator->paginate(
+            $allAppointmentsQuery,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        return $this->render('user/index.html.twig', [
+            'users' => $appointments,
+        ]);
+        
         // if the user is logged in but is not admin, redirect to the homepage
-        return $this->redirectToRoute("app_series_index");
+        //return $this->redirectToRoute("app_series_index");
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
@@ -77,10 +80,42 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    public function show(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
+
+
+        $appointmentsQuerySeriesFollowed = $user->getSeries();
+
+        $user = $entityManager->getRepository(User::class)->find($request->get('id'));
+    
+
+
+        $appointmentsQueryRating = $user->getRatings();
+
+        /** @var \App\Entity\Paginator */
+        $appointmentsRatings = $paginator->paginate(
+            $appointmentsQueryRating,
+            $request->query->getInt('ratings_page', 1),
+            2,
+            ['pageParameterName' => 'ratings_page']
+        );
+
+        $appointmentsSeriesFollowed = $paginator->paginate(
+            $appointmentsQuerySeriesFollowed,
+            $request->query->getInt('series_page', 1),
+            2,
+            ['pageParameterName' => 'series_page']
+        );
+
+
+        
+
+            
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
+            'ratings' => $appointmentsRatings,
+            'seriesFollowed' => $appointmentsSeriesFollowed
         ]);
     }
 
@@ -137,6 +172,25 @@ class UserController extends AbstractController
 
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/user/followed/{id}', name: 'app_user_followedSeriesById', methods: ['GET'])]
+    public function followedSerie(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        // if the user is not logged in, redirect to the login page
+        $user = $entityManager->getRepository(User::class)->find($request->get('id'));
+
+        $seriesFollowed = $user->getSeries();
+
+        $seriesFollowedPaginated = $paginator->paginate(
+            $seriesFollowed,
+            $request->query->getInt('page', 1), /*page number*/
+            7 /*limit per page*/
+        );
+        
+        return $this->render('user/followedSeriesForUser.html.twig', [
+            'series' => $seriesFollowedPaginated,
+        ]);
     }
 
     

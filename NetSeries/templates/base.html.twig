@@ -23,11 +23,10 @@
             <div id="buttons">
 
                 {% if app.user %}
-                    {% if app.user.isAdmin() %}
-                        <div class="button">
-                            <a href="{{  path('app_user_index')  }}">User list</a>
-                        </div>
-                    {% endif %}
+                    <div class="button">
+                        <a href="{{  path('app_user_index')  }}">User list</a>
+                    </div>
+                    
 
                     {# On test si un administrateur est en train d'incarner un utilisateur#}
                     {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
