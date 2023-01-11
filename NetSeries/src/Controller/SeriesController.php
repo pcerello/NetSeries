@@ -17,6 +17,7 @@ use Doctrine\Persistence\ManagerRegistry;
 
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Doctrine\ORM\Query\ResultSetMapping;
 
 #[Route('/series')]
 class SeriesController extends AbstractController
@@ -36,10 +37,10 @@ class SeriesController extends AbstractController
         // Récupère le repository des séries
         $appointmentsRepository = $entityManager->getRepository(Series::class);
         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-        ->orderBy('search.title', 'ASC')
-        ->where('search.title LIKE :search')
-        ->setParameter('search', '%' . $request->query->get('search') . '%')
-        ->getQuery();
+            ->orderBy('search.title', 'ASC')
+            ->where('search.title LIKE :search')
+            ->setParameter('search', '%' . $request->query->get('search') . '%')
+            ->getQuery();
         $catvalue = $request->query->get('category');
         switch ($catvalue) {
             case 'title':
@@ -52,14 +53,40 @@ class SeriesController extends AbstractController
             case 'genre':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
                     ->orderBy('search.title', 'ASC')
-                    ->join('search.genre', 'genre')
-                    ->where('search.genre LIKE :search')
+                    ->leftJoin('search.genre', 'g')
+                    ->where('g.name LIKE :search')
+                    ->setParameter('search', '%' . $request->query->get('search') . '%')
+                    ->getQuery();
+                break;
+            case 'date':
+                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+                    ->orderBy('search.title', 'ASC')
+                    ->where('search.yearStart LIKE :search')
+                    ->setParameter('search', '%' . $request->query->get('search') . '%')
+                    ->getQuery();
+                break;
+            case 'actor':
+                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+                    ->orderBy('search.title', 'ASC')
+                    ->leftjoin('search.actor', 'actor')
+                    ->where('actor.name LIKE :search')
+                    ->setParameter('search', '%' . $request->query->get('search') . '%')
+                    ->getQuery();
+                break;
+            case 'note':
+                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+                    ->orderBy('search.title', 'ASC')
+                    ->innerJoin('search.externalRating', 'er')
+                    ->innerJoin('er.source', 'ers')
+                    
+                    ->where('SUBSTRING(er.value, 1, LENGTH(er.value) - 3) LIKE :search')
+                    ->andWhere('ers.id = :sourceId')
+                    ->setParameter('sourceId', 1)
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
                     ->getQuery();
                 break;
         }
 
-        // Crée une requête pour sélectionner toutes les séries
 
 
 
