@@ -11,6 +11,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use VictorPrdh\RecaptchaBundle\Form\ReCaptchaType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -20,6 +21,7 @@ class RegistrationFormType extends AbstractType
             ->add('email', Null, array('label' => false))
             ->add('name', Null, array('label' => false))
             ->add('country', Null, array('label' => false, 'placeholder' => 'Country'))
+            ->add('captcha', ReCaptchaType::class)
             ->add('agreeTerms', CheckboxType::class, [
                 'label' => 'I agree with the terms and conditions',
                 'mapped' => false,
