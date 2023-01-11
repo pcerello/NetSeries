@@ -54,6 +54,9 @@
             {{ form_row(registrationForm.agreeTerms) }}
         </div>
 
+        {{ form_row(registrationForm.captcha) }}
+        {{ form_errors(registrationForm.captcha) }}
+
         <button class="button__auth" type="submit">Create new account</button>
         {{ form_end(registrationForm) }}
 
