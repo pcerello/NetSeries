@@ -192,6 +192,5 @@ class UserController extends AbstractController
             'series' => $seriesFollowedPaginated,
         ]);
     }
-
     
 }

@@ -421,4 +421,20 @@ class Series
         return $this->title;
     }
 
+    public function calculRatingAVG(){
+
+        $total = 0;
+        $count = 0;
+        foreach ($r as $ratings) {
+            $total += $rating->getValue();
+            $count++;
+        }
+
+        if ($count > 0) {
+            $this->averageRating = $total / $count;
+        } else {
+            $this->averageRating = null;
+    }
+    }
+
 }
