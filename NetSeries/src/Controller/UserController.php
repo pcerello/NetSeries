@@ -3,8 +3,12 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Series;
 use App\Form\UserType;
+use App\Form\Rating;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -75,10 +79,15 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user): Response
+    public function show(User $user, EntityManagerInterface $entityManager): Response
     {
+
+
+        $series = $user->getSeries();
+        
         return $this->render('user/show.html.twig', [
             'user' => $user,
+            'series' => $series,
         ]);
     }
 
