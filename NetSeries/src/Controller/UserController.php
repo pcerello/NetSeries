@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Rating;
 use App\Entity\Series;
 use App\Form\UserType;
-use App\Form\Rating;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
@@ -13,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+
 
 use Knp\Component\Pager\PaginatorInterface;
 
@@ -79,15 +80,41 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user, EntityManagerInterface $entityManager): Response
+    public function show(User $user, EntityManagerInterface $em, Request $request): Response
     {
 
 
         $series = $user->getSeries();
+
+        $user = $em->getRepository(User::class)->find($request->get('id'));
         
+        $ratings = $em->getRepository(Rating::class)->findBy(['user' => $user]);
+        
+        $seriesWithRatings = [];
+
+        foreach ($series as $s) {
+            $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $s]);
+
+            if ($rating) {
+                $seriesWithRatings[] = [
+                    'series' => $s,
+                    'rating' => $rating->getValue(),
+                    'critic' => $rating->getComment()
+                ];
+            } else {
+                $seriesWithRatings[] = [
+                    'series' => $s,
+                    'rating' => null,
+                    'critic' => null
+                ];
+            }
+        }
+
+            
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
-            'series' => $series,
+            'seriesWithRatings' => $seriesWithRatings,
         ]);
     }
 

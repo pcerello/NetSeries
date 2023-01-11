@@ -31,10 +31,12 @@
             </tr>
         </thead>
         <tbody>
-            {% for series in series %}
+             {% for serie in seriesWithRatings %}
                 <tr>
-                    <td>{{ series.poster }}</td>
-                    <td>{{ series.title }}</td>
+                    <td>{{ serie.series.poster }}</td>
+                    <td>{{ serie.series.title }}</td>
+                    <td>{{ serie.rating }}</td>
+                    <td>{{ serie.critic }}</td>
                 </tr>
             {% endfor %}
 
