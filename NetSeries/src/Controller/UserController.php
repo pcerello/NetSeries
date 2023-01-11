@@ -22,7 +22,9 @@ class UserController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        
+        if (!$user){
+            return $this->redirectToRoute('app_login');
+        }
 
         // Récupère le repository des séries
         $appointmentsRepository = $entityManager->getRepository(User::class);
