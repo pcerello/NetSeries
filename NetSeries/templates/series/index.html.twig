@@ -15,7 +15,15 @@
 
     {# Barre de recherche #}
     <form action="{{ path('app_series_index') }}" method="get">
-        <input type="text" name="search" placeholder="Rechercher une série">
+        <input type="text" name="search" placeholder="Search a serie">
+        <select name="category">
+            <option value="title">Title</option>
+            <option value="genre">Genre</option>
+            <option value="date">Date</option>
+            <option value="actor">Actor</option>
+            <option value="note">Note</option>
+            </select>
+
         <input type="submit" value="Rechercher">
     </form>
 
