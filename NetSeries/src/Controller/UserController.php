@@ -18,42 +18,38 @@ class UserController extends AbstractController
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
-        // if the user is not logged in, redirect to the login page
-        if (!$this->getUser()) {
-            return $this->redirectToRoute('app_login');
-        }
         // if the user is logged in and is admin accessed by the isAdmin() method of User.php, show the user list
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        if ($user->isAdmin()) {
+        
 
-            // Récupère le repository des séries
-            $appointmentsRepository = $entityManager->getRepository(User::class);
+        // Récupère le repository des séries
+        $appointmentsRepository = $entityManager->getRepository(User::class);
 
-            // Crée une requête pour sélectionner toutes les séries
-            $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
-                ->getQuery();
+        // Crée une requête pour sélectionner toutes les séries
+        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('p')
+            ->getQuery();
 
-            $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                ->orderBy('search.email', 'ASC')
-                ->where('search.email LIKE :search')
-                ->setParameter('search', '%' . $request->query->get('search') . '%')
-                ->getQuery();
+        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+            ->orderBy('search.email', 'ASC')
+            ->where('search.email LIKE :search')
+            ->setParameter('search', '%' . $request->query->get('search') . '%')
+            ->getQuery();
 
-            // Pagination des résultats (5 séries par pages maximum)
-            $appointments = $paginator->paginate(
-                $allAppointmentsQuery,
-                $request->query->getInt('page', 1),
-                10
-            );
+        // Pagination des résultats (5 séries par pages maximum)
+        $appointments = $paginator->paginate(
+            $allAppointmentsQuery,
+            $request->query->getInt('page', 1),
+            10
+        );
 
-            return $this->render('user/index.html.twig', [
-                'users' => $appointments,
-            ]);
-        }
+        return $this->render('user/index.html.twig', [
+            'users' => $appointments,
+        ]);
+        
         // if the user is logged in but is not admin, redirect to the homepage
-        return $this->redirectToRoute("app_series_index");
+        //return $this->redirectToRoute("app_series_index");
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]

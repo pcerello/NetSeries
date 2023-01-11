@@ -10,35 +10,45 @@ block body %}
 <table class="table">
   <thead>
     <tr>
-      <th>Id</th>
       <th>Name</th>
       <th>Email</th>
-      <th>Registration Date</th>
-      <th>Admin</th>
-      <th>Country</th>
+      {% if app.user.isAdmin() %}
+        <th>Registration Date</th>
+        <th>Admin</th>
+        <th>Country</th>
+      {% endif %}
       <th>actions</th>
+
     </tr>
   </thead>
   <tbody>
     {% for user in users %}
     <tr>
-      <td>{{ user.id }}</td>
       <td>{{ user.name }}</td>
       <td>{{ user.email }}</td>
-      <td>
-        {{ user.registerDate ? user.registerDate|date('Y-m-d H:i:s') : '' }}
-      </td>
-      <td>{{ user.admin ? "Oui" : "Non" }}</td>
-      <td>{{ user.country }}</td>
-      <td>
-        <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate</a>
-        {% if user.admin == false %}
-        <a href="user/promote/{{ user.id }}">Promote</a>
-        {% else %}
-        <a href="user/demote/{{ user.id }}">Demote</a>
-        {% endif %}
+      
+      {% if app.user.isAdmin() %}
+        <td>
+          {{ user.registerDate ? user.registerDate|date('Y-m-d H:i:s') : '' }}
+        </td>
+        <td>{{ user.admin ? "Oui" : "Non" }}</td>
+        <td>{{ user.country }}</td>
 
-      </td>
+      {% endif %}
+        <td>
+          {% if app.user.isAdmin() %}
+            <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate</a>
+            {% if user.admin == false %}
+              <a href="user/promote/{{ user.id }}">Promote</a>
+            {% else %}
+              <a href="user/demote/{{ user.id }}">Demote</a>
+            {% endif %}
+        {% endif %}
+        
+          <a href="">see this user's profile</a>
+
+        </td>
+      
     </tr>
     {% else %}
     <tr>
