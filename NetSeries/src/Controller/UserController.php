@@ -92,17 +92,19 @@ class UserController extends AbstractController
 
         $appointmentsQueryRating = $user->getRatings();
 
-        
+        /** @var \App\Entity\Paginator */
         $appointmentsRatings = $paginator->paginate(
             $appointmentsQueryRating,
             $request->query->getInt('ratings_page', 1),
-            2
+            2,
+            ['pageParameterName' => 'ratings_page']
         );
 
         $appointmentsSeriesFollowed = $paginator->paginate(
             $appointmentsQuerySeriesFollowed,
             $request->query->getInt('series_page', 1),
-            2
+            2,
+            ['pageParameterName' => 'series_page']
         );
 
 
