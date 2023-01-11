@@ -3,3 +3,8 @@ controllers:
         path: ../src/Controller/
         namespace: App\Controller
     type: attribute
+
+generate_users:
+  path: /user/generate_users
+  controller: App\Controller\UserController::generateAndInsertUsers
+  methods: ['POST']

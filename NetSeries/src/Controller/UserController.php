@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Country;
 use App\Entity\Rating;
 use App\Entity\Series;
 use App\Form\UserType;
@@ -13,6 +14,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Faker\Factory as Faker;
 
 
 use Knp\Component\Pager\PaginatorInterface;
@@ -20,6 +22,15 @@ use Knp\Component\Pager\PaginatorInterface;
 #[Route('/user')]
 class UserController extends AbstractController
 {
+
+    /** @var EntityManagerInterface */
+    private $entityManager;
+
+    public function __construct(EntityManagerInterface $entityManager)
+    {
+        $this->entityManager = $entityManager;
+    }
+
     #[Route('/', name: 'app_user_index', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
@@ -148,7 +159,7 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/user/promote/{id}', name: 'app_user_promote', methods: ['GET'])]
+    #[Route('/promote/{id}', name: 'app_user_promote', methods: ['GET'])]
     public function promote(User $user, EntityManagerInterface $entityManager): Response
     {
         # Met la variable admin à vrai pour que l'utilisateur soit un admin
@@ -161,7 +172,7 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/user/demote/{id}', name: 'app_user_demote', methods: ['GET'])]
+    #[Route('/demote/{id}', name: 'app_user_demote', methods: ['GET'])]
     public function demote(User $user, EntityManagerInterface $entityManager): Response
     {
         # Met la variable admin à faux pour que l'utilisateur soit plus un admin
@@ -174,7 +185,7 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/user/followed/{id}', name: 'app_user_followedSeriesById', methods: ['GET'])]
+    #[Route('/followed/{id}', name: 'app_user_followedSeriesById', methods: ['GET'])]
     public function followedSerie(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
         // if the user is not logged in, redirect to the login page
@@ -193,5 +204,30 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/generate/{id}', name:'generate', methods: ['GET'])]
+    public function generateAndInsertUsers(User $user, EntityManagerInterface $entityManager, Request $request) : Response
+    {
+
+        $countries = $this->entityManager->getRepository(Country::class)->findAll();
+        shuffle($countries);
+        $randomCountry = array_pop($countries);
+
+        $faker = Faker::create();
+        for ($i = 0; $i < 3; $i++) {
+            $user = new User();
+            $user->setName($faker->unique()->userName);
+            $user->setEmail($faker->unique()->email);
+            $user->setPassword(password_hash($faker->password(), PASSWORD_DEFAULT));
+            $user->setCountry($randomCountry);
+
+            // persist the user
+            $this->entityManager->persist($user);
+        }
+
+        // flush all persisted users
+        $this->entityManager->flush();
+
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
     
 }
