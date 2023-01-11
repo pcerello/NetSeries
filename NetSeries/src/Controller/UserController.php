@@ -80,41 +80,40 @@ class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $user, EntityManagerInterface $em, Request $request): Response
+    public function show(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
 
 
-        $series = $user->getSeries();
+        $appointmentsQuerySeriesFollowed = $user->getSeries();
 
-        $user = $em->getRepository(User::class)->find($request->get('id'));
+        $user = $entityManager->getRepository(User::class)->find($request->get('id'));
+    
+
+
+        $appointmentsQueryRating = $user->getRatings();
+
         
-        $ratings = $em->getRepository(Rating::class)->findBy(['user' => $user]);
+        $appointmentsRatings = $paginator->paginate(
+            $appointmentsQueryRating,
+            $request->query->getInt('ratings_page', 1),
+            2
+        );
+
+        $appointmentsSeriesFollowed = $paginator->paginate(
+            $appointmentsQuerySeriesFollowed,
+            $request->query->getInt('series_page', 1),
+            2
+        );
+
+
         
-        $seriesWithRatings = [];
-
-        foreach ($series as $s) {
-            $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $s]);
-
-            if ($rating) {
-                $seriesWithRatings[] = [
-                    'series' => $s,
-                    'rating' => $rating->getValue(),
-                    'critic' => $rating->getComment()
-                ];
-            } else {
-                $seriesWithRatings[] = [
-                    'series' => $s,
-                    'rating' => null,
-                    'critic' => null
-                ];
-            }
-        }
 
             
 
         return $this->render('user/show.html.twig', [
             'user' => $user,
-            'seriesWithRatings' => $seriesWithRatings,
+            'ratings' => $appointmentsRatings,
+            'seriesFollowed' => $appointmentsSeriesFollowed
         ]);
     }
 
@@ -171,6 +170,25 @@ class UserController extends AbstractController
 
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/user/followed/{id}', name: 'app_user_followedSeriesById', methods: ['GET'])]
+    public function followedSerie(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        // if the user is not logged in, redirect to the login page
+        $user = $entityManager->getRepository(User::class)->find($request->get('id'));
+
+        $seriesFollowed = $user->getSeries();
+
+        $seriesFollowedPaginated = $paginator->paginate(
+            $seriesFollowed,
+            $request->query->getInt('page', 1), /*page number*/
+            7 /*limit per page*/
+        );
+        
+        return $this->render('user/followedSeriesForUser.html.twig', [
+            'series' => $seriesFollowedPaginated,
+        ]);
     }
 
     

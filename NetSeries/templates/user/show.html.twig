@@ -20,6 +20,27 @@
     </table>
 
     <h2> Sa liste de séries qui regarde </h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Postere</th>
+                <th>Title</th>
+            </tr>
+        </thead>
+        <tbody>
+             {% for serie in seriesFollowed %}
+                <tr>
+                    <td>{{ serie.poster }}</td>
+                    <td>{{ serie.title }}</td>
+                </tr>
+            {% endfor %}
+
+        </tbody>
+    </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(seriesFollowed) }}
+    </div>
 
     <table class="table">
         <thead>
@@ -31,18 +52,21 @@
             </tr>
         </thead>
         <tbody>
-             {% for serie in seriesWithRatings %}
+             {% for rating in ratings %}
                 <tr>
-                    <td>{{ serie.series.poster }}</td>
-                    <td>{{ serie.series.title }}</td>
-                    <td>{{ serie.rating }}</td>
-                    <td>{{ serie.critic }}</td>
+                    <td>{{ rating.series.poster }}</td>
+                    <td>{{ rating.series.title }}</td>
+                    <td>{{ rating.value }}</td>
+                    <td>{{ rating.comment }}</td>
                 </tr>
             {% endfor %}
 
         </tbody>
     </table>
 
+    <div class="navigation">
+        {{ knp_pagination_render(ratings) }}
+    </div>
 
     <a href="{{ path('app_user_index') }}">back to list</a>
 {% endblock %}
