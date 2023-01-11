@@ -75,7 +75,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     /**
      * @var \Country|null
      *
-     * @ORM\ManyToOne(targetEntity="Country")
+     * @ORM\ManyToOne(targetEntity="Country", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="country_id", referencedColumnName="id")
      * })

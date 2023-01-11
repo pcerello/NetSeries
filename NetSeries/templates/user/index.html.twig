@@ -59,7 +59,7 @@ block body %}
 </table>
 
 
-<a href="{{ path('generate', {'id': app.user.id}) }}">Générer les utilisateurs</a>
+
 
 {# Permet de mettre en place la pagination des utilisateurs #}
 <div class="navigation">
@@ -67,6 +67,11 @@ block body %}
 </div>
 
 
+{% if app.user %}
+  {% if app.user.isAdmin() %}
+    <a href="{{ path('generate', {'id': app.user.id}) }}">Générer 500 utilisateurs</a>
+  {% endif %}
+{% endif %}
 
 {% endblock %} {% block stylesheets %}
 {{ parent() }}
