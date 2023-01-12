@@ -36,36 +36,43 @@ class SeriesController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
 
+        // Vérifie si le paramètre de requête "order" est défini sur "ASC" ou "DESC"
         if ($request->query->get('order') == 'ASC') {
             $AscOrDesc = "ASC";
         } else {
             $AscOrDesc = "DESC";
         }
 
+        // On récupère les séries d'après les trier de l'utilisateur
         $qb = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
 
+        // Vérifie si il y a une recherche (barre de recherche) qui a était donnée
         if ($search = $request->query->get('search')) {
             $qb->andWhere('s.title LIKE :search')
             ->setParameter('search', '%' . $search . '%');
         }
 
+        // Vérifie si il y a un genre qui a était donnée
         if ($genreName = $request->query->get('genres')) {
             $qb->leftJoin('s.genre', 'g')
             ->andWhere('g.name = :genres')
             ->setParameter('genres', $genreName);
         }
 
+        // Vérifie si il y a une date qui a était donnée
         if ($date = $request->query->get('date')) {
             $qb->andWhere('s.yearStart = :date')
             ->setParameter('date', $date);
         }
 
+        // Vérifie si il y a un acteur qui a était donnée
         if ($actor = $request->query->get('actor')) {
             $qb->leftJoin('s.actor', 'a')
             ->andWhere('a.name LIKE :actor')
             ->setParameter('actor', '%' . $actor . '%');
         }
 
+        // Vérifie si il y a une note minimale qui a était donnée
         if ($minnote = $request->query->get('minnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
                 ->select('AVG(r.value/2)')
@@ -76,6 +83,7 @@ class SeriesController extends AbstractController
             ->setParameter('minnote', $minnote);
         }
 
+        // Vérifie si il y a une note maximale qui a était donnée
         if ($maxnote = $request->query->get('maxnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('m')
                 ->select('AVG(m.value/2)')
@@ -86,16 +94,17 @@ class SeriesController extends AbstractController
             ->setParameter('maxnote', $maxnote);
         }
 
-        
-
+        //On trie les séries par l'ordre choisis par l'utilisateur
         $qb->orderBy('s.title', $AscOrDesc);
 
+        // Pagination des séries sur la requete faite
         $series = $paginator->paginate(
             $qb->getQuery(),
             $request->query->getInt('page', 1),
             12
         );
 
+        // Récupération de tous les genres
         $genres = $entityManager->getRepository(\App\Entity\Genre::class)->findAll();
 
         return $this->render('series/index.html.twig', [
@@ -128,32 +137,35 @@ class SeriesController extends AbstractController
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
     public function show(Series $series, EntityManagerInterface $em, Request $request, PaginatorInterface $paginator): Response
     {
+        // Récupère tout les saisons d'une série
         $seasons = $series->getSeasons();
         $episodesBySeason = [];
 
+        // Récupère l'utilisateur courant
         $user = $this->getUser(); // Récupérer l'utilisateur courant
+
+        // Récupère la série via l'id passé en paramètre de la requête
         $series = $em->getRepository(Series::class)->find($request->get('id'));
+
+        // Récupère la note de l'utilisateur courant pour cette série
         $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+        
+        // Récupère toutes les notes pour cette série
         $ratings = $em->getRepository(Rating::class)->findOneBy(['series' => $rating]);
 
+        // Vérifie si l'utilisateur courant a noté cette série
         if ($rating) {
             $userHasRated = true;
-            /*$allAppointmentsQuery = $ratings->createQueryBuilder('p')->getQuery();
-            $appointmentsRatings = $paginator->paginate(
-                $allAppointmentsQuery,
-                $request->query->getInt('page', 1),
-                10
-            );*/
         } else {
             $userHasRated = false;
-            //$appointmentsRatings = null;
         }
 
+        // Récupère tous les épisodes de chaque saison
         foreach ($seasons as $season) {
             $episodesBySeason[$season->getNumber()] = $this->episodeRepository->findBySeason($season->getId());
         }
 
-
+        // Compte le nombre de notes entre 0 et 1, entre 1 et 2, entre 2 et 3, entre 3 et 4, entre 4 et 5
         $ratingsBetween0And1 = $series->getRatings()->filter(function(Rating $rating) {
             $halfValue = $rating->getValue() / 2;
             return $halfValue >= 0 && $halfValue < 1;
@@ -179,7 +191,7 @@ class SeriesController extends AbstractController
             return $halfValue  >= 4 && $halfValue <= 5;
         })->count();
 
-
+        // Retourne les détails de la série, les épisodes par saison, si l'utilisateur a noté la série, et les statistiques de notes
         return $this->render('series/show.html.twig', [
             'series' => $series,
             'episodesBySeason' => $episodesBySeason,
