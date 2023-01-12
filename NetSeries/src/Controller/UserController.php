@@ -193,6 +193,8 @@ class UserController extends AbstractController
         return $this->render('user/followedSeriesForUser.html.twig', [
             'series' => $seriesFollowedPaginated,
         ]);
+
+        
     }
 
     #[Route('/generate/{id}', name:'generate', methods: ['POST'])]

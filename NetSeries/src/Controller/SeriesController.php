@@ -37,8 +37,11 @@ class SeriesController extends AbstractController
     {
         // Récupère le repository des séries
         $appointmentsRepository = $entityManager->getRepository(Series::class);
+
+        $ascOrDesc = 'DESC';
+
         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-            ->orderBy('search.title', 'ASC')
+            ->orderBy('search.title', $ascOrDesc)
             ->where('search.title LIKE :search')
             ->setParameter('search', '%' . $request->query->get('search') . '%')
             ->getQuery();
@@ -46,14 +49,14 @@ class SeriesController extends AbstractController
         switch ($catvalue) {
             case 'title':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->where('search.title LIKE :search')
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
                     ->getQuery();
                 break;
             case 'genre':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->leftJoin('search.genre', 'g')
                     ->where('g.name LIKE :search')
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
@@ -61,14 +64,14 @@ class SeriesController extends AbstractController
                 break;
             case 'date':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->where('search.yearStart LIKE :search')
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
                     ->getQuery();
                 break;
             case 'actor':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->leftjoin('search.actor', 'actor')
                     ->where('actor.name LIKE :search')
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
@@ -76,7 +79,7 @@ class SeriesController extends AbstractController
                 break;
             case 'note':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->innerJoin('search.externalRating', 'er')
                     ->innerJoin('er.source', 'ers')
                     
