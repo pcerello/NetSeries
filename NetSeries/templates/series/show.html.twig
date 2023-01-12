@@ -111,18 +111,21 @@
 
     {% endfor %}
 
-    <a class="back" href="">0-1 stars</a>
-    <a class="back" href="">1-2 stars</a>
-    <a class="back" href="">2-3 stars</a>
-    <a class="back" href="">3-4 stars</a>
-    <a class="back" href="">4-5 stars</a>
+    <div class="trancheNote">
+        <a class="back" href=""> 0-1 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween0And1}} avi(s) </a> 
+        <a class="back" href=""> 1-2 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween1And2}} avi(s) </a>
+        <a class="back" href=""> 2-3 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween2And3}} avi(s) </a>
+        <a class="back" href=""> 3-4 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween3And4}} avi(s) </a>
+        <a class="back" href=""> 4-5 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween4And5}} avi(s) </a>
+    </div>
     
+
 
 
     {# Permet de revenir à la page où il y a toute les séries #}
     <a class="back" href="{{ path('app_series_index') }}">⟵</a>{% endblock %}
 
-
+    
 
 
 {% block stylesheets %}
