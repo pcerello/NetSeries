@@ -25,12 +25,6 @@
 
 
                 {% if app.user %}
-<<<<<<< HEAD
-                    <div class="button">
-                        <a href="{{  path('app_user_index')  }}">User list</a>
-                    </div>
-                    
-=======
                     <a class="button square profile" data-tooltip="My profile">
                         <div class="user__profile">
                             <img class="" src="{{ asset('images/icons/user-profile.svg') }}">
@@ -42,7 +36,6 @@
                             <a href="{{  path('app_user_index')  }}"><img src="{{ asset('images/icons/users-list.svg') }}"></a>
                         </div>
                     {% endif %}
->>>>>>> raph-frontend4
 
                     {# On test si un administrateur est en train d'incarner un utilisateur #}
                     {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
