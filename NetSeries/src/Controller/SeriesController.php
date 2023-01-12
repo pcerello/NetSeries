@@ -88,9 +88,6 @@ class SeriesController extends AbstractController
                 break;
         }
 
-
-
-
         // Pagination des résultats (5 séries par pages maximum)
         $appointments = $paginator->paginate(
             $allAppointmentsQuery,
@@ -133,6 +130,7 @@ class SeriesController extends AbstractController
         $user = $this->getUser(); // Récupérer l'utilisateur courant
         $series = $em->getRepository(Series::class)->find($request->get('id'));
         $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
+        $ratings = $em->getRepository(Rating::class)->findOneBy(['series' => $rating]);
 
         if ($rating) {
             $userHasRated = true;
@@ -148,6 +146,7 @@ class SeriesController extends AbstractController
             'series' => $series,
             'episodesBySeason' => $episodesBySeason,
             'userHasRated' => $userHasRated,
+            'ratings' => $ratings,
         ]);
     }
 

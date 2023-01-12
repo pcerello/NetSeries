@@ -51,6 +51,8 @@ class RatingController extends AbstractController
             return $this->redirectToRoute('app_rating_index', [], Response::HTTP_SEE_OTHER);
         }
 
+        $series->addRating($rating);
+
         return $this->renderForm('rating/new.html.twig', [
             'rating' => $rating,
             'form' => $form,

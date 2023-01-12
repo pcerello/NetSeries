@@ -88,6 +88,12 @@
         {% endif %}
     {% endif %}
 
+    {% for r in series.ratings %}
+        {{ r.comment }}
+        {{ (r.value)/2 }}
+
+    {% endfor %}
+
     {# Permet de revenir à la page où il y a toute les séries #}
     <a href="{{ path('app_series_index') }}">back to list</a>
 {% endblock %}
