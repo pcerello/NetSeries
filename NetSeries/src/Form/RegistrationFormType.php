@@ -11,13 +11,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class RegistrationFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', Null, array('label' => false))
+            ->add('email', Null, array('label' => false, 'constraints' => [
+                new Assert\Email()
+            ]))
             ->add('name', Null, array('label' => false))
             ->add('country', Null, array('label' => false, 'placeholder' => 'Country'))
             ->add('agreeTerms', CheckboxType::class, [

@@ -38,7 +38,6 @@ body {
 #menu a {
     text-decoration: none;
     color: black;
-    font-size: 14px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -57,9 +56,9 @@ body {
 }
   
 .button {
-    height: 2rem;
+    height: 1.8rem;
     width: 8rem;
-    margin: 0 1.5rem;
+    margin: 0 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -69,9 +68,13 @@ body {
 .button.square {
     background: #FFFFFF;
     border-radius: 15px;
-    width: 2.5em;
-    height: 2.5em;
+    width: 2.4em;
+    height: 2.4em;
     filter: drop-shadow(0px 2px 5px rgba(0, 0, 0, 0.25));
+}
+
+.button.square.profile {
+    width: 8em;
 }
 
 .button.square img {
@@ -79,9 +82,13 @@ body {
     height: 25px;
 }
 
+.button.square .user__profile img {
+    width: 25px;
+    height: 25px;
+    margin-top: 10px;
+}
+
 .user__profile img {
-    width: 30px;
-    height: 30px;
     margin-top: 10px;
 }
 
@@ -93,8 +100,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 2.5em;
-    height: 2.5em;
+    width: 2em;
+    height: 2em;
     border-radius: 100%;
     background: white;
 }
@@ -129,3 +136,38 @@ body {
         flex-direction: column;
     }
 }
+
+[data-tooltip]:before {            
+    position : absolute;
+    content : attr(data-tooltip);
+    top: 125%;
+    opacity: 0;
+    background-color: white;
+    padding: 5px 10px;
+    border-radius: 10px;
+    transition: all 0.15s ease;
+    box-shadow: 2px 2px 1px silver;
+    width: 150%;
+    left: -25%;
+}
+
+[data-tooltip]:hover:before {        
+    opacity : 0.9;
+}
+
+[data-tooltip]:hover:after {        
+    opacity : 0.9;
+}
+
+[data-tooltip]:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    opacity: 0;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent white transparent;
+    transition: all 0.15s ease;
+  }

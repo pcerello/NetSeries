@@ -27,14 +27,14 @@ block body %}
       <td>
         {{ user.registerDate ? user.registerDate|date('Y-m-d H:i:s') : '' }}
       </td>
-      <td>{{ user.admin ? "Oui" : "Non" }}</td>
+      <td>{{ user.admin ? "✅" : "❌" }}</td>
       <td>{{ user.country }}</td>
       <td>
-        <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate</a>
+        <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate 👤</a>
         {% if user.admin == false %}
-        <a href="user/promote/{{ user.id }}">Promote</a>
+        <a href="user/promote/{{ user.id }}">Promote ⬆</a>
         {% else %}
-        <a href="user/demote/{{ user.id }}">Demote</a>
+        <a href="user/demote/{{ user.id }}">Demote ⬇</a>
         {% endif %}
 
       </td>

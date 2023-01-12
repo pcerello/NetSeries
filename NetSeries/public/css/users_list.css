@@ -23,6 +23,14 @@ tr > * {
     border-bottom: 0;
 }
 
+.table>thead>tr {
+    margin-bottom: 0;
+}
+
+td a {
+    margin-right: 10px;
+}
+
 .table * {
     border: 0;
 }
@@ -30,6 +38,13 @@ tr > * {
 
 .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
     border: 0;
+}
+
+form {
+    width: 30%;
+    margin: 0 20px;
+    display: flex;
+    justify-content: flex-start;
 }
 
 input[name="search"] {
@@ -42,3 +57,6 @@ input[name="search"] {
     border-radius: 10px;
 }
 
+h1 {
+    margin: 10px 20px;
+}

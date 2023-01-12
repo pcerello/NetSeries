@@ -23,42 +23,43 @@
 
             <div id="buttons">
 
+
                 {% if app.user %}
-                    {% if app.user.isAdmin() %}
-                        <div class="button square">
-                            <a href="{{  path('app_user_index')  }}"><img src="{{ asset('images/icons/users-list.svg') }}"></a>
-                        </div>
-                    {% endif %}
-
-                    {# On test si un administrateur est en train d'incarner un utilisateur#}
-                    {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
-                        {# On affiche qui il incarne #}
-                        <p>I incarnate : {{ app.user.email }}</p>
-
-                        {# On ajoute le bouton 'désincarner' pour se désincarné d'un utilisateur #}
-                        <div class="button">
-                            <a class="dropdown-item" href="{{ path('app_user_index', {'_switch_user': '_exit'}) }}">Désincarner</a> 
-                        </div>
-                    {% endif %}
-                    
-                    
-                    <a>
+                    <a class="button square profile" data-tooltip="My profile">
                         <div class="user__profile">
                             <img class="" src="{{ asset('images/icons/user-profile.svg') }}">
                         </div>
                         {{ app.user.name }}
                     </a>
+                    {% if app.user.isAdmin() %}
+                        <div class="button square"  data-tooltip="List of all users">
+                            <a href="{{  path('app_user_index')  }}"><img src="{{ asset('images/icons/users-list.svg') }}"></a>
+                        </div>
+                    {% endif %}
+
+                    {# On test si un administrateur est en train d'incarner un utilisateur #}
+                    {% if is_granted('ROLE_PREVIOUS_ADMIN') %}
+                        {# On affiche qui il incarne #}
+                        <div class="button square profile" data-tooltip="I incarnate {{ app.user.email }}">I'm {{ app.user.email }}</div>
+
+                        {# On ajoute le bouton 'désincarner' pour se désincarner d'un utilisateur #}
+                        <div class="button square">
+                            <a href="{{ path('app_user_index', {'_switch_user': '_exit'}) }}"  data-tooltip="Return to my account"><img src="{{ asset('images/icons/desincarnate.svg') }}"></a> 
+                        </div>
+                    {% endif %}
+                    
+                    
                     <div class="button square">
-                        <a href="{{  path('app_logout')  }}"><img src="{{ asset('images/icons/logout.svg') }}"></a>
+                        <a href="{{  path('app_logout')  }}" data-tooltip="Logout"><img src="{{ asset('images/icons/logout.svg') }}"></a>
                     </div>
 
                     {% else %}
                     <div class="button">
-                        <a href="{{  path('app_login')  }}">Login</a>
+                        <a href="{{  path('app_login')  }}" data-tooltip="Login">Login</a>
                     </div>
 
                     <div class="button" id="signUp">
-                        <a href="{{  path('app_register')  }}">Sign up now !</a>
+                        <a href="{{  path('app_register')  }}" data-tooltip="Signup">Sign up now !</a>
                     </div>
                 {% endif %}
             </div>
