@@ -42,7 +42,7 @@ class SeriesController extends AbstractController
             ->where('search.title LIKE :search')
             ->setParameter('search', '%' . $request->query->get('search') . '%')
             ->getQuery();
-<<<<<<< HEAD
+            
         $catvalue = $request->query->get('category');
         switch ($catvalue) {
             case 'title':
@@ -88,8 +88,6 @@ class SeriesController extends AbstractController
                     ->getQuery();
                 break;
         }
-=======
->>>>>>> raph-frontend4
 
         // Pagination des résultats (5 séries par pages maximum)
         $appointments = $paginator->paginate(
