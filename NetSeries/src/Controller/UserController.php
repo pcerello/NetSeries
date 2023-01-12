@@ -93,12 +93,16 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
+        // Récupère les séries suivies par l'utilisateur
         $appointmentsQuerySeriesFollowed = $user->getSeries();
 
+        // Récupère l'utilisateur via son ID passé à l'URL
         $user = $entityManager->getRepository(User::class)->find($request->get('id'));
     
+        // Récupère les notes de l'utilisateur
         $appointmentsQueryRating = $user->getRatings();
 
+        // Pagination des notes et critique de l'utilisateur
         /** @var \App\Entity\Paginator */
         $appointmentsRatings = $paginator->paginate(
             $appointmentsQueryRating,
@@ -107,6 +111,7 @@ class UserController extends AbstractController
             ['pageParameterName' => 'ratings_page']
         );
 
+        // Pagination des séries suivies par l'utilisateur
         $appointmentsSeriesFollowed = $paginator->paginate(
             $appointmentsQuerySeriesFollowed,
             $request->query->getInt('series_page', 1),
@@ -114,6 +119,7 @@ class UserController extends AbstractController
             ['pageParameterName' => 'series_page']
         );
 
+        // Retourne les détails de l'utilisateur, les notes qu'il a données et les séries qu'il suit
         return $this->render('user/show.html.twig', [
             'user' => $user,
             'ratings' => $appointmentsRatings,
@@ -198,25 +204,41 @@ class UserController extends AbstractController
     }
 
     #[Route('/generate/{id}', name:'generate', methods: ['POST'])]
-    public function generateAndInsertUsers(User $user, EntityManagerInterface $entityManager, Request $request) : Response
+    public function generateAndInsertUsers(User $user, Request $request) : Response
     {
+        // Récupère le nombre d'utilisateurs à générer
         $user_count = $request->request->get('user_count');
 
-
+        // Initialise Faker pour pouvoir faire des comptes cohérent
         $faker = Faker::create();
+
+        // Taille du lot pour l'insertion en base de données pour une meilleur optimisation
         $batchSize = 20;
+
+        // Récupère tous les pays
         $countries = $this->entityManager->getRepository(Country::class)->findAll();
+        
+        // Mélange les pays
         shuffle($countries);
+
+        // Sélectionne un pays aléatoire
         $randomCountry = array_pop($countries);
+
+        // Un même mot de passe pour tous les utilisateurs
         $passwordAllUser = password_hash($faker->password(), PASSWORD_DEFAULT);
 
-        
+        // Boucle pour générer un nombre d'utilisateurs
         for ($i = 0; $i < $user_count; $i++) {
             $user = new User();
+            // Génère un nom d'utilisateur unique
             $user->setName($faker->unique()->userName);
+            // Génère un email unique
             $user->setEmail($faker->unique()->email);
+            // Ajoute le mot de passe à l'utilisateur
             $user->setPassword($passwordAllUser);
+            // Ajoute le pays aléatoire à l'utilisateur
             $user->setCountry($randomCountry);
+            // Persiste l'utilisateur
             $this->entityManager->persist($user);
             if (($i % $batchSize) === 0) {
                 $this->entityManager->flush();
@@ -224,10 +246,11 @@ class UserController extends AbstractController
             }
         }
 
-        // flush all persisted users
+        // mise à jour de la base de données
         $this->entityManager->flush();
         $this->entityManager->clear();
 
+        // redirige vers la page d'index des utilisateurs
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
     
