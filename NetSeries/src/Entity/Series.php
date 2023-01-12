@@ -128,14 +128,14 @@ class Series
      *
      * @ORM\OneToOne(targetEntity="ExternalRating", mappedBy="series")
      */
-    private $externalRating;
+    private $externalRating = array();
 
      /**
      * @var \Rating|null
      *
      * @ORM\OneToMany(targetEntity="Rating", mappedBy="series")
      */
-    private $ratings;
+    private $ratings = array();
 
     /**
      * Constructor
@@ -429,21 +429,27 @@ class Series
         return $this->title;
     }
 
-    public function calculRatingAVG(){
-
-        $total = 0;
+    public function getAverageRating()
+    {
+        $averageRating = 0;
         $count = 0;
-        foreach ($r as $ratings) {
+        $total = 0;
+        foreach ($this->getRatings() as $rating) {
             $total += $rating->getValue();
             $count++;
         }
 
         if ($count > 0) {
-            $this->averageRating = $total / $count;
+            $averageRating = $total / $count;
         } else {
-            $this->averageRating = null;
+            $averageRating = null;
         }
+        $averageRating = $averageRating/2;
+        $averageRating = round($averageRating * 2) / 2;
+        return $averageRating;
     }
+
+    
 
     /**
      * @return Collection<int, Rating>
