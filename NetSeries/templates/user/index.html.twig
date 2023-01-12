@@ -3,8 +3,12 @@ block body %}
 <h1>Search an existing user</h1>
 
 <form action="{{ path('app_user_index') }}" method="get">
+<<<<<<< HEAD
     <input type="text" name="search" placeholder="Find a user">
     <input type="submit" value="To research">
+=======
+    <input type="text" name="search" placeholder="Search user account...">
+>>>>>>> raph-frontend4
 </form>
 
 <table class="table">
@@ -26,6 +30,7 @@ block body %}
     <tr>
       <td>{{ user.name }}</td>
       <td>{{ user.email }}</td>
+<<<<<<< HEAD
       
       {% if app.user.isAdmin() %}
         <td>
@@ -33,6 +38,20 @@ block body %}
         </td>
         <td>{{ user.admin ? "Oui" : "Non" }}</td>
         <td>{{ user.country }}</td>
+=======
+      <td>
+        {{ user.registerDate ? user.registerDate|date('Y-m-d H:i:s') : '' }}
+      </td>
+      <td>{{ user.admin ? "✅" : "❌" }}</td>
+      <td>{{ user.country }}</td>
+      <td>
+        <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate 👤</a>
+        {% if user.admin == false %}
+        <a href="user/promote/{{ user.id }}">Promote ⬆</a>
+        {% else %}
+        <a href="user/demote/{{ user.id }}">Demote ⬇</a>
+        {% endif %}
+>>>>>>> raph-frontend4
 
       {% endif %}
         <td>
@@ -85,4 +104,7 @@ block body %}
   rel="stylesheet"
   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 />
+<link
+  rel="stylesheet"
+  href="{{ asset('css/users_list.css') }}">
 {% endblock %}

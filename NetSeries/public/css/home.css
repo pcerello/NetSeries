@@ -205,6 +205,13 @@ div.description img {
     width: 15px;
 }
 
+div.description {
+    overflow: hidden; /* or scroll or anything other than `visible` */
+    text-overflow: "...";
+    display: block;
+    white-space:nowrap
+}
+
 div.search_section input[name="search"] {
     background: url(../images/icons/search.svg) #FFFFFF no-repeat scroll 14px;
     margin: 30px 0px;
@@ -214,6 +221,11 @@ div.search_section input[name="search"] {
     border: 0.5px solid #909090;
     border-radius: 10px;
 }
+
+a.series:hover > .description > :first-child {                /* modèle de boîte en ligne */
+    padding-right: 100%;                   /* un peu d'espace pour la transition */                   /* placement à droite du conteneur */                  /* pas de passage à la ligne */
+    animation: defilement-rtl 2s infinite linear;
+  }
  
 /* Big screen devices (889px and above) */
 @media only screen and (max-width: 1100px) {
@@ -245,16 +257,6 @@ div.search_section input[name="search"] {
 
     div.buttons {
         width: 80%;
-    }
-
-    div.search_section input[name="search"] {
-        background: url(../images/icons/search.svg) #FFFFFF no-repeat scroll 14px;
-        margin: 40px 0px;
-        padding-left: 50px;
-        width: 100%;
-        height: 30px;
-        border: 0.5px solid #909090;
-        border-radius: 10px;
     }
 }
 @media only screen and (max-width: 1300px) {
@@ -303,14 +305,13 @@ div.search_section input[name="search"] {
         margin: 0 5px;
         margin-bottom: 5px;
     }
-
-    div.search_section input[name="search"] {
-        background: url(../images/icons/search.svg) #FFFFFF no-repeat scroll 14px;
-        margin: 40px 0px;
-        padding-left: 50px;
-        width: 100%;
-        height: 30px;
-        border: 0.5px solid #909090;
-        border-radius: 10px;
-    }
 }
+
+@keyframes defilement-rtl {
+    0% {
+      transform: translate3d(0,0,0);      /* position initiale à droite */
+    }
+    100% {
+      transform: translate3d(-50%,0,0);  /* position finale à gauche */
+    }
+  }

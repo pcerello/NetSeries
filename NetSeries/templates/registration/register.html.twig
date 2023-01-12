@@ -2,6 +2,11 @@
 
 {% block title %}NetSeries | Register{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
 <form method="post">
     <a href="{{ path('app_home') }}"class="logo">
@@ -17,7 +22,8 @@
         {{ form_row(registrationForm.name , {
             attr: {
                 placeholder: 'Name',
-                class: 'form-control'
+                class: 'form-control',
+
             }
         }) }}
         </div>
@@ -26,7 +32,9 @@
         {{ form_row(registrationForm.email, {
             attr: {
                 placeholder: 'Email',
-                class: 'form-control'
+                class: 'form-control',
+                required: 'required',
+                type: "email"
             }
         }) }}
 
@@ -42,7 +50,7 @@
             }) }}
             </div>
 
-        <div class="mb-3">
+        <div class="mb-3 country">
         {{ form_row(registrationForm.country,{            
             attr: {
                 placeholder: 'Country',
@@ -65,8 +73,4 @@
         </div>
     </div>
 </form>
-{% endblock %}
-{% block stylesheets %}
-{{ parent() }}
-<link href={{ asset('css/login2.css') }} rel="stylesheet">
 {% endblock %}
