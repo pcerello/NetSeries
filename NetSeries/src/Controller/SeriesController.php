@@ -37,8 +37,11 @@ class SeriesController extends AbstractController
     {
         // Récupère le repository des séries
         $appointmentsRepository = $entityManager->getRepository(Series::class);
+
+        $ascOrDesc = 'DESC';
+
         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-            ->orderBy('search.title', 'ASC')
+            ->orderBy('search.title', $ascOrDesc)
             ->where('search.title LIKE :search')
             ->setParameter('search', '%' . $request->query->get('search') . '%')
             ->getQuery();
@@ -47,14 +50,14 @@ class SeriesController extends AbstractController
         switch ($catvalue) {
             case 'title':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->where('search.title LIKE :search')
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
                     ->getQuery();
                 break;
             case 'genre':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->leftJoin('search.genre', 'g')
                     ->where('g.name LIKE :search')
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
@@ -62,14 +65,14 @@ class SeriesController extends AbstractController
                 break;
             case 'date':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->where('search.yearStart LIKE :search')
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
                     ->getQuery();
                 break;
             case 'actor':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->leftjoin('search.actor', 'actor')
                     ->where('actor.name LIKE :search')
                     ->setParameter('search', '%' . $request->query->get('search') . '%')
@@ -77,7 +80,7 @@ class SeriesController extends AbstractController
                 break;
             case 'note':
                 $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
+                    ->orderBy('search.title', $ascOrDesc)
                     ->innerJoin('search.externalRating', 'er')
                     ->innerJoin('er.source', 'ers')
                     
@@ -151,11 +154,42 @@ class SeriesController extends AbstractController
         }
 
 
+        $ratingsBetween0And1 = $series->getRatings()->filter(function(Rating $rating) {
+            $halfValue = $rating->getValue() / 2;
+            return $halfValue >= 0 && $halfValue < 1;
+        })->count();
+
+        $ratingsBetween1And2 = $series->getRatings()->filter(function(Rating $rating) {
+            $halfValue = $rating->getValue() / 2;
+            return $halfValue  >= 1 && $halfValue < 2;
+        })->count();
+
+        $ratingsBetween2And3 = $series->getRatings()->filter(function(Rating $rating) {
+            $halfValue = $rating->getValue() / 2;
+            return $halfValue  >= 2 && $halfValue < 3;
+        })->count();
+
+        $ratingsBetween3And4 = $series->getRatings()->filter(function(Rating $rating) {
+            $halfValue = $rating->getValue() / 2;
+            return $halfValue  >= 3 && $halfValue < 4;
+        })->count();
+
+        $ratingsBetween4And5 = $series->getRatings()->filter(function(Rating $rating) {
+            $halfValue = $rating->getValue() / 2;
+            return $halfValue  >= 4 && $halfValue <= 5;
+        })->count();
+
+
         return $this->render('series/show.html.twig', [
             'series' => $series,
             'episodesBySeason' => $episodesBySeason,
-            'userHasRated' => $userHasRated
-            //'ratings' => $appointmentsRatings
+            'userHasRated' => $userHasRated,
+            'ratings' => $ratings,
+            'ratingsBetween0And1' => $ratingsBetween0And1,
+            'ratingsBetween1And2' => $ratingsBetween1And2,
+            'ratingsBetween2And3' => $ratingsBetween2And3,
+            'ratingsBetween3And4' => $ratingsBetween3And4,
+            'ratingsBetween4And5' => $ratingsBetween4And5,
         ]);
     }
 
@@ -295,5 +329,7 @@ class SeriesController extends AbstractController
         # Redirige vers la page où il y a toute les séries suivi
         return $this->redirectToRoute('app_followed_series');
     }
+
+
 
 }
