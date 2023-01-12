@@ -11,6 +11,7 @@ block body %}
     <tr>
       <th>Name</th>
       <th>Email</th>
+      {# Si l'utilisateur courant est un admin #}
       {% if app.user.isAdmin() %}
         <th>Registration Date</th>
         <th>Admin</th>
@@ -22,30 +23,33 @@ block body %}
   </thead>
   <tbody>
     {% for user in users %}
-    <tr>
-      <td>{{ user.name }}</td>
-      <td>{{ user.email }}</td>
+      <tr>
+        <td>{{ user.name }}</td>
+        <td>{{ user.email }}</td>
 
-      {% if app.user.isAdmin() %}
-      <td>
-        {{ user.registerDate ? user.registerDate|date('Y-m-d H:i:s') : '' }}
-      </td>
-      <td>{{ user.admin ? "✅" : "❌" }}</td>
-      <td>{{ user.country }}</td>
-      <td>
-        <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate 👤</a>
-        {% if user.admin == false %}
-          <a href="user/promote/{{ user.id }}">Promote ⬆</a>
-        {% else %}
-          <a href="user/demote/{{ user.id }}">Demote ⬇</a>
-        {% endif %}
-      
-      {% endif %}
-      <a href="{{ path('app_user_show', {'id' : user.id} )}}">See this user's profile</a></td>
-      </td>
+        {# Si l'utilisateur courant est un admin #}
+        {% if app.user.isAdmin() %}
         
-      
-    </tr>
+          <td>
+            {{ user.registerDate ? user.registerDate|date('Y-m-d H:i:s') : '' }}
+          </td>
+          <td>{{ user.admin ? "✅" : "❌" }}</td>
+          <td>{{ user.country }}</td>
+        {% endif %}
+        <td>
+        {% if app.user.isAdmin() %}
+          <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate 👤</a>
+          {% if user.admin == false %}
+            <a href="user/promote/{{ user.id }}">Promote ⬆</a>
+          {% else %}
+            <a href="user/demote/{{ user.id }}">Demote ⬇</a>
+          {% endif %}
+            
+        {% endif %}
+          <a href="{{ path('app_user_show', {'id' : user.id} )}}">See this user's profile</a>
+          </td>
+        </td>
+      </tr>
     {% else %}
     <tr>
       <td colspan="8">no records found</td>
