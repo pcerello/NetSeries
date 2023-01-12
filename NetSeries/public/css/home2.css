@@ -257,6 +257,11 @@ div.search_section input[name="search"] {
         border-radius: 10px;
     }
 }
+@media only screen and (max-width: 1300px) {
+    div.buttons a.button2 {
+        margin: 5px;
+    }
+}
 
 @media only screen and (max-width: 500px) {
     div.content {
@@ -292,12 +297,11 @@ div.search_section input[name="search"] {
 
     div.buttons a.button1 {
         font-size: 15px;
-        align-self: self-end;
     }
 
     div.buttons a.button2 {
         margin: 0 5px;
-        
+        margin-bottom: 5px;
     }
 
     div.search_section input[name="search"] {
