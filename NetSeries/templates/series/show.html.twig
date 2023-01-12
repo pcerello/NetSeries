@@ -1,7 +1,5 @@
 {% extends 'base.html.twig' %}
 
-
-
 {% block title %}Series{% endblock %}
 
 {% block body %}
@@ -105,11 +103,31 @@
         {% endif %}
     {% endif %}
 
-    {% for r in series.ratings %}
-        {{ r.comment }}
-        {{ (r.value)/2 }}
-
-    {% endfor %}
+    <h1>Comments list</h1>
+    <div class="tbl-header">
+    <table cellpadding="0" cellspacing="0" border="0">
+        <thead class="thead">
+            <tr class="tr">
+                <th class="th">Comment</th>
+                <th class="th">Rating</th>
+            </tr>
+        </thead>
+    </table>
+    </div>
+    <div class="tbl-content">
+        <table cellpadding="0" cellspacing="0" border="0">
+            <tbody>
+                {% for r in series.ratings %}
+                    <tr>
+                        {% if r.comment != null %}
+                            <td class="td">{{ r.comment }}</td>
+                            <td class="td">{{ (r.value)/2 }}/5</td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
     {# Permet de revenir à la page où il y a toute les séries #}
     <a class="back" href="{{ path('app_series_index') }}">⟵</a>{% endblock %}

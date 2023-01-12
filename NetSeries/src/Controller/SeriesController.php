@@ -123,7 +123,7 @@ class SeriesController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
-    public function show(Series $series, EntityManagerInterface $em, Request $request): Response
+    public function show(Series $series, EntityManagerInterface $em, Request $request, PaginatorInterface $paginator): Response
     {
         $seasons = $series->getSeasons();
         $episodesBySeason = [];
@@ -135,19 +135,27 @@ class SeriesController extends AbstractController
 
         if ($rating) {
             $userHasRated = true;
+            /*$allAppointmentsQuery = $ratings->createQueryBuilder('p')->getQuery();
+            $appointmentsRatings = $paginator->paginate(
+                $allAppointmentsQuery,
+                $request->query->getInt('page', 1),
+                10
+            );*/
         } else {
             $userHasRated = false;
+            //$appointmentsRatings = null;
         }
 
         foreach ($seasons as $season) {
             $episodesBySeason[$season->getNumber()] = $this->episodeRepository->findBySeason($season->getId());
         }
 
+
         return $this->render('series/show.html.twig', [
             'series' => $series,
             'episodesBySeason' => $episodesBySeason,
-            'userHasRated' => $userHasRated,
-            'ratings' => $ratings,
+            'userHasRated' => $userHasRated
+            //'ratings' => $appointmentsRatings
         ]);
     }
 
