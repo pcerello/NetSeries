@@ -207,18 +207,19 @@ class UserController extends AbstractController
     #[Route('/generate/{id}', name:'generate', methods: ['GET'])]
     public function generateAndInsertUsers(User $user, EntityManagerInterface $entityManager, Request $request) : Response
     {
-
+        $faker = Faker::create();
         $batchSize = 20;
         $countries = $this->entityManager->getRepository(Country::class)->findAll();
         shuffle($countries);
         $randomCountry = array_pop($countries);
+        $passwordAllUser = password_hash($faker->password(), PASSWORD_DEFAULT);
 
-        $faker = Faker::create();
-        for ($i = 0; $i < 500; $i++) {
+        
+        for ($i = 0; $i < 5000; $i++) {
             $user = new User();
             $user->setName($faker->unique()->userName);
             $user->setEmail($faker->unique()->email);
-            $user->setPassword(password_hash($faker->password(), PASSWORD_DEFAULT));
+            $user->setPassword($passwordAllUser);
             $user->setCountry($randomCountry);
             $this->entityManager->persist($user);
             if (($i % $batchSize) === 0) {
