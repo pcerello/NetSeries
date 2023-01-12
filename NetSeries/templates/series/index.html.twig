@@ -19,17 +19,17 @@
         <select name="genres">
             <option value="">All</option>
             {% for genre in genres %}
-                <option value="{{ genre.id }}">{{ genre.name }}</option>
+                <option value="{{ genre.name }}">{{ genre.name }}</option>
             {% endfor %}
             </select>
-            <input name='date'type="number" min="1969" max="2099" step="1" value="2016" />
+            <input name='date'type="number" min="1969" max="2099" step="1"/>
             <input type="text" name="actor" placeholder="Search an actor">
             <label for="note">Note</label>
             <input name="minnote" type="number" min="0" max="5" step="0.5" value="0" />
             <input name="maxnote" type="number" min="0" max="5" step="0.5" value="5" />
         <select name="order">
-        <option value="ASC">a -> z</option>
-        <option value="DESC">z -> a</option>
+            <option value="ASC">a -> z</option>
+            <option value="DESC">z -> a</option>
         </select>
         <input type="submit" value="To search">
         

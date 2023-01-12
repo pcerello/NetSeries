@@ -128,14 +128,14 @@ class Series
      *
      * @ORM\OneToOne(targetEntity="ExternalRating", mappedBy="series")
      */
-    private $externalRating;
+    private $externalRating = array();
 
      /**
      * @var \Rating|null
      *
      * @ORM\OneToMany(targetEntity="Rating", mappedBy="series")
      */
-    private $ratings;
+    private $ratings = array();
 
     /**
      * Constructor

@@ -36,16 +36,9 @@ class SeriesController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
 
-        if ($request->query->get('search') == 'ASC') {
-            $AscOrDesc = "ASC";
-        } else {
-            $AscOrDesc = "DESC";
-        }
-
-
 
         // Récupère le repository des séries
-        $appointmentsRepository = $entityManager->getRepository(Series::class);
+        /*$appointmentsRepository = $entityManager->getRepository(Series::class);
         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search', 'genre', 'date', 'actor', 'minnote', 'maxnote')
             ->orderBy('search.title', $AscOrDesc)
             ->leftJoin('search.genre', 'g')
@@ -59,6 +52,9 @@ class SeriesController extends AbstractController
             ->andWhere('SUBSTRING(er.value, 1, LENGTH(er.value) - 3) BETWEEN :minnote AND :maxnote')
             ->setParameter('search', '%' . $request->query->get('search') . '%' )
             ->getQuery();
+        */
+
+        
 
 
         // $catvalue = $request->query->get('category');
@@ -112,7 +108,7 @@ class SeriesController extends AbstractController
 
 
         // Pagination des résultats (5 séries par pages maximum)
-        $appointments = $paginator->paginate(
+        /*$appointments = $paginator->paginate(
             $allAppointmentsQuery,
             $request->query->getInt('page', 1),
             12
@@ -123,7 +119,75 @@ class SeriesController extends AbstractController
         return $this->render('series/index.html.twig', [
             'series' => $appointments,
             'genres' => $genres,
-        ]);
+        ]);*/
+
+
+    if ($request->query->get('order') == 'ASC') {
+        $AscOrDesc = "ASC";
+    } else {
+        $AscOrDesc = "DESC";
+    }
+
+    $qb = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
+
+    if ($search = $request->query->get('search')) {
+        $qb->andWhere('s.title LIKE :search')
+           ->setParameter('search', '%' . $search . '%');
+    }
+
+    if ($genreName = $request->query->get('genres')) {
+        $qb->leftJoin('s.genre', 'g')
+           ->andWhere('g.name = :genres')
+           ->setParameter('genres', $genreName);
+    }
+
+    if ($date = $request->query->get('date')) {
+        $qb->andWhere('s.yearStart = :date')
+           ->setParameter('date', $date);
+    }
+
+    if ($actor = $request->query->get('actor')) {
+        $qb->leftJoin('s.actor', 'a')
+           ->andWhere('a.name LIKE :actor')
+           ->setParameter('actor', '%' . $actor . '%');
+    }
+
+    if ($minnote = $request->query->get('minnote')) {
+        $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
+            ->select('AVG(r.value/2)')
+            ->where('r.series = s')
+            ->getDQL();
+    
+        $qb->andWhere(sprintf('(%s) >= :minnote', $subquery))
+           ->setParameter('minnote', $minnote);
+    }
+
+    if ($maxnote = $request->query->get('maxnote')) {
+        $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('m')
+            ->select('AVG(m.value/2)')
+            ->where('m.series = s')
+            ->getDQL();
+    
+        $qb->andWhere(sprintf('(%s) >= :maxnote', $subquery))
+           ->setParameter('maxnote', $maxnote);
+    }
+
+    
+
+    $qb->orderBy('s.title', $AscOrDesc);
+
+    $series = $paginator->paginate(
+        $qb->getQuery(),
+        $request->query->getInt('page', 1),
+        12
+    );
+
+    $genres = $entityManager->getRepository(\App\Entity\Genre::class)->findAll();
+
+    return $this->render('series/index.html.twig', [
+        'series' => $series,
+        'genres' => $genres,
+    ]);
     }
 
 
