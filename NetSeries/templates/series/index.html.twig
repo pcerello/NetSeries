@@ -13,13 +13,6 @@
         {{ knp_pagination_render(series) }}
     </div>
 
-    {# Barre de recherche #}
-    <form action="{{ path('app_series_index') }}" method="get">
-        <input type="text" name="search" placeholder="Rechercher une série">
-        <input type="submit" value="Rechercher">
-    </form>
-
-
 
     {# Si un utilisateur est connecté, affichage d'un lien vers les séries suivies #}
     {% if app.user %}
