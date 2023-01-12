@@ -2,6 +2,11 @@
 
 {% block title %}NetSeries | Register{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
 <form method="post">
     <a href="{{ path('app_home') }}"class="logo">
@@ -62,8 +67,4 @@
         </div>
     </div>
 </form>
-{% endblock %}
-{% block stylesheets %}
-{{ parent() }}
-<link href={{ asset('css/login2.css') }} rel="stylesheet">
 {% endblock %}

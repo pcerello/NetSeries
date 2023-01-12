@@ -141,8 +141,7 @@ input[type=checkbox] {
     margin: 0;
 }
 
+
 .form-control::-webkit-input-placeholder {
     color: #909090;
   }
-
-

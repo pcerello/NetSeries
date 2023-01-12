@@ -3,8 +3,7 @@ block body %}
 <h1>Search an existing user</h1>
 
 <form action="{{ path('app_user_index') }}" method="get">
-    <input type="text" name="search" placeholder="Rechercher une série">
-    <input type="submit" value="Rechercher">
+    <input type="text" name="search" placeholder="Search user account...">
 </form>
 
 <table class="table">
@@ -59,4 +58,7 @@ block body %}
   rel="stylesheet"
   href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
 />
+<link
+  rel="stylesheet"
+  href="{{ asset('css/users_list.css') }}">
 {% endblock %}

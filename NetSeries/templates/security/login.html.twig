@@ -2,6 +2,12 @@
 
 {% block title %}NetSeries | Login{% endblock %}
 
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('css/login.css') }}" type="text/css" rel="stylesheet">
+{% endblock %}
+
 {% block body %}
 <form method="post">
     {% if error %}
@@ -43,10 +49,4 @@
     </div>
 
 </form>
-{% endblock %}
-
-{% block stylesheets %}
-{{ parent() }}
-<link href={{ asset('css/login2.css') }} rel="stylesheet">
-
 {% endblock %}

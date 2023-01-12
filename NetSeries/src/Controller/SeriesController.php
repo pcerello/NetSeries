@@ -43,7 +43,6 @@ class SeriesController extends AbstractController
             ->where('search.title LIKE :search')
             ->setParameter('search', '%' . $request->query->get('search') . '%')
             ->getQuery();
-        
 
         // Pagination des résultats (5 séries par pages maximum)
         $appointments = $paginator->paginate(
