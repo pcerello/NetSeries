@@ -10,7 +10,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use App\Entity\Series;
-
+use DateTime;
 
 /**
  * User
@@ -75,7 +75,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     /**
      * @var \Country|null
      *
-     * @ORM\ManyToOne(targetEntity="Country")
+     * @ORM\ManyToOne(targetEntity="Country", cascade={"persist"})
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="country_id", referencedColumnName="id")
      * })
@@ -127,6 +127,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->series = new \Doctrine\Common\Collections\ArrayCollection();
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
         $this->ratings = new ArrayCollection();
+        $this->registerDate = new DateTime();
     }
 
     public function getId(): ?int
