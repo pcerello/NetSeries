@@ -1,0 +1,113 @@
+#title-content{
+    margin: 0.5em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+#title-content h1{
+    margin: 0.5rem;
+    font-size: 2em;
+    font-weight: 1000;
+}
+
+#title-content img{
+    margin: 0.5rem;
+    height: 2em;
+    width: 2em;
+}
+
+#rating_value{
+    margin:1em;
+    width: 5em;
+    background-color: rgb(255, 255, 255);
+    border: 2px solid black;
+}
+
+.comment-content{
+    background: #FFFFFF;
+    opacity: 1;
+    border: 0.5px solid #909090;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 40px;
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 50px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#rating_comment{
+    margin-left: 7em;
+    width: 20em;
+    height:20em;
+    background-color: rgb(255, 255, 255);
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 15px;
+    border: 2px solid black;
+}
+
+#rating_comment:focus, #rating_comment:active,#rating_value:focus, #rating_value:active{
+    color: var(--bs-body-color);
+    background-color: var(--bs-form-control-bg);
+    border-color: var(--bs-primary);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+
+#rating_comment::placeholder{
+    padding: 1em;
+    color: black;
+    font-size: 1.5em;
+    font-weight: 1000;
+}
+
+
+.btn{
+    background-color: rgba(128, 127, 127, 0.185);
+    border: 2px solid black;
+    margin: 1em;
+    width: 5em;
+    border-radius: 16px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto ;
+}
+
+.btn:hover{
+    background-color: rgb(49, 48, 48);
+    color: white;
+    /* make center of button */
+
+    width: 5em;
+    border-radius: 16px;
+}
+
+label[for="rating_comment"]{
+    position: absolute;
+
+}
+
+a.back {
+    padding: 1em 0.2em;
+    text-decoration: none;
+    color: black;
+    font-weight: 1000;
+    border: 2px solid rgb(85, 80, 80);
+    width: 10rem;
+    border-radius: 20px;
+    text-align: center;
+    margin: 2em 2em;
+}
+
+
+
+a.back:hover {
+    color: white;
+    background-color: #222222;
+}

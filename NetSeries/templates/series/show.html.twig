@@ -101,7 +101,7 @@
         {% if userHasRated %}
             <p>You already put an appreciation on this series</p>
         {% else %}
-            <a href="{{ path('app_rating_new', {'idSerie' : series.id}) }}">Add a comment of the serie</a>
+            <a class="linkComment" href="{{ path('app_rating_new', {'idSerie' : series.id}) }}"><img src="https://cdn-icons-png.flaticon.com/512/4922/4922073.png"> <p> Add a comment</p></a>
         {% endif %}
     {% endif %}
 
