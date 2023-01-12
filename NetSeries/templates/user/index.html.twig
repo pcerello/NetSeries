@@ -37,15 +37,19 @@ block body %}
           <td>{{ user.country }}</td>
         {% endif %}
         <td>
+        {# Si l'utilisateur courant est un admin #}
         {% if app.user.isAdmin() %}
           <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate 👤</a>
           {% if user.admin == false %}
+            {# Promu un utilisateur pour qu'il soit admin #}
             <a href="user/promote/{{ user.id }}">Promote ⬆</a>
           {% else %}
+            {# Destituer un admin #}
             <a href="user/demote/{{ user.id }}">Demote ⬇</a>
           {% endif %}
             
         {% endif %}
+          {# Lien pour voir la fiche d'un utilisateur #}
           <a href="{{ path('app_user_show', {'id' : user.id} )}}">See this user's profile</a>
           </td>
         </td>
@@ -66,8 +70,10 @@ block body %}
     {{ knp_pagination_render(users) }}
 </div>
 
-
+{# Si un utilisateur connecté #}
 {% if app.user %}
+
+  {# Et que c'est un admin #}
   {% if app.user.isAdmin() %}  
     <form action="{{ path('generate', {'id': app.user.id}) }}" method="POST" >
       <label for="user_count">Number of Users:</label>
