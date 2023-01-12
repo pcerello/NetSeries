@@ -1,37 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block stylesheets %}
-{{ parent() }}
-    <link href={{ asset('css/series.css') }} rel="stylesheet">
-{% endblock %}
+
 
 {% block title %}Series{% endblock %}
 
 {% block body %}
-    <h1>Series</h1>
+    <h1>{{ series.title }}</h1>
     {# Permet de revenir à la page où il y a toute les séries #}
-    <a href="{{ path('app_series_index') }}">back to list</a>
+    <a class="back" href="{{ path('app_series_index') }}">⟵</a>
 
     <div id="infos">
         <div id="titlePoster">
             {# On affiche le poster de la série #}
             <img id="posterShow" src='{{ path('app_poster_show', {'id': series.id}) }}'>
-
-            <h3>Title : {{ series.title }}</h3>
         </div>
         {# On affiche les informations sur la série choisis #}
         <div id="infoSerie">
-            <p><b>Description :</b> {{ series.plot }}</p>
+            <p><strong>Description : </strong>{{ series.plot }}</p>
 
-            <p><b>Director :</b> {{ series.Director }}</p>
+            <p><strong>Director : </strong>{{ series.Director }}</p>
 
-            <p><b>Award(s) :</b> {{ series.awards }}</p>
+            <p><strong>Award(s) : </strong>{{ series.awards }}</p>
 
-            <p><b>Year start :</b> {{ series.yearStart }}</p>
+            <p><strong>Year start : </strong>{{ series.yearStart }}</p>
 
-            <p><b>Year end :</b> {{ series.yearEnd }}</p>
+            <p><strong>Year end : </strong>{{ series.yearEnd }}</p>
 
-            <p> <b>Note :</b> {{ series.externalRating.value }} </p>
+            <p class="notes"> <strong> Note : </strong> <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ series.externalRating.value }} </p>
+
+            <p><strong>Trailer</strong></p>
             {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
 
             <p><b>Trailer :</b></p>
@@ -42,38 +39,58 @@
 
     <table class="table">
         <tbody>
-
             <tr>
                 <th>
-                {# On parcourt les saisons et leurs épisodes #}
-                {% for seasonNumber, episodes in episodesBySeason %}
-                    Season {{ seasonNumber }}:
-                    <ul>
+                    <div id="accordion">
+                        {# On parcourt les saisons et leurs épisodes #}
+                        {% for seasonNumber, episodes in episodesBySeason %}
+                        <div class="card">
+                            {# On affiche le titre de la saison #}
+                            <div class="card-header">
+                                <a class="card-link" data-toggle="collapse" href="#collapse{{ seasonNumber }}">
+                                    Saison : {{ seasonNumber }}
+                                </a>
+                              </div>
+                        
+                              <div id="collapse{{ seasonNumber }}" class="collapse show" data-parent="#accordion">
+                                <div class="card-body">
+                        <ul class="nameEpisode">
                         {# On parcourt les épisodes de la saison #}
                         {% for episode in episodes %}
+
                             {# On affiche le titre de l'épisode #}
                             <li>Episode {{ episode.number }} - {{ episode.title }}
 
                             {# On regarde si un utilisateur est connecté #}
                             {% if app.user %}
 
-                                {# On regarde si cet utilisateur a vu l'épisode #}
+                                 {# On regarde si cet utilisateur a vu l'épisode #}
                                 {% if app.user.isView(episode) %}
                                     {# Permet d'enlever vu un épisode choisis #}
-                                    <span>: Vu,  </span><a href="{{ path('app_episode_remove_view', {'id1': episode.id, 'id2': series.id}) }}">Enlever vue</a>
-                                {% else %}
+                                    <a href="{{ path('app_episode_remove_view', {'id1': episode.id, 'id2': series.id}) }}"><span class="eyeClosed" ><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></span></a>
+                                    {% else %}
                                     {# Permet de mettre vu un épisode choisis#}
-                                    <a href="{{ path('app_episode_view', {'id1': episode.id, 'id2': series.id}) }}">Marquer comme vus</a>
+                                    
+                                    <a href="{{ path('app_episode_view', {'id1': episode.id, 'id2': series.id}) }}">
+                                        <span class="eye" >
+                                            <img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png">
+                                        </span>
+                                    </a>
                                 {% endif %}
                             
                             {% endif %} 
                                 
                             </li>
+                        
                         {% endfor %}
-                    </ul>
-                {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-                </th>
+        {% endfor %}
+    </div>
+    </th>
 
             </tr>
         </tbody>
@@ -89,5 +106,11 @@
     {% endif %}
 
     {# Permet de revenir à la page où il y a toute les séries #}
-    <a href="{{ path('app_series_index') }}">back to list</a>
+    <a class="back" href="{{ path('app_series_index') }}">⟵</a>{% endblock %}
+
+{% block stylesheets %}
+{{ parent() }}
+<link href={{ asset('css/episode.css') }} rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD">
+
 {% endblock %}
