@@ -30,63 +30,86 @@ class SeriesController extends AbstractController
         $this->episodeRepository = $episodeRepository;
     }
 
-
+    
 
     #[Route('/', name: 'app_series_index', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
+
+        if ($request->query->get('search') == 'ASC') {
+            $AscOrDesc = "ASC";
+        } else {
+            $AscOrDesc = "DESC";
+        }
+
+
+
         // Récupère le repository des séries
         $appointmentsRepository = $entityManager->getRepository(Series::class);
-        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-            ->orderBy('search.title', 'ASC')
+        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search', 'genre', 'date', 'actor', 'minnote', 'maxnote')
+            ->orderBy('search.title', $AscOrDesc)
+            ->leftJoin('search.genre', 'g')
+            ->leftJoin('search.actor', 'actor')
+            ->innerJoin('search.externalRating', 'er')
+            ->innerJoin('er.source', 'ers')
             ->where('search.title LIKE :search')
-            ->setParameter('search', '%' . $request->query->get('search') . '%')
+            ->andWhere('g.name LIKE :genre')
+            ->andWhere('search.yearStart LIKE :date')
+            ->andwhere('actor.name LIKE :search')
+            ->andWhere('SUBSTRING(er.value, 1, LENGTH(er.value) - 3) BETWEEN :minnote AND :maxnote')
+            ->setParameter('search', '%' . $request->query->get('search') . '%' )
             ->getQuery();
-        $catvalue = $request->query->get('category');
-        switch ($catvalue) {
-            case 'title':
-                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
-                    ->where('search.title LIKE :search')
-                    ->setParameter('search', '%' . $request->query->get('search') . '%')
-                    ->getQuery();
-                break;
-            case 'genre':
-                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
-                    ->leftJoin('search.genre', 'g')
-                    ->where('g.name LIKE :search')
-                    ->setParameter('search', '%' . $request->query->get('search') . '%')
-                    ->getQuery();
-                break;
-            case 'date':
-                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
-                    ->where('search.yearStart LIKE :search')
-                    ->setParameter('search', '%' . $request->query->get('search') . '%')
-                    ->getQuery();
-                break;
-            case 'actor':
-                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
-                    ->leftjoin('search.actor', 'actor')
-                    ->where('actor.name LIKE :search')
-                    ->setParameter('search', '%' . $request->query->get('search') . '%')
-                    ->getQuery();
-                break;
-            case 'note':
-                $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-                    ->orderBy('search.title', 'ASC')
-                    ->innerJoin('search.externalRating', 'er')
-                    ->innerJoin('er.source', 'ers')
+
+
+        // $catvalue = $request->query->get('category');
+        // switch ($catvalue) {
+        //     case 'title':
+        //         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+        //             ->orderBy('search.title', $AscOrDesc)
+        //             ->where('search.title LIKE :search')
+        //             ->setParameter('search', '%' . $request->query->get('search') . '%')
+        //             ->getQuery();
+        //         break;
+        //     case 'genre':
+        //         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+        //             ->orderBy('search.title', $AscOrDesc)
+        //             ->leftJoin('search.genre', 'g')
+        //             ->where('g.name LIKE :search')
+        //             ->setParameter('search', '%' . $request->query->get('search') . '%')
+        //             ->getQuery();
+        //         break;
+        //     case 'date':
+        //         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+        //             ->orderBy('search.title', $AscOrDesc)
+        //             ->where('search.yearStart LIKE :search')
+        //             ->setParameter('search', '%' . $request->query->get('search') . '%')
+        //             ->getQuery();
+        //         break;
+        //     case 'actor':
+        //         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+        //             ->orderBy('search.title', $AscOrDesc)
+        //             ->leftjoin('search.actor', 'actor')
+        //             ->where('actor.name LIKE :search')
+        //             ->setParameter('search', '%' . $request->query->get('search') . '%')
+        //             ->getQuery();
+        //         break;
+        //     case 'note':
+        //         $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
+        //             ->orderBy('search.title', $AscOrDesc)
+        //             ->innerJoin('search.externalRating', 'er')
+        //             ->innerJoin('er.source', 'ers')
                     
-                    ->where('SUBSTRING(er.value, 1, LENGTH(er.value) - 3) LIKE :search')
-                    ->andWhere('ers.id = :sourceId')
-                    ->setParameter('sourceId', 1)
-                    ->setParameter('search', '%' . $request->query->get('search') . '%')
-                    ->getQuery();
-                break;
-        }
+        //             ->where('SUBSTRING(er.value, 1, LENGTH(er.value) - 3) LIKE :search')
+        //             ->andWhere('ers.id = :sourceId')
+        //             ->setParameter('sourceId', 1)
+        //             ->setParameter('search', '%' . $request->query->get('search') . '%')
+        //             ->getQuery();
+        //         break;
+
+            
+        // }
+
+
 
         // Pagination des résultats (5 séries par pages maximum)
         $appointments = $paginator->paginate(
@@ -95,8 +118,11 @@ class SeriesController extends AbstractController
             12
         );
 
+        $genres = $entityManager->getRepository(\App\Entity\Genre::class)->findAll();
+
         return $this->render('series/index.html.twig', [
             'series' => $appointments,
+            'genres' => $genres,
         ]);
     }
 

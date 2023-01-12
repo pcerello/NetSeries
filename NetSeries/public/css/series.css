@@ -80,9 +80,8 @@ h1{
 }
 
 .notes{
-    margin-left: 4rem;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
     font-size: 0.7rem;
