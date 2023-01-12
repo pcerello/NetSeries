@@ -37,24 +37,30 @@ class RatingController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
+        # Associe la note à la série et à l'utilisateur
         $rating->setSeries($series);
         $rating->setUser($user);
 
+        # Création du formulaire pour la note
         $form = $this->createForm(RatingType::class, $rating);
 
         $form->handleRequest($request);
 
+        # Si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
+            # Enregistrement de la note et mise à jour de la base de données
             $entityManager->persist($rating);
             $entityManager->flush();
 
+            # Redirection vers la liste des notes
             return $this->redirectToRoute('app_rating_index', [], Response::HTTP_SEE_OTHER);
         }
         
+        # Ajoute la note à l'utilisateur et à la série
         $user->addRating($rating);
-
         $series->addRating($rating);
 
+        # Affichage du formulaire pour la note
         return $this->renderForm('rating/new.html.twig', [
             'rating' => $rating,
             'form' => $form,
