@@ -39,11 +39,11 @@ block body %}
         {% else %}
           <a href="user/demote/{{ user.id }}">Demote ⬇</a>
         {% endif %}
-
+      
       {% endif %}
-      <td><a href="{{ path('app_user_show', {'id' : user.id} )}}">See this user's profile</a></td>
-
-        </td>
+      <a href="{{ path('app_user_show', {'id' : user.id} )}}">See this user's profile</a></td>
+      </td>
+        
       
     </tr>
     {% else %}
