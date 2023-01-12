@@ -55,47 +55,41 @@
                                 <a class="card-link" data-toggle="collapse" href="#collapse{{ seasonNumber }}">
                                     Saison : {{ seasonNumber }}
                                 </a>
-                              </div>
-                        
-                              <div id="collapse{{ seasonNumber }}" class="collapse show" data-parent="#accordion">
+                            </div>
+                            <div id="collapse{{ seasonNumber }}" class="collapse show" data-parent="#accordion">
                                 <div class="card-body">
-                        <ul class="nameEpisode">
-                        {# On parcourt les épisodes de la saison #}
-                        {% for episode in episodes %}
+                                    <ul class="nameEpisode">
+                                    {# On parcourt les épisodes de la saison #}
+                                    {% for episode in episodes %}
 
-                            {# On affiche le titre de l'épisode #}
-                            <li>Episode {{ episode.number }} - {{ episode.title }}
+                                        {# On affiche le titre de l'épisode #}
+                                        <li>Episode {{ episode.number }} - {{ episode.title }}
 
-                            {# On regarde si un utilisateur est connecté #}
-                            {% if app.user %}
+                                        {# On regarde si un utilisateur est connecté #}
+                                        {% if app.user %}
 
-                                 {# On regarde si cet utilisateur a vu l'épisode #}
-                                {% if app.user.isView(episode) %}
-                                    {# Permet d'enlever vu un épisode choisis #}
-                                    <a href="{{ path('app_episode_remove_view', {'id1': episode.id, 'id2': series.id}) }}"><span class="eyeClosed" ><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></span></a>
-                                    {% else %}
-                                    {# Permet de mettre vu un épisode choisis#}
-                                    
-                                    <a href="{{ path('app_episode_view', {'id1': episode.id, 'id2': series.id}) }}">
-                                        <span class="eye" >
-                                            <img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png">
-                                        </span>
-                                    </a>
-                                {% endif %}
-                            
-                            {% endif %} 
-                                
-                            </li>
-                        
+                                            {# On regarde si cet utilisateur a vu l'épisode #}
+                                            {% if app.user.isView(episode) %}
+                                                {# Permet d'enlever vu un épisode choisis #}
+                                                <a href="{{ path('app_episode_remove_view', {'id1': episode.id, 'id2': series.id}) }}"><span class="eyeClosed" ><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></span></a>
+                                            {% else %}
+                                                {# Permet de mettre vu un épisode choisis#}
+                                                <a href="{{ path('app_episode_view', {'id1': episode.id, 'id2': series.id}) }}">
+                                                    <span class="eye" >
+                                                        <img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png">
+                                                    </span>
+                                                </a>
+                                            {% endif %}
+                                        {% endif %} 
+                                        </li>
+                                    {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                         {% endfor %}
-                        </ul>
                     </div>
-                </div>
-            </div>
-
-        {% endfor %}
-    </div>
-    </th>
+                </th>
 
             </tr>
         </tbody>
@@ -148,16 +142,8 @@
         </table>
     </div>
 
-    
-    
-
-
-
     {# Permet de revenir à la page où il y a toute les séries #}
     <a class="back" href="{{ path('app_series_index') }}">⟵</a>{% endblock %}
-
-    
-
 
 {% block stylesheets %}
 {{ parent() }}
