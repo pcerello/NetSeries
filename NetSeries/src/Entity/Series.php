@@ -429,27 +429,41 @@ class Series
         return $this->title;
     }
 
+    /**
+     * Cette fonction permet de calculer la note moyenne d'une série en utilisant les notes associées à cette série
+     *
+     * @return float La note moyenne arrondie à 0.5 près, ou null si aucune note n'a été donnée
+     */
     public function getAverageRating()
     {
+        // Initialisation des variables pour stocker la somme des notes et le nombre de notes
         $averageRating = 0;
         $count = 0;
         $total = 0;
+
+        // Parcours des notes associées à la série
         foreach ($this->getRatings() as $rating) {
+            // Incrémente la somme total par la nouvelle note
             $total += $rating->getValue();
+            // Incrémentation du nombre de notes total
             $count++;
         }
 
+        // Si au moins une note a été donnée
         if ($count > 0) {
+            // Calcul de la moyenne
             $averageRating = $total / $count;
         } else {
+            // Si aucune note n'a été donnée, la note moyenne est null
             $averageRating = null;
         }
+
+        //Mais la moyenne sur 5
         $averageRating = $averageRating/2;
+        // Arrondi à 0.5 près
         $averageRating = round($averageRating * 2) / 2;
         return $averageRating;
     }
-
-    
 
     /**
      * @return Collection<int, Rating>
