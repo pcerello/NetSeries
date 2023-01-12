@@ -93,14 +93,10 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-
-
         $appointmentsQuerySeriesFollowed = $user->getSeries();
 
         $user = $entityManager->getRepository(User::class)->find($request->get('id'));
     
-
-
         $appointmentsQueryRating = $user->getRatings();
 
         /** @var \App\Entity\Paginator */
@@ -117,11 +113,6 @@ class UserController extends AbstractController
             2,
             ['pageParameterName' => 'series_page']
         );
-
-
-        
-
-            
 
         return $this->render('user/show.html.twig', [
             'user' => $user,
@@ -204,9 +195,12 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/generate/{id}', name:'generate', methods: ['GET'])]
+    #[Route('/generate/{id}', name:'generate', methods: ['POST'])]
     public function generateAndInsertUsers(User $user, EntityManagerInterface $entityManager, Request $request) : Response
     {
+        $user_count = $request->request->get('user_count');
+
+
         $faker = Faker::create();
         $batchSize = 20;
         $countries = $this->entityManager->getRepository(Country::class)->findAll();
@@ -215,7 +209,7 @@ class UserController extends AbstractController
         $passwordAllUser = password_hash($faker->password(), PASSWORD_DEFAULT);
 
         
-        for ($i = 0; $i < 5000; $i++) {
+        for ($i = 0; $i < $user_count; $i++) {
             $user = new User();
             $user->setName($faker->unique()->userName);
             $user->setEmail($faker->unique()->email);

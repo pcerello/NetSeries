@@ -70,6 +70,14 @@ block body %}
 {% if app.user %}
   {% if app.user.isAdmin() %}
     <a href="{{ path('generate', {'id': app.user.id}) }}">Générer 500 utilisateurs</a>
+  
+    <form action="{{ path('generate', {'id': app.user.id}) }}" method="POST" >
+      <label for="user_count">Number of Users:</label>
+      <input type="number" name="user_count" id="user_count" min="1" required>
+      <input type="submit" value="Generate">
+    </form>
+
+  
   {% endif %}
 {% endif %}
 
