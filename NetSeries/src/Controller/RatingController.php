@@ -53,6 +53,8 @@ class RatingController extends AbstractController
         
         $user->addRating($rating);
 
+        $series->addRating($rating);
+
         return $this->renderForm('rating/new.html.twig', [
             'rating' => $rating,
             'form' => $form,
