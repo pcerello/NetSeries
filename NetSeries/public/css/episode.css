@@ -133,3 +133,33 @@ li .Viewed {
     color: white;
     background-color: #222222;
 }
+
+@media only screen and (max-width: 1100px) {
+    #infoSerie {
+        width: 65%;
+    }
+    #titlePoster img {
+        width: 88%;
+        height: auto;
+    }
+
+    iframe {
+        width: -webkit-fill-available;
+    }
+}
+
+@media only screen and (max-width: 800px) {
+    iframe {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #infos {
+        flex-direction: column;
+    }
+    #infoSerie {
+        width: 95%;
+    }
+    
+}
