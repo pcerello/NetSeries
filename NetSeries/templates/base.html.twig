@@ -31,11 +31,12 @@
                         </div>
                         {{ app.user.name }}
                     </a>
-                    {% if app.user.isAdmin() %}
-                        <div class="button square"  data-tooltip="List of all users">
-                            <a href="{{  path('app_user_index')  }}"><img src="{{ asset('images/icons/users-list.svg') }}"></a>
-                        </div>
-                    {% endif %}
+                    
+                    
+                    <div class="button square"  data-tooltip="List of all users">
+                        <a href="{{  path('app_user_index')  }}"><img src="{{ asset('images/icons/users-list.svg') }}"></a>
+                    </div>
+                    
 
                     {# On test si un administrateur est en train d'incarner un utilisateur #}
                     {% if is_granted('ROLE_PREVIOUS_ADMIN') %}

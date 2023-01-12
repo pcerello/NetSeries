@@ -35,13 +35,13 @@ block body %}
       <td>
         <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate 👤</a>
         {% if user.admin == false %}
-        <a href="user/promote/{{ user.id }}">Promote ⬆</a>
+          <a href="user/promote/{{ user.id }}">Promote ⬆</a>
         {% else %}
-        <a href="user/demote/{{ user.id }}">Demote ⬇</a>
+          <a href="user/demote/{{ user.id }}">Demote ⬇</a>
         {% endif %}
 
       {% endif %}
-      <a href="{{ path('app_user_show', {'id' : user.id} )}}">See this user's profile</a>
+      <td><a href="{{ path('app_user_show', {'id' : user.id} )}}">See this user's profile</a></td>
 
         </td>
       
