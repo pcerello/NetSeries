@@ -90,7 +90,7 @@ class SeriesController extends AbstractController
                 ->where('m.series = s')
                 ->getDQL();
         
-            $qb->andWhere(sprintf('(%s) >= :maxnote', $subquery))
+            $qb->andWhere(sprintf('(%s) <= :maxnote', $subquery))
             ->setParameter('maxnote', $maxnote);
         }
 

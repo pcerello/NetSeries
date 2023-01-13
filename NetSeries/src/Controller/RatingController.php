@@ -53,7 +53,7 @@ class RatingController extends AbstractController
             $entityManager->flush();
 
             # Redirection vers la liste des notes
-            return $this->redirectToRoute('app_rating_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_series_show', ['id' => $request->get('idSerie')], Response::HTTP_SEE_OTHER);
         }
         
         # Ajoute la note à l'utilisateur et à la série
