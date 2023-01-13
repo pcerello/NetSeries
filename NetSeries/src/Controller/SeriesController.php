@@ -30,7 +30,7 @@ class SeriesController extends AbstractController
         $this->episodeRepository = $episodeRepository;
     }
 
-    
+
 
     #[Route('/', name: 'app_series_index', methods: ['GET'])]
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
@@ -49,27 +49,27 @@ class SeriesController extends AbstractController
         // Vérifie si il y a une recherche (barre de recherche) qui a était donnée
         if ($search = $request->query->get('search')) {
             $qb->andWhere('s.title LIKE :search')
-            ->setParameter('search', '%' . $search . '%');
+                ->setParameter('search', '%' . $search . '%');
         }
 
         // Vérifie si il y a un genre qui a était donnée
         if ($genreName = $request->query->get('genres')) {
             $qb->leftJoin('s.genre', 'g')
-            ->andWhere('g.name = :genres')
-            ->setParameter('genres', $genreName);
+                ->andWhere('g.name = :genres')
+                ->setParameter('genres', $genreName);
         }
 
         // Vérifie si il y a une date qui a était donnée
         if ($date = $request->query->get('date')) {
             $qb->andWhere('s.yearStart = :date')
-            ->setParameter('date', $date);
+                ->setParameter('date', $date);
         }
 
         // Vérifie si il y a un acteur qui a était donnée
         if ($actor = $request->query->get('actor')) {
             $qb->leftJoin('s.actor', 'a')
-            ->andWhere('a.name LIKE :actor')
-            ->setParameter('actor', '%' . $actor . '%');
+                ->andWhere('a.name LIKE :actor')
+                ->setParameter('actor', '%' . $actor . '%');
         }
 
         // Vérifie si il y a une note minimale qui a était donnée
@@ -78,9 +78,9 @@ class SeriesController extends AbstractController
                 ->select('AVG(r.value/2)')
                 ->where('r.series = s')
                 ->getDQL();
-        
+
             $qb->andWhere(sprintf('(%s) >= :minnote', $subquery))
-            ->setParameter('minnote', $minnote);
+                ->setParameter('minnote', $minnote);
         }
 
         // Vérifie si il y a une note maximale qui a était donnée
@@ -89,9 +89,9 @@ class SeriesController extends AbstractController
                 ->select('AVG(m.value/2)')
                 ->where('m.series = s')
                 ->getDQL();
-        
+
             $qb->andWhere(sprintf('(%s) <= :maxnote', $subquery))
-            ->setParameter('maxnote', $maxnote);
+                ->setParameter('maxnote', $maxnote);
         }
 
         //On trie les séries par l'ordre choisis par l'utilisateur
@@ -149,7 +149,7 @@ class SeriesController extends AbstractController
 
         // Récupère la note de l'utilisateur courant pour cette série
         $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
-        
+
         // Récupère toutes les notes pour cette série
         $ratings = $em->getRepository(Rating::class)->findOneBy(['series' => $rating]);
 
@@ -166,27 +166,27 @@ class SeriesController extends AbstractController
         }
 
         // Compte le nombre de notes entre 0 et 1, entre 1 et 2, entre 2 et 3, entre 3 et 4, entre 4 et 5
-        $ratingsBetween0And1 = $series->getRatings()->filter(function(Rating $rating) {
+        $ratingsBetween0And1 = $series->getRatings()->filter(function (Rating $rating) {
             $halfValue = $rating->getValue() / 2;
             return $halfValue >= 0 && $halfValue < 1;
         })->count();
 
-        $ratingsBetween1And2 = $series->getRatings()->filter(function(Rating $rating) {
+        $ratingsBetween1And2 = $series->getRatings()->filter(function (Rating $rating) {
             $halfValue = $rating->getValue() / 2;
             return $halfValue  >= 1 && $halfValue < 2;
         })->count();
 
-        $ratingsBetween2And3 = $series->getRatings()->filter(function(Rating $rating) {
+        $ratingsBetween2And3 = $series->getRatings()->filter(function (Rating $rating) {
             $halfValue = $rating->getValue() / 2;
             return $halfValue  >= 2 && $halfValue < 3;
         })->count();
 
-        $ratingsBetween3And4 = $series->getRatings()->filter(function(Rating $rating) {
+        $ratingsBetween3And4 = $series->getRatings()->filter(function (Rating $rating) {
             $halfValue = $rating->getValue() / 2;
             return $halfValue  >= 3 && $halfValue < 4;
         })->count();
 
-        $ratingsBetween4And5 = $series->getRatings()->filter(function(Rating $rating) {
+        $ratingsBetween4And5 = $series->getRatings()->filter(function (Rating $rating) {
             $halfValue = $rating->getValue() / 2;
             return $halfValue  >= 4 && $halfValue <= 5;
         })->count();
@@ -259,12 +259,14 @@ class SeriesController extends AbstractController
         }
         # get 1 epiosde from the episodes array
         $exepisode = $episodes[0];
-        $seasons = $entityManager->getRepository(Season::class)->findBy(['series' => $request->get('id2'), 'number' => range(1, $exepisode->getSeason()->getNumber() - 1)]);
-        foreach ($seasons as $season) {
+        if ($exepisode->getSeason()->getNumber() > 1) {
+            $seasons = $entityManager->getRepository(Season::class)->findBy(['series' => $request->get('id2'), 'number' => range(1, $exepisode->getSeason()->getNumber() - 1)]);
+            foreach ($seasons as $season) {
 
-            $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $season]);
-            foreach ($episodes as $episode) {
-                $user->addEpisode($episode);
+                $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $season]);
+                foreach ($episodes as $episode) {
+                    $user->addEpisode($episode);
+                }
             }
         }
 
@@ -341,7 +343,4 @@ class SeriesController extends AbstractController
         # Redirige vers la page où il y a toute les séries suivi
         return $this->redirectToRoute('app_followed_series');
     }
-
-
-
 }
