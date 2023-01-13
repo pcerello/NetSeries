@@ -24,6 +24,8 @@
 
             <p><strong>Year end : </strong>{{ series.yearEnd }}</p>
 
+            <p>IMDB : <a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
+
             <p class="notes"> <strong> Note : </strong> <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ series.externalRating.value }} </p>
 
             {% if series.getAverageRating() == 0 %}
