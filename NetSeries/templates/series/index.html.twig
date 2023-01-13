@@ -15,22 +15,36 @@
 
 
     {# Barre de recherche #}
-    <form action="{{ path('app_series_index') }}" method="get">
-        <div class="box_search">
-
-             <input type="text" name="search" placeholder="Search a serie">        
-
-        <select name="category">
-            <option value="title">Title</option>
-            <option value="genre">Genre</option>
-            <option value="date">Date</option>
-            <option value="actor">Actor</option>
-            <option value="note">Note</option>
-            </select>
-
+    <form action="{{ path('app_series_index') }}" method="get" class="box_search">
+        <input type="text" name="search" placeholder="Search a serie">
+        {# Liste déroulante pour filtrer par genre #}
+        <select name="genres">
+            <option value="">All</option>
+            {% for genre in genres %}
+                <option value="{{ genre.name }}">{{ genre.name }}</option>
+            {% endfor %}
+        </select>
+        {# Champ pour filtrer par date de sortie #}
+        <input name='date'type="number" min="1969" max="2099" step="1" placeholder="Year"/>
+        {# Champ pour filtrer par acteur #}
+        <input type="text" name="actor" placeholder="Search an actor">
+        {# Champ pour filtrer par note #}
+        <div class="note">
+{# Champ pour donné une note/moyenne minimum #}
+<input name="minnote" type="number" min="0" max="5" step="0.5" placeholder="Note Min" />
+{# Champ pour donné une note/moyenne maximum #}
+<input name="maxnote" type="number" min="0" max="5" step="0.5" placeholder="Note Max" />
+        </div>
+        
+        {# Menu déroulante pour filtrer par ordre alphabétique ou non #}
+        <select name="order">
+            <option value="ASC">Order ASC</option>
+            <option value="DESC">Order DESC</option>
+        </select>
         <input type="submit" value="To search">
-    </div>
+        
     </form>
+
 
 
 
@@ -44,42 +58,53 @@
         {# On parcours tout les séries existant de la base de donnée#}
         {% for series in series %}
             <div class="serie">
-                <a class = "linkSerie" href="{{ path('app_series_show', {'id': series.id}) }}">
-                    <div class="boxSerie">
-                <div class="imgSerie">
-                    {# Affichage du poster de la série #}  
-                    <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
-                </div>
-                <div class="titleSerie">
-                    {# Affichage du titre de la série #}
-                    {{ series.title }}
-                </div>
-
-                <div class="notes">
-                    <p>IMDB :</p>
-                    {# Affichage de la note moyenne de la série #}
-                    <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
-                    <p> {{ series.externalRating.value}}</p>
-                </div>
-
-                    {# Lien vers la page de détail de la série #}
-                  
+                {# Lien vers la page de détail de la série #}
                 
+                <a class = "linkSerie" href="{{ path('app_series_show', {'id': series.id}) }}">
+                <div class="boxSerie">
+                    {# Affichage de l'image de la série #}
+                    <div class="imgSerie">
+                        {# Affichage du poster de la série #}  
+                        <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
+                    </div>
+                    <div class="titleSerie">
+                        {# Affichage du titre de la série #}
+                        {{ series.title }}
+                    </div>
 
-                {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
-                {% if app.user %}
-                    {# On vérifie si l'utilisateur est un administrateur #}
-                    {% if app.user.isFollowing(series) %}
-                        <span class="eye" ><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
-                    {% else %}
-                        <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
+                    <div class="notes">
+
+                        <div id="note-Imdb">
+                            <a href="https://www.imdb.com/title/{{series.imdb}}">IMDB :</a>
+                            {# Affichage de la note moyenne de la série #}
+                            <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                            <p> {{ series.externalRating.value}}</p>
+                        </div>
+                        <div id="note-User">
+                            <p><strong> Note of Users : <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                            {% if series.getAverageRating() == 0 %}
+                            </strong> No note </p>
+                        {% else %}
+                    </strong> {{ series.getAverageRating() }}/5</p>
+                        {% endif %}
+                        </div>
+                    </div>
+                </a>
+                    {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
+                    {% if app.user %}
+                        {# On vérifie si l'utilisateur est un administrateur #}
+                        {% if app.user.isFollowing(series) %}
+                            <span class="eye" ><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
+                        {% else %}
+                            <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
+                        {% endif %}
                     {% endif %}
-                {% endif %}
-            </div>
-            </a>  
+                </div>
+                
             </div>
         {% endfor %}
     </div>
+
 
     {# Permet de mettre en place la pagination des séries #}
     <div class="navigation">
