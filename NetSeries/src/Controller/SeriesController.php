@@ -37,10 +37,10 @@ class SeriesController extends AbstractController
     {
 
         // Vérifie si le paramètre de requête "order" est défini sur "ASC" ou "DESC"
-        if ($request->query->get('order') == 'ASC') {
-            $AscOrDesc = "ASC";
-        } else {
-            $AscOrDesc = "DESC";
+        if ($request->query->get('order') == 'NoteCroissant') {
+            $TypeTrie = "ASC";
+        } else if ($request->query->get('order') == 'DESC') {
+            $TypeTrie = "DESC";
         }
 
         // On récupère les séries d'après les trier de l'utilisateur
@@ -94,8 +94,28 @@ class SeriesController extends AbstractController
                 ->setParameter('maxnote', $maxnote);
         }
 
-        //On trie les séries par l'ordre choisis par l'utilisateur
-        $qb->orderBy('s.title', $AscOrDesc);
+        if ($request->query->get('order') == 'noteCroissant') {
+            $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
+                ->select('AVG(r.value/2)')
+                ->where('r.series = s')
+                ->getDQL();
+            $qb->orderBy($subquery, 'ASC');
+        }
+
+        if ($request->query->get('order') == 'noteDecroissant') {
+            $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
+                ->select('AVG(r.value/2)')
+                ->where('r.series = s')
+                ->getDQL();
+            $qb->orderBy($subquery, 'DESC');
+        }
+
+       
+        if ($request->query->get('order') == 'DESC'){
+            $qb->orderBy('s.title', "DESC");
+        } else {
+            $qb->orderBy('s.title', "ASC");
+        }
 
         // Pagination des séries sur la requete faite
         $series = $paginator->paginate(
