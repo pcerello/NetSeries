@@ -19,14 +19,8 @@ class DefaultController extends AbstractController
     public function index(ManagerRegistry $doctrine): Response
     {
 
-        // Select 4 random series
-        $series = $this->doctrine->getRepository(Series::class)->findAll();
-
-            
-
-        shuffle($series);
-
-        $randomSeries = array_slice($series, 0, 4);
+        // Select 4 random series out of all series (optimized)
+        $randomSeries = $this->doctrine->getRepository(Series::class)->findBy([], [], 4);
 
         return $this->render('home/index.html.twig', [
             'random_series' => $randomSeries,
