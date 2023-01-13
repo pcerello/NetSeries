@@ -161,6 +161,24 @@ li .Viewed {
         width: 95%;
     }
     
+    .linkComment {
+        width: 35%;
+    }
+
+    a.back img {
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
+    }
+
+    a.back {
+        width: 38%;
+        display: flex;
+        flex-direction: row;
+    }
+    .trancheNote {
+        display: flex;
+        flex-direction: column;
+    }
 }
 
 .linkComment{
