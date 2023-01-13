@@ -134,7 +134,22 @@ class Rating
         return $this;
     }
 
-    public function getYear() {
-        return $this->date->format('Y-m-d H:i:s');
+    public function getTime() {
+        $now = new DateTime(); // date actuelle
+        $interval = $this->date->diff($now); // calcul de la différence entre les deux dates
+
+        if ($interval->y > 0) {
+            echo "Commentaire posté il y a " . $interval->y . " an(s).";
+        } elseif ($interval->m > 0) {
+            echo "Commentaire posté il y a " . $interval->m . " mois.";
+        } elseif ($interval->d > 0) {
+            echo "Commentaire posté il y a " . $interval->d . " jour(s).";
+        } elseif ($interval->h > 0) {
+            echo "Commentaire posté il y a " . $interval->h . " heure(s).";
+        } elseif ($interval->i > 0) {
+            echo "Commentaire posté il y a " . $interval->i . " minute(s).";
+        } elseif ($interval->s > 0) {
+            echo "Commentaire posté il y a " . $interval->s . " seconde(s).";
+        }
     }
 }
