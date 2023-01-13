@@ -220,6 +220,53 @@ span.eye img{
 iframe {
     width: 97%;
 }
+
+.box_search{
+    margin: 2em;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.box_search input, select {
+    margin: 0.5em;
+    padding: 0.5em;
+    display: block;
+    width: 40%;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 0.5px solid #909090;
+    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    color: #909090;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    padding-left: 55px;
+}
+
+input[placeholder="Search a serie"] {
+    background: url(../images/icons/search.svg) no-repeat scroll 14px;
+}
+
+select {
+    background: url(../images/icons/menu.svg) no-repeat scroll 15px 9px;
+    padding: 0.375rem 3.6rem;
+    padding-left: 55px;
+}
+
+
+input[type=text]:focus, input[type=password]:focus, select:focus {
+    color: var(--bs-body-color);
+    background-color: var(--bs-form-control-bg);
+    border-color: var(--bs-primary);
+    outline: 0;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+
+
+
+
 @media only screen and (max-width: 1100px) {
     .series {
         flex-direction: column;

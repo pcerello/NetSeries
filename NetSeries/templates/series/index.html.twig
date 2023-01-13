@@ -13,33 +13,23 @@
         {{ knp_pagination_render(series) }}
     </div>
 
+
     {# Barre de recherche #}
     <form action="{{ path('app_series_index') }}" method="get">
-        <input type="text" name="search" placeholder="Search a serie">
-        {# Liste déroulante pour filtrer par genre #}
-        <select name="genres">
-            <option value="">All</option>
-            {% for genre in genres %}
-                <option value="{{ genre.name }}">{{ genre.name }}</option>
-            {% endfor %}
-        </select>
-        {# Champ pour filtrer par date de sortie #}
-        <input name='date'type="number" min="1969" max="2099" step="1"/>
-        {# Champ pour filtrer par acteur #}
-        <input type="text" name="actor" placeholder="Search an actor">
-        {# Champ pour filtrer par note #}
-        <label for="note">Note</label>
-        {# Champ pour donné une note/moyenne minimum #}
-        <input name="minnote" type="number" min="0" max="5" step="0.5" />
-        {# Champ pour donné une note/moyenne maximum #}
-        <input name="maxnote" type="number" min="0" max="5" step="0.5" />
-        {# Menu déroulante pour filtrer par ordre alphabétique ou non #}
-        <select name="order">
-            <option value="ASC">a -> z</option>
-            <option value="DESC">z -> a</option>
-        </select>
+        <div class="box_search">
+
+             <input type="text" name="search" placeholder="Search a serie">        
+
+        <select name="category">
+            <option value="title">Title</option>
+            <option value="genre">Genre</option>
+            <option value="date">Date</option>
+            <option value="actor">Actor</option>
+            <option value="note">Note</option>
+            </select>
+
         <input type="submit" value="To search">
-        
+    </div>
     </form>
 
 
@@ -54,43 +44,39 @@
         {# On parcours tout les séries existant de la base de donnée#}
         {% for series in series %}
             <div class="serie">
-                {# Lien vers la page de détail de la série #}
                 <a class = "linkSerie" href="{{ path('app_series_show', {'id': series.id}) }}">
-
-                <div class="boxSerie">
-                    {# Affichage de l'image de la série #}
-                    <div class="imgSerie">
-                        {# Affichage du poster de la série #}  
-                        <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
-                    </div>
-                    <div class="titleSerie">
-                        {# Affichage du titre de la série #}
-                        {{ series.title }}
-                    </div>
-
-                    <div class="notes">
-                        <p>IMDB : <a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
-                        {# Affichage de la note moyenne de la série #}
-                        <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
-                        <p> {{ series.externalRating.value}}</p>
-                        {% if series.getAverageRating() == 0 %}
-                            <p><strong> Note :</strong> No note </p>
-                        {% else %}
-                            <p class="notes"><strong>Note utilisateur : </strong><img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">{{ series.getAverageRating() }}/5</p>
-                        {% endif %}
-                    </div>
-
-                    {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
-                    {% if app.user %}
-                        {# On vérifie si l'utilisateur est un administrateur #}
-                        {% if app.user.isFollowing(series) %}
-                            <span class="eye" ><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
-                        {% else %}
-                            <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
-                        {% endif %}
-                    {% endif %}
+                    <div class="boxSerie">
+                <div class="imgSerie">
+                    {# Affichage du poster de la série #}  
+                    <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
                 </div>
-                </a>  
+                <div class="titleSerie">
+                    {# Affichage du titre de la série #}
+                    {{ series.title }}
+                </div>
+
+                <div class="notes">
+                    <p>IMDB :</p>
+                    {# Affichage de la note moyenne de la série #}
+                    <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                    <p> {{ series.externalRating.value}}</p>
+                </div>
+
+                    {# Lien vers la page de détail de la série #}
+                  
+                
+
+                {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
+                {% if app.user %}
+                    {# On vérifie si l'utilisateur est un administrateur #}
+                    {% if app.user.isFollowing(series) %}
+                        <span class="eye" ><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
+                    {% else %}
+                        <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
+                    {% endif %}
+                {% endif %}
+            </div>
+            </a>  
             </div>
         {% endfor %}
     </div>
