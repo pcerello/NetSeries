@@ -133,4 +133,8 @@ class Rating
 
         return $this;
     }
+
+    public function getYear() {
+        return $this->date->format('Y-m-d H:i:s');
+    }
 }

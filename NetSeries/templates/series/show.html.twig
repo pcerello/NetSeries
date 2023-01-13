@@ -124,6 +124,7 @@
                 <th class="th">User</th>
                 <th class="th">Comment</th>
                 <th class="th">Rating</th>
+                <th class="th">Date</th>
             </tr>
         </thead>
     </table>
@@ -137,7 +138,7 @@
                         <td class="td">{{ r.user.name }}</td>
                         <td class="td">{{ r.comment }}</td>
                         <td class="td">{{ (r.value)/2 }}/5</td>
-                        
+                        <td class="td">{{ r.getYear() }}</td>                        
                     </tr>
                 {% endfor %}
             </tbody>
