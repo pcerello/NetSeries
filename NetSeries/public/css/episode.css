@@ -147,39 +147,6 @@ li .Viewed {
     }
 }
 
-@media only screen and (max-width: 800px) {
-    iframe {
-        width: 100%;
-    }
-}
-
-@media only screen and (max-width: 500px) {
-    #infos {
-        flex-direction: column;
-    }
-    #infoSerie {
-        width: 95%;
-    }
-    
-    .linkComment {
-        width: 35%;
-    }
-
-    a.back img {
-        margin-top: 0.5rem;
-        margin-left: 0.5rem;
-    }
-
-    a.back {
-        width: 38%;
-        display: flex;
-        flex-direction: row;
-    }
-    .trancheNote {
-        display: flex;
-        flex-direction: column;
-    }
-}
 
 .linkComment{
     padding: 1rem;
@@ -280,4 +247,39 @@ table {
 
 ::-webkit-scrollbar-thumb {
       -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+}
+
+
+@media only screen and (max-width: 800px) {
+    iframe {
+        width: 100%;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #infos {
+        flex-direction: column;
+    }
+    #infoSerie {
+        width: 95%;
+    }
+    
+    .linkComment {
+        width: 35%;
+    }
+
+    a.back img {
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
+    }
+
+    a.back {
+        width: 38%;
+        display: flex;
+        flex-direction: row;
+    }
+    .trancheNote {
+        display: flex;
+        flex-direction: column;
+    }
 }
