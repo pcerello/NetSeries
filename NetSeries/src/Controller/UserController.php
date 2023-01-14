@@ -203,7 +203,7 @@ class UserController extends AbstractController
         
     }
 
-    #[Route('/generate/{id}', name:'generate', methods: ['POST'])]
+    #[Route('/generate/{id}', name:'generateUser', methods: ['POST'])]
     public function generateAndInsertUsers(User $user, Request $request) : Response
     {
         // Récupère le nombre d'utilisateurs à générer
@@ -253,5 +253,7 @@ class UserController extends AbstractController
         // redirige vers la page d'index des utilisateurs
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    
     
 }

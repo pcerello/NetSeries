@@ -184,7 +184,7 @@ class SeriesController extends AbstractController
         $appointmentsRatings = $paginator->paginate(
             $ratings,
             $request->query->getInt('page', 1),
-            2,
+            10,
         );
 
         // Récupère tous les épisodes de chaque saison

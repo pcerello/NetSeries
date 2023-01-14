@@ -4,8 +4,11 @@ namespace App\Controller;
 
 use App\Entity\Rating;
 use App\Entity\Series;
+use App\Entity\User;
 use App\Form\RatingType;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Masterminds\HTML5\Entities;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,5 +107,48 @@ class RatingController extends AbstractController
         }
 
         return $this->redirectToRoute('app_rating_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/generateCritic/{id}', name:'generateCritic', methods: ['POST'])]
+    public function generateCritic(Request $request, EntityManagerInterface $em) : Response
+    {
+
+        // Récupère le nombre de critique à générer
+        $critic_count = $request->request->get('critic_count');
+
+        // Récupère tous les utilisateurs
+        $users = $em->getRepository(User::class)->findAll();
+
+        $series = $em->getRepository(Series::class)->findAll();
+
+        shuffle($series);
+
+        // Sélectionne un utilisateur aléatoire
+        $randomUser = array_pop($users);
+
+        // Taille du lot pour l'insertion en base de données pour une meilleur optimisation
+        $batchSize = 20;
+
+        // Boucle pour générer un nombre d'utilisateurs
+        for ($i = 0; $i < $critic_count; $i++) {
+            $rating = new Rating();
+            
+            $rating->setUser($randomUser);
+
+            $rating->setSeries($series[$i]);
+
+            $rating->setValue(rand(0, 10));
+
+
+            $em->persist($rating);
+
+        }
+
+        // mise à jour de la base de données
+        $em->flush();
+        $em->clear();
+
+        // redirige vers la page d'index des utilisateurs
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 }
