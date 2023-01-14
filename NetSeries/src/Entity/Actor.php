@@ -93,5 +93,4 @@ class Actor
 
         return $this;
     }
-
 }

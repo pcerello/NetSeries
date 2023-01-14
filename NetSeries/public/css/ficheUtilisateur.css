@@ -1,3 +1,29 @@
 img {
     width: 15vh;
 }
+
+#edit {
+    display: flex;
+    flex-direction: row;
+}
+
+#nameMail, #editInput {
+    flex: 1;
+    align-self: center;
+}
+
+#editInput {
+    text-align: center;
+    
+}
+
+#editInput a {
+    color: black;
+    border: 2px solid black;
+    border-radius: 5px;
+    padding: 1vh;
+}
+
+a {
+    text-decoration: none;
+}

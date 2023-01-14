@@ -130,12 +130,30 @@ class UserController extends AbstractController
     #[Route('/profil/{id}', name: 'app_user_profil', methods: ['GET'])]
     public function profil(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        return 0;
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+        $form = $this->createForm(UpdateProfileFormType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Votre profil a été mis à jour avec succès.');
+
+            return $this->redirectToRoute('profile');
+        }
+
+        return $this->render('profile/profil.html.twig', [
+            'form' => $form->createView(),
+        ]);
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
