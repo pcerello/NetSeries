@@ -73,12 +73,13 @@
 
                     <div class="notes">
                         {# Affichage de la note moyenne de la série #}
-                        <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
-                        <p> {{ series.externalRating.value}}</p>
+                        
+                        <p> IMDB : {{ series.externalRating.value}} <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
+                        
                         {% if series.getAverageRating() == 0 %}
-                            <p><strong> Note :</strong> No note </p>
+                            <p><strong> Note IMDB :</strong> No note </p>
                         {% else %}
-                            <p class="notes"><strong>Note utilisateur : </strong><img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">{{ series.getAverageRating() }}/5</p>
+                            <p class="notes"><strong>Moyenne note : {{ series.getAverageRating() }}/5 </strong><img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
                         {% endif %}
                     </div>
 
