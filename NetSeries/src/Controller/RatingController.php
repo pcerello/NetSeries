@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\FormError;
 
 #[Route('/rating')]
 class RatingController extends AbstractController
@@ -31,7 +32,7 @@ class RatingController extends AbstractController
     }
 
     #[Route('/new/{idSerie}', name: 'app_rating_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request ,EntityManagerInterface $entityManager): Response
     {
         $rating = new Rating();
 
@@ -44,10 +45,20 @@ class RatingController extends AbstractController
         $rating->setSeries($series);
         $rating->setUser($user);
 
+        # Vérifie si un enregistrement de note existe déjà pour cette série et cet utilisateur
+        $existingRating = $entityManager->getRepository(Rating::class)->findOneBy(['series' => $series, 'user' => $user]);
+        
+
+
         # Création du formulaire pour la note
         $form = $this->createForm(RatingType::class, $rating);
 
         $form->handleRequest($request);
+
+        if ($existingRating) {
+            // On regarde si l'utilisateur a deja mise une note sur la séries concerné
+            $form->get('value')->addError(new FormError("You've already given this series a rating and/or critic"));
+        }
 
         # Si le formulaire est soumis et valide
         if ($form->isSubmitted() && $form->isValid()) {
