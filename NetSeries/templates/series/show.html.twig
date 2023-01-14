@@ -97,19 +97,13 @@
         </tbody>
     </table>
 
+
+
     <div class="trancheNote">
         <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}"> ALL opinions </a> 
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=00"> 0 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[0]}} opinions </a> 
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=1"> 0,5 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[1]}} opinions </a>
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=2"> 1 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[2]}} opinions </a>
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=3"> 1,5 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[3]}} opinions </a>
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=4"> 2 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[4]}} opinions </a>
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=5"> 2,5 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[5]}} opinions </a> 
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=6"> 3 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[6]}} opinions </a>
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=7"> 3,5 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[7]}} opinions </a>
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=8"> 4 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[8]}} opinions </a>
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=9"> 4,5 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[9]}} opinions </a>
-        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=10"> 5 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[10]}} opinions </a>
+        {% for i in 0..10 %}
+            <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=0{{i}}"> {{i/2}} <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[i]}} opinions </a>
+        {% endfor %}
     </div>
 
     {% if app.user %}
