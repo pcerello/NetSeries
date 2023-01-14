@@ -94,24 +94,22 @@ class SeriesController extends AbstractController
                 ->setParameter('maxnote', $maxnote);
         }
 
+        
+
         if ($request->query->get('order') == 'noteCroissant') {
-            $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
-                ->select('AVG(r.value/2)')
-                ->where('r.series = s')
-                ->getDQL();
-            $qb->orderBy($subquery, 'ASC');
+            $qb->leftJoin('s.ratings', 'r')
+            ->addSelect('AVG(r.value) as HIDDEN avg_value')
+            ->groupBy('s.id')->orderBy('avg_value', 'ASC');
         }
 
-        if ($request->query->get('order') == 'noteDecroissant') {
-            $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
-                ->select('AVG(r.value/2)')
-                ->where('r.series = s')
-                ->getDQL();
-            $qb->orderBy($subquery, 'DESC');
-        }
+        /*SELECT title from series s 
+        order by (select avg(value/2) 
+        from rating r where s.id = r.id 
+        and r.value is not null) asc;*/
+
 
        
-        if ($request->query->get('order') == 'DESC'){
+        else if ($request->query->get('order') == 'DESC'){
             $qb->orderBy('s.title', "DESC");
         } else {
             $qb->orderBy('s.title', "ASC");

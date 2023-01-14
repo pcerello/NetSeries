@@ -137,6 +137,7 @@ class Series
      */
     private $ratings = array();
 
+
     /**
      * Constructor
      */
@@ -462,6 +463,7 @@ class Series
         $averageRating = $averageRating/2;
         // Arrondi à 0.5 près
         $averageRating = round($averageRating * 2) / 2;
+
         return $averageRating;
     }
 
