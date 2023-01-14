@@ -37,13 +37,6 @@ class SeriesController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
 
-        // Vérifie si le paramètre de requête "order" est défini sur "ASC" ou "DESC"
-        if ($request->query->get('order') == 'NoteCroissant') {
-            $TypeTrie = "ASC";
-        } else if ($request->query->get('order') == 'DESC') {
-            $TypeTrie = "DESC";
-        }
-
         // On récupère les séries d'après les trier de l'utilisateur
         $qb = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
 
@@ -173,8 +166,15 @@ class SeriesController extends AbstractController
         // Récupère la note de l'utilisateur courant pour cette série
         $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
 
-        // Récupère toutes les notes pour cette série
-        $ratings = $em->getRepository(Rating::class)->findOneBy(['series' => $rating]);
+
+        if ($val = $request->query->get('valueChoice')){
+            $ratings = $em->getRepository(Rating::class)->findBy(['series' => $series, 'value' => $val]);
+        } else {
+            $ratings = $series->getRatings();
+        }
+
+        
+            
 
         // Vérifie si l'utilisateur courant a noté cette série
         if ($rating) {
@@ -221,6 +221,7 @@ class SeriesController extends AbstractController
     
         return $result;
     }
+
 
     #[Route('/poster/{id}', name: 'app_poster_show', methods: ['GET', 'POST'])]
     public function shows(Series $series): Response

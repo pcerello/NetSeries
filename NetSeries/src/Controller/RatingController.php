@@ -70,6 +70,8 @@ class RatingController extends AbstractController
     #[Route('/{id}', name: 'app_rating_show', methods: ['GET'])]
     public function show(Rating $rating): Response
     {
+        
+
         return $this->render('rating/show.html.twig', [
             'rating' => $rating,
         ]);
