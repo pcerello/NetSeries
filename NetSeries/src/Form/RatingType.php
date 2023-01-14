@@ -17,19 +17,19 @@ class RatingType extends AbstractType
         $builder
             ->add('value', ChoiceType::class, [ 'choices' => [
                 '0 ⭐' => 0,
-                '1 ⭐' => 1,
-                '2 ⭐' => 2,
-                '3 ⭐' => 3,
-                '4 ⭐' => 4,
-                '5 ⭐' => 5,
-                '6 ⭐' => 6,
-                '7 ⭐' => 7,
-                '8 ⭐' => 8,
-                '9 ⭐' => 9,
-                '10 ⭐' => 10,
+                '0,5 ⭐' => 1,
+                '1 ⭐' => 2,
+                '1,5 ⭐' => 3,
+                '2 ⭐' => 4,
+                '2,5 ⭐' => 5,
+                '3 ⭐' => 6,
+                '3,5 ⭐' => 7,
+                '4 ⭐' => 8,
+                '4,5 ⭐' => 9,
+                '5 ⭐' => 10,
             ],
             'label' => 'Rating of series',
-            'constraints' => [new Choice(['choices' => [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]])]
+            'constraints' => [new Choice(['choices' => [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]])]
         ])
             ->add('comment');
     }
