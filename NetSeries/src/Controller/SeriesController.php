@@ -173,15 +173,19 @@ class SeriesController extends AbstractController
             $ratings = $series->getRatings();
         }
 
-        
-            
-
         // Vérifie si l'utilisateur courant a noté cette série
         if ($rating) {
             $userHasRated = true;
         } else {
             $userHasRated = false;
         }
+
+        //Pagination des commentaires/critique des utilisateurs
+        $appointmentsRatings = $paginator->paginate(
+            $ratings,
+            $request->query->getInt('page', 1),
+            2,
+        );
 
         // Récupère tous les épisodes de chaque saison
         foreach ($seasons as $season) {
@@ -196,7 +200,7 @@ class SeriesController extends AbstractController
             'series' => $series,
             'episodesBySeason' => $episodesBySeason,
             'userHasRated' => $userHasRated,
-            'ratings' => $ratings,
+            'ratings' => $appointmentsRatings,
             'criticByValue' => $criticByValue,
         ]);
     }

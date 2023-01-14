@@ -145,6 +145,10 @@
         </table>
     </div>
 
+    <div class="navigation">
+        {{ knp_pagination_render(ratings) }}
+    </div>
+
     {# Permet de revenir à la page où il y a toute les séries #}
     <a class="back" href="{{ path('app_series_index') }}">⟵</a>{% endblock %}
 
