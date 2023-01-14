@@ -207,14 +207,18 @@ class SeriesController extends AbstractController
     private function compteNombreAvis(Series $series, EntityManagerInterface $em) {
         $notes = $em->getRepository(Rating::class)->findBy(['series' => $series]);
         $result = array();
-        for ($i = 0; $i <= 5; $i += 0.5) {
+        for ($i = 0; $i <= 10; $i++) {
             $result[$i] = 0;
         }
         foreach ($notes as $note) {
-            $noteValue = $note->getValue() / 2;
-            $result[$noteValue]++;
+            $noteValue = $note->getValue();
+            if (is_int($noteValue)) {
+                $result[$noteValue]++;
+            } else {
+                $result[$noteValue]++;
+            }
         }
-
+    
         return $result;
     }
 
