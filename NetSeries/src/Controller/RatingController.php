@@ -127,24 +127,26 @@ class RatingController extends AbstractController
         // Récupère le nombre de critique à générer
         $critic_count = $request->request->get('critic_count');
 
-        // Récupère tous les utilisateurs
-        $users = $em->getRepository(User::class)->findAll();
-
+        //Récupère tout les séries existant
         $series = $em->getRepository(Series::class)->findAll();
 
+        //On mélange les séries
         shuffle($series);
 
-        // Sélectionne un utilisateur aléatoire
-        $randomUser = array_pop($users);
+        // On prend le nombre d'utilisateur présent dans la table User
+        $nbTotalUsers = $em->getRepository(User::class)->createQueryBuilder('u')
+                ->select('count(u.id)')
+                ->getQuery()
+                ->getSingleScalarResult();
 
-        // Taille du lot pour l'insertion en base de données pour une meilleur optimisation
-        $batchSize = 20;
+        // Sélectionne un utilisateur aléatoire
+        $randomUser = $em->getRepository(User::class)->findBy([], null, 1, rand(0, $nbTotalUsers-1));
 
         // Boucle pour générer un nombre d'utilisateurs
         for ($i = 0; $i < $critic_count; $i++) {
             $rating = new Rating();
             
-            $rating->setUser($randomUser);
+            $rating->setUser($randomUser[0]);
 
             $rating->setSeries($series[$i]);
 
