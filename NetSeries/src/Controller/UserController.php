@@ -62,8 +62,11 @@ class UserController extends AbstractController
             10
         );
 
+        $series = $entityManager->getRepository(Series::class)->findAll();
+
         return $this->render('user/index.html.twig', [
             'users' => $appointments,
+            'series' => $series,
         ]);
         
         // if the user is logged in but is not admin, redirect to the homepage
