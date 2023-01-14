@@ -23,8 +23,9 @@
                 <option value="{{ genre.name }}">{{ genre.name }}</option>
             {% endfor %}
         </select>
-        {# Champ pour filtrer par date de sortie #}
-        <input name='date'type="number" min="1969" max="2099" step="1"/>
+        {# Champs pour filtrer par date de sortie #}
+        <input name='dateMin'type="number" min="1969" max="2099" step="1"/>
+        <input name='dateMax'type="number" min="1969" max="2099" step="1"/>
         {# Champ pour filtrer par acteur #}
         <input type="text" name="actor" placeholder="Search an actor">
         {# Champ pour filtrer par note #}
@@ -35,8 +36,10 @@
         <input name="maxnote" type="number" min="0" max="5" step="0.5" />
         {# Menu déroulante pour filtrer par ordre alphabétique ou non #}
         <select name="order">
-            <option value="ASC">a -> z</option>
-            <option value="DESC">z -> a</option>
+            <option value="ASC">A -> Z</option>
+            <option value="DESC">Z -> A</option>
+            <option value="noteCroissant">Moyenne croissant</option>
+            <option value="noteDecroissant">Moyenne décroissant</option>
         </select>
         <input type="submit" value="To search">
         

@@ -37,10 +37,10 @@ class SeriesController extends AbstractController
     {
 
         // Vérifie si le paramètre de requête "order" est défini sur "ASC" ou "DESC"
-        if ($request->query->get('order') == 'ASC') {
-            $AscOrDesc = "ASC";
-        } else {
-            $AscOrDesc = "DESC";
+        if ($request->query->get('order') == 'NoteCroissant') {
+            $TypeTrie = "ASC";
+        } else if ($request->query->get('order') == 'DESC') {
+            $TypeTrie = "DESC";
         }
 
         // On récupère les séries d'après les trier de l'utilisateur
@@ -59,10 +59,16 @@ class SeriesController extends AbstractController
                 ->setParameter('genres', $genreName);
         }
 
-        // Vérifie si il y a une date qui a était donnée
-        if ($date = $request->query->get('date')) {
-            $qb->andWhere('s.yearStart = :date')
-                ->setParameter('date', $date);
+        // Vérifie si il y a une date minimum qui a était donnée
+        if ($date = $request->query->get('dateMin')) {
+            $qb->andWhere('s.yearStart >= :dateMin')
+                ->setParameter('dateMin', $date);
+        }
+
+        // Vérifie si il y a une date maximum qui a était donnée
+        if ($date = $request->query->get('dateMax')) {
+            $qb->andWhere('s.yearStart <= :dateMax')
+                ->setParameter('dateMax', $date);
         }
 
         // Vérifie si il y a un acteur qui a était donnée
@@ -94,8 +100,24 @@ class SeriesController extends AbstractController
                 ->setParameter('maxnote', $maxnote);
         }
 
-        //On trie les séries par l'ordre choisis par l'utilisateur
-        $qb->orderBy('s.title', $AscOrDesc);
+        
+
+        if ($request->query->get('order') == 'noteCroissant') {
+            $qb->leftJoin('s.ratings', 'r')
+            ->addSelect('AVG(r.value) as HIDDEN avg_value')
+            ->groupBy('s.id')->orderBy('avg_value', 'ASC');
+        }
+
+        else if ($request->query->get('order') == 'noteDecroissant'){
+            $qb->leftJoin('s.ratings', 'r')
+            ->addSelect('AVG(r.value) as HIDDEN avg_value')
+            ->groupBy('s.id')->orderBy('avg_value', 'DESC');
+
+        } else if ($request->query->get('order') == 'DESC'){
+            $qb->orderBy('s.title', "DESC");
+        } else {
+            $qb->orderBy('s.title', "ASC");
+        }
 
         // Pagination des séries sur la requete faite
         $series = $paginator->paginate(
