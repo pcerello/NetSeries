@@ -127,6 +127,12 @@ class UserController extends AbstractController
         ]);
     }
 
+    #[Route('/profil/{id}', name: 'app_user_profil', methods: ['GET'])]
+    public function profil(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        return 0;
+    }
+
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
