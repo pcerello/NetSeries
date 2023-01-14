@@ -97,12 +97,13 @@
         </tbody>
     </table>
 
+
+
     <div class="trancheNote">
-        <a class="back" href=""> 0-1 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween0And1}} avis </a> 
-        <a class="back" href=""> 1-2 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween1And2}} avis </a>
-        <a class="back" href=""> 2-3 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween2And3}} avis </a>
-        <a class="back" href=""> 3-4 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween3And4}} avis </a>
-        <a class="back" href=""> 4-5 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ratingsBetween4And5}} avis </a>
+        <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}"> ALL opinions </a> 
+        {% for i in 0..10 %}
+            <a class="back" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=0{{i}}"> {{i/2}} <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">: {{criticByValue[i]}} opinions </a>
+        {% endfor %}
     </div>
 
     {% if app.user %}
@@ -132,7 +133,7 @@
     <div class="tbl-content">
         <table cellpadding="0" cellspacing="0" border="0">
             <tbody>
-                {% for r in series.ratings %}
+                {% for r in ratings %}
                     <tr>
                         
                         <td class="td">{{ r.user.name }}</td>
@@ -143,6 +144,10 @@
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <div class="navigation">
+        {{ knp_pagination_render(ratings) }}
     </div>
 
     {# Permet de revenir à la page où il y a toute les séries #}

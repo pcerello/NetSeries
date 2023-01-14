@@ -23,8 +23,9 @@
                 <option value="{{ genre.name }}">{{ genre.name }}</option>
             {% endfor %}
         </select>
-        {# Champ pour filtrer par date de sortie #}
-        <input name='date'type="number" min="1969" max="2099" step="1"/>
+        {# Champs pour filtrer par date de sortie #}
+        <input name='dateMin'type="number" min="1969" max="2099" step="1"/>
+        <input name='dateMax'type="number" min="1969" max="2099" step="1"/>
         {# Champ pour filtrer par acteur #}
         <input type="text" name="actor" placeholder="Search an actor">
         {# Champ pour filtrer par note #}
@@ -35,8 +36,10 @@
         <input name="maxnote" type="number" min="0" max="5" step="0.5" />
         {# Menu déroulante pour filtrer par ordre alphabétique ou non #}
         <select name="order">
-            <option value="ASC">a -> z</option>
-            <option value="DESC">z -> a</option>
+            <option value="ASC">A -> Z</option>
+            <option value="DESC">Z -> A</option>
+            <option value="noteCroissant">Moyenne croissant</option>
+            <option value="noteDecroissant">Moyenne décroissant</option>
         </select>
         <input type="submit" value="To search">
         
@@ -69,14 +72,14 @@
                     </div>
 
                     <div class="notes">
-                        <p>IMDB : <a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
                         {# Affichage de la note moyenne de la série #}
-                        <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
-                        <p> {{ series.externalRating.value}}</p>
+                        
+                        <p> IMDB : {{ series.externalRating.value}} <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
+                        
                         {% if series.getAverageRating() == 0 %}
-                            <p><strong> Note :</strong> No note </p>
+                            <p><strong> Note IMDB :</strong> No note </p>
                         {% else %}
-                            <p class="notes"><strong>Note utilisateur : </strong><img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">{{ series.getAverageRating() }}/5</p>
+                            <p class="notes"><strong>Moyenne note : {{ series.getAverageRating() }}/5 </strong>{{ series.getRatings()|length }} avis<img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
                         {% endif %}
                     </div>
 

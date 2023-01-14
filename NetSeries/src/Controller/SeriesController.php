@@ -9,6 +9,7 @@ use App\Entity\Rating;
 use App\Entity\User;
 use App\Form\SeriesType;
 use App\Repository\EpisodeRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,13 +37,6 @@ class SeriesController extends AbstractController
     public function index(Request $request, EntityManagerInterface $entityManager, PaginatorInterface $paginator): Response
     {
 
-        // Vérifie si le paramètre de requête "order" est défini sur "ASC" ou "DESC"
-        if ($request->query->get('order') == 'ASC') {
-            $AscOrDesc = "ASC";
-        } else {
-            $AscOrDesc = "DESC";
-        }
-
         // On récupère les séries d'après les trier de l'utilisateur
         $qb = $entityManager->getRepository(Series::class)->createQueryBuilder('s');
 
@@ -59,10 +53,16 @@ class SeriesController extends AbstractController
                 ->setParameter('genres', $genreName);
         }
 
-        // Vérifie si il y a une date qui a était donnée
-        if ($date = $request->query->get('date')) {
-            $qb->andWhere('s.yearStart = :date')
-                ->setParameter('date', $date);
+        // Vérifie si il y a une date minimum qui a était donnée
+        if ($date = $request->query->get('dateMin')) {
+            $qb->andWhere('s.yearStart >= :dateMin')
+                ->setParameter('dateMin', $date);
+        }
+
+        // Vérifie si il y a une date maximum qui a était donnée
+        if ($date = $request->query->get('dateMax')) {
+            $qb->andWhere('s.yearStart <= :dateMax')
+                ->setParameter('dateMax', $date);
         }
 
         // Vérifie si il y a un acteur qui a était donnée
@@ -94,8 +94,24 @@ class SeriesController extends AbstractController
                 ->setParameter('maxnote', $maxnote);
         }
 
-        //On trie les séries par l'ordre choisis par l'utilisateur
-        $qb->orderBy('s.title', $AscOrDesc);
+        
+
+        if ($request->query->get('order') == 'noteCroissant') {
+            $qb->leftJoin('s.ratings', 'r')
+            ->addSelect('AVG(r.value) as HIDDEN avg_value')
+            ->groupBy('s.id')->orderBy('avg_value', 'ASC');
+        }
+
+        else if ($request->query->get('order') == 'noteDecroissant'){
+            $qb->leftJoin('s.ratings', 'r')
+            ->addSelect('AVG(r.value) as HIDDEN avg_value')
+            ->groupBy('s.id')->orderBy('avg_value', 'DESC');
+
+        } else if ($request->query->get('order') == 'DESC'){
+            $qb->orderBy('s.title', "DESC");
+        } else {
+            $qb->orderBy('s.title', "ASC");
+        }
 
         // Pagination des séries sur la requete faite
         $series = $paginator->paginate(
@@ -150,8 +166,12 @@ class SeriesController extends AbstractController
         // Récupère la note de l'utilisateur courant pour cette série
         $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
 
-        // Récupère toutes les notes pour cette série
-        $ratings = $em->getRepository(Rating::class)->findOneBy(['series' => $rating]);
+
+        if ($val = $request->query->get('valueChoice')){
+            $ratings = $em->getRepository(Rating::class)->findBy(['series' => $series, 'value' => $val]);
+        } else {
+            $ratings = $series->getRatings();
+        }
 
         // Vérifie si l'utilisateur courant a noté cette série
         if ($rating) {
@@ -160,50 +180,52 @@ class SeriesController extends AbstractController
             $userHasRated = false;
         }
 
+        //Pagination des commentaires/critique des utilisateurs
+        $appointmentsRatings = $paginator->paginate(
+            $ratings,
+            $request->query->getInt('page', 1),
+            2,
+        );
+
         // Récupère tous les épisodes de chaque saison
         foreach ($seasons as $season) {
             $episodesBySeason[$season->getNumber()] = $this->episodeRepository->findBySeason($season->getId());
         }
 
-        // Compte le nombre de notes entre 0 et 1, entre 1 et 2, entre 2 et 3, entre 3 et 4, entre 4 et 5
-        $ratingsBetween0And1 = $series->getRatings()->filter(function (Rating $rating) {
-            $halfValue = $rating->getValue() / 2;
-            return $halfValue >= 0 && $halfValue < 1;
-        })->count();
-
-        $ratingsBetween1And2 = $series->getRatings()->filter(function (Rating $rating) {
-            $halfValue = $rating->getValue() / 2;
-            return $halfValue  >= 1 && $halfValue < 2;
-        })->count();
-
-        $ratingsBetween2And3 = $series->getRatings()->filter(function (Rating $rating) {
-            $halfValue = $rating->getValue() / 2;
-            return $halfValue  >= 2 && $halfValue < 3;
-        })->count();
-
-        $ratingsBetween3And4 = $series->getRatings()->filter(function (Rating $rating) {
-            $halfValue = $rating->getValue() / 2;
-            return $halfValue  >= 3 && $halfValue < 4;
-        })->count();
-
-        $ratingsBetween4And5 = $series->getRatings()->filter(function (Rating $rating) {
-            $halfValue = $rating->getValue() / 2;
-            return $halfValue  >= 4 && $halfValue <= 5;
-        })->count();
+        $criticByValue = $this->compteNombreAvis($series, $em);
+        
 
         // Retourne les détails de la série, les épisodes par saison, si l'utilisateur a noté la série, et les statistiques de notes
         return $this->render('series/show.html.twig', [
             'series' => $series,
             'episodesBySeason' => $episodesBySeason,
             'userHasRated' => $userHasRated,
-            'ratings' => $ratings,
-            'ratingsBetween0And1' => $ratingsBetween0And1,
-            'ratingsBetween1And2' => $ratingsBetween1And2,
-            'ratingsBetween2And3' => $ratingsBetween2And3,
-            'ratingsBetween3And4' => $ratingsBetween3And4,
-            'ratingsBetween4And5' => $ratingsBetween4And5,
+            'ratings' => $appointmentsRatings,
+            'criticByValue' => $criticByValue,
         ]);
     }
+
+    /**
+     * Compte le nombre de notes qui a sur une séries à une valeur de note donnée
+     */
+    private function compteNombreAvis(Series $series, EntityManagerInterface $em) {
+        $notes = $em->getRepository(Rating::class)->findBy(['series' => $series]);
+        $result = array();
+        for ($i = 0; $i <= 10; $i++) {
+            $result[$i] = 0;
+        }
+        foreach ($notes as $note) {
+            $noteValue = $note->getValue();
+            if (is_int($noteValue)) {
+                $result[$noteValue]++;
+            } else {
+                $result[$noteValue]++;
+            }
+        }
+    
+        return $result;
+    }
+
 
     #[Route('/poster/{id}', name: 'app_poster_show', methods: ['GET', 'POST'])]
     public function shows(Series $series): Response
