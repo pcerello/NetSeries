@@ -102,14 +102,12 @@ class SeriesController extends AbstractController
             ->groupBy('s.id')->orderBy('avg_value', 'ASC');
         }
 
-        /*SELECT title from series s 
-        order by (select avg(value/2) 
-        from rating r where s.id = r.id 
-        and r.value is not null) asc;*/
+        else if ($request->query->get('order') == 'noteDecroissant'){
+            $qb->leftJoin('s.ratings', 'r')
+            ->addSelect('AVG(r.value) as HIDDEN avg_value')
+            ->groupBy('s.id')->orderBy('avg_value', 'DESC');
 
-
-       
-        else if ($request->query->get('order') == 'DESC'){
+        } else if ($request->query->get('order') == 'DESC'){
             $qb->orderBy('s.title', "DESC");
         } else {
             $qb->orderBy('s.title', "ASC");
