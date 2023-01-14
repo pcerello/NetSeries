@@ -138,7 +138,6 @@ class Series
      */
     private $ratings = array();
 
-
     /**
      * Constructor
      */

@@ -98,13 +98,13 @@ class SeriesController extends AbstractController
 
         if ($request->query->get('order') == 'noteCroissant') {
             $qb->leftJoin('s.ratings', 'c')
-            ->addSelect('AVG(c.value) as HIDDEN avg_value')
+            ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
             ->groupBy('s.id')->orderBy('avg_value', 'ASC');
         }
 
         else if ($request->query->get('order') == 'noteDecroissant'){
             $qb->leftJoin('s.ratings', 'd')
-            ->addSelect('AVG(d.value) as HIDDEN avg_value')
+            ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
             ->groupBy('s.id')->orderBy('avg_value', 'DESC');
 
         } else if ($request->query->get('order') == 'DESC'){
