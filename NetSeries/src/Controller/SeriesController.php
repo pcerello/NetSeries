@@ -59,10 +59,16 @@ class SeriesController extends AbstractController
                 ->setParameter('genres', $genreName);
         }
 
-        // Vérifie si il y a une date qui a était donnée
-        if ($date = $request->query->get('date')) {
-            $qb->andWhere('s.yearStart = :date')
-                ->setParameter('date', $date);
+        // Vérifie si il y a une date minimum qui a était donnée
+        if ($date = $request->query->get('dateMin')) {
+            $qb->andWhere('s.yearStart >= :dateMin')
+                ->setParameter('dateMin', $date);
+        }
+
+        // Vérifie si il y a une date maximum qui a était donnée
+        if ($date = $request->query->get('dateMax')) {
+            $qb->andWhere('s.yearStart <= :dateMax')
+                ->setParameter('dateMax', $date);
         }
 
         // Vérifie si il y a un acteur qui a était donnée
