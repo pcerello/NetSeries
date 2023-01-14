@@ -9,6 +9,7 @@ use App\Entity\Rating;
 use App\Entity\User;
 use App\Form\SeriesType;
 use App\Repository\EpisodeRepository;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -187,18 +188,7 @@ class SeriesController extends AbstractController
             $episodesBySeason[$season->getNumber()] = $this->episodeRepository->findBySeason($season->getId());
         }
 
-        // Compte le nombre de notes entre 0 et 1, entre 1 et 2, entre 2 et 3, entre 3 et 4, entre 4 et 5
-        $ratings0 = $this->compteNombreAvis(0, $series);
-        $ratings05 = $this->compteNombreAvis(0.5, $series);
-        $ratings1 = $this->compteNombreAvis(1, $series);
-        $ratings15 = $this->compteNombreAvis(1.5, $series);
-        $ratings2 = $this->compteNombreAvis(2, $series);
-        $ratings25 = $this->compteNombreAvis(2.5, $series);
-        $ratings3 = $this->compteNombreAvis(3, $series);
-        $ratings35 = $this->compteNombreAvis(3.5, $series);
-        $ratings4 = $this->compteNombreAvis(4, $series);
-        $ratings45 = $this->compteNombreAvis(4.5, $series);
-        $ratings5 = $this->compteNombreAvis(5, $series);
+        $criticByValue = $this->compteNombreAvis($series, $em);
         
 
         // Retourne les détails de la série, les épisodes par saison, si l'utilisateur a noté la série, et les statistiques de notes
@@ -207,25 +197,25 @@ class SeriesController extends AbstractController
             'episodesBySeason' => $episodesBySeason,
             'userHasRated' => $userHasRated,
             'ratings' => $ratings,
-            'ratings0' => $ratings0,
-            'ratings05' => $ratings05,
-            'ratings1' => $ratings1,
-            'ratings15' => $ratings15,
-            'ratings2' => $ratings2,
-            'ratings25' => $ratings25,
-            'ratings3' => $ratings3,
-            'ratings35' => $ratings35,
-            'ratings4' => $ratings4,
-            'ratings45' => $ratings45,
-            'ratings5' => $ratings5,
+            'criticByValue' => $criticByValue,
         ]);
     }
 
-    private function compteNombreAvis(float $valeur, Series $serie) {
-        return $serie->getRatings()->filter(function (Rating $rating) use ($valeur) {
-            $halfValue = $rating->getValue() / 2;
-            return $halfValue == ($valeur);
-        })->count();
+    /**
+     * Compte le nombre de notes qui a sur une séries à une valeur de note donnée
+     */
+    private function compteNombreAvis(Series $series, EntityManagerInterface $em) {
+        $notes = $em->getRepository(Rating::class)->findBy(['series' => $series]);
+        $result = array();
+        for ($i = 0; $i <= 5; $i += 0.5) {
+            $result[$i] = 0;
+        }
+        foreach ($notes as $note) {
+            $noteValue = $note->getValue() / 2;
+            $result[$noteValue]++;
+        }
+
+        return $result;
     }
 
     #[Route('/poster/{id}', name: 'app_poster_show', methods: ['GET', 'POST'])]
