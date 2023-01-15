@@ -483,7 +483,7 @@ class Series
     public function getRatingsModerate() 
     {
         /** @var \Rating */
-        $valueModerate = array();
+        $valueModerate = new ArrayCollection();
         foreach ($this->getRatings() as $rating) {
             if ($rating->isEstModere()){
                 $valueModerate->add($rating);

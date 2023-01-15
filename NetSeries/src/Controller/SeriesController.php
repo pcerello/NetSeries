@@ -76,7 +76,7 @@ class SeriesController extends AbstractController
         if ($minnote = $request->query->get('minnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
                 ->select('AVG(r.value/2)')
-                ->where('r.series = s')
+                ->where('r.series = s AND r.estModere = true')
                 ->getDQL();
 
             $qb->andWhere(sprintf('(%s) >= :minnote', $subquery))
@@ -87,7 +87,7 @@ class SeriesController extends AbstractController
         if ($maxnote = $request->query->get('maxnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('m')
                 ->select('AVG(m.value/2)')
-                ->where('m.series = s')
+                ->where('m.series = s AND m.estModere = true')
                 ->getDQL();
 
             $qb->andWhere(sprintf('(%s) <= :maxnote', $subquery))
@@ -99,13 +99,17 @@ class SeriesController extends AbstractController
         if ($request->query->get('order') == 'noteCroissant') {
             $qb->leftJoin('s.ratings', 'c')
             ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
-            ->groupBy('s.id')->orderBy('avg_value', 'ASC');
+            ->where('c.estModere = true')
+            ->groupBy('s.id')
+            ->orderBy('avg_value', 'ASC');
         }
 
         else if ($request->query->get('order') == 'noteDecroissant'){
             $qb->leftJoin('s.ratings', 'd')
             ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
-            ->groupBy('s.id')->orderBy('avg_value', 'DESC');
+            ->where('d.estModere = true')
+            ->groupBy('s.id')
+            ->orderBy('avg_value', 'DESC');
 
         } else if ($request->query->get('order') == 'DESC'){
             $qb->orderBy('s.title', "DESC");
