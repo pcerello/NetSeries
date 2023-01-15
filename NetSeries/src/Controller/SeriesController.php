@@ -100,16 +100,14 @@ class SeriesController extends AbstractController
             $qb->leftJoin('s.ratings', 'c')
             ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
             ->where('c.estModere = true')
-            ->groupBy('s.id')
-            ->orderBy('avg_value', 'ASC');
+            ->groupBy('s.id')->orderBy('avg_value', 'ASC');
         }
 
         else if ($request->query->get('order') == 'noteDecroissant'){
             $qb->leftJoin('s.ratings', 'd')
             ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
             ->where('d.estModere = true')
-            ->groupBy('s.id')
-            ->orderBy('avg_value', 'DESC');
+            ->groupBy('s.id')->orderBy('avg_value', 'DESC');
 
         } else if ($request->query->get('order') == 'DESC'){
             $qb->orderBy('s.title', "DESC");

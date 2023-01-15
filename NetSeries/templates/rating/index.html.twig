@@ -1,5 +1,10 @@
 {% extends 'base.html.twig' %}
 
+{% block stylesheets %}
+{{ parent() }}
+    <link href={{ asset('css/rating_list.css') }} rel="stylesheet">
+{% endblock %}
+
 {% block title %}Rating index{% endblock %}
 
 {% block body %}
@@ -8,11 +13,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                <th>Poster</th>
+                <th>Series</th>
                 <th>Value</th>
                 <th>Comment</th>
                 <th>Date</th>
-                <th>actions</th>
                 <th>Is moderate</th>
                 <th>Action</th>
             </tr>
@@ -20,14 +25,11 @@
         <tbody>
         {% for rating in ratings %}
             <tr>
-                <td>{{ rating.id }}</td>
+                <td> <img id="poster" src='{{ path('app_poster_show', {'id': rating.series.id}) }}'> </td>
+                <td> {{rating.series.title}} </td>
                 <td>{{ rating.value }}</td>
                 <td>{{ rating.comment }}</td>
                 <td>{{ rating.date ? rating.date|date('Y-m-d H:i:s') : '' }}</td>
-                <td>
-                    <a href="{{ path('app_rating_show', {'id': rating.id}) }}">show</a>
-                    <a href="{{ path('app_rating_edit', {'id': rating.id}) }}">edit</a>
-                </td>
                 <td>{{ rating.estModere ? "✅" : "❌" }} </td>
                 <td> 
                     <a href="{{ path('app_rating_accept_critic', {'id' : rating.id}) }}">Accept</a> 
@@ -41,5 +43,9 @@
         {% endfor %}
         </tbody>
     </table>
+    {# Permet de mettre en place la pagination des notes/critique des utilisateurs #}
+    <div class="navigation">
+        {{ knp_pagination_render(ratings) }}
+    </div>
 
 {% endblock %}

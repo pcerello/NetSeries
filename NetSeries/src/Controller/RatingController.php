@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Form\RatingType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Masterminds\HTML5\Entities;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -15,19 +16,38 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormError;
+use Knp\Component\Pager\PaginatorInterface;
 
 #[Route('/rating')]
 class RatingController extends AbstractController
 {
     #[Route('/', name: 'app_rating_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    public function index(EntityManagerInterface $entityManager, PaginatorInterface $paginator, Request $request): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        if (!$user ){
+            return $this->redirectToRoute('app_login');
+        }
+
+        if (!$user->isAdmin()){
+            return $this->redirectToRoute('app_home');
+        }
+        
+        //On prend tout les notes qui ne sont pas modéré
         $ratings = $entityManager
             ->getRepository(Rating::class)
-            ->findAll();
+            ->findBy(['estModere' => false]);
+
+        $paginatorRatings = $paginator->paginate(
+            $ratings,
+            $request->query->getInt('page', 1),
+            5
+        );
 
         return $this->render('rating/index.html.twig', [
-            'ratings' => $ratings,
+            'ratings' => $paginatorRatings,
         ]);
     }
 
