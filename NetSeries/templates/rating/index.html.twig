@@ -33,7 +33,7 @@
                 <td>{{ rating.estModere ? "✅" : "❌" }} </td>
                 <td> 
                     <a href="{{ path('app_rating_accept_critic', {'id' : rating.id}) }}">Accept</a> 
-                    <a href="">Decline</a> 
+                    <a href="{{ path('app_rating_decline_critic', {'id' : rating.id}) }}">Decline</a> 
                 </td>
             </tr>
         {% else %}

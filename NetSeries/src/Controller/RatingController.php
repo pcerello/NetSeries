@@ -201,7 +201,8 @@ class RatingController extends AbstractController
     #[Route('/declineCritic/{id}', name: 'app_rating_decline_critic', methods: ['GET'])]
     public function declineCritics(Rating $rating, EntityManagerInterface $entityManager): Response
     {
-        
+        //On supprime la critique
+        $entityManager->remove($rating);
 
         # Met à jour la base de données
         $entityManager->flush();
