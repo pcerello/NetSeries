@@ -15,6 +15,7 @@
             <tr>
                 <th>Poster</th>
                 <th>Series</th>
+                <th>User</th>
                 <th>Value</th>
                 <th>Comment</th>
                 <th>Date</th>
@@ -27,6 +28,7 @@
             <tr>
                 <td> <img id="poster" src='{{ path('app_poster_show', {'id': rating.series.id}) }}'> </td>
                 <td> {{rating.series.title}} </td>
+                <td>{{ rating.user.email }}</td>
                 <td>{{ rating.value }}</td>
                 <td>{{ rating.comment }}</td>
                 <td>{{ rating.date ? rating.date|date('Y-m-d H:i:s') : '' }}</td>

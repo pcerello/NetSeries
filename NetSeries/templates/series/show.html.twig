@@ -24,7 +24,7 @@
 
             <p><strong>Year end : </strong>{{ series.yearEnd }}</p>
 
-            <p>IMDB : <a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
+            <p><strong>IMDB : </strong><a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
 
             <p class="notes"> <strong> Note : </strong> <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ series.externalRating.value }} </p>
 
@@ -35,10 +35,8 @@
             {% endif %}
 
 
-            <p><strong>Trailer</strong></p>
+            <p><strong>Trailer :</strong></p>
             {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
-
-            <p><b>Trailer :</b></p>
 
             <iframe width="560" height="315" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>

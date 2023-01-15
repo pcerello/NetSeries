@@ -188,6 +188,14 @@ class RatingController extends AbstractController
     #[Route('/acceptCritic/{id}', name: 'app_rating_accept_critic', methods: ['GET'])]
     public function acceptCritic(Rating $rating, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //On regarde que c'est bien un admin qui a les droit pour accepter une critique
+        if (!$user || !$user->isAdmin()){
+            return $this->redirectToRoute('app_home');
+        }
+
         # Met la variable admin à vrai pour que l'utilisateur soit un admin
         $rating->setEstModere(true);
 
@@ -201,6 +209,14 @@ class RatingController extends AbstractController
     #[Route('/declineCritic/{id}', name: 'app_rating_decline_critic', methods: ['GET'])]
     public function declineCritics(Rating $rating, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //On regarde que c'est bien un admin qui a les droit pour réfuser une critique
+        if (!$user || !$user->isAdmin()){
+            return $this->redirectToRoute('app_home');
+        }
+
         //On supprime la critique
         $entityManager->remove($rating);
 
