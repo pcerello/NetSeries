@@ -164,4 +164,30 @@ class RatingController extends AbstractController
         // redirige vers la page d'index des utilisateurs
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/acceptCritic/{id}', name: 'app_rating_accept_critic', methods: ['GET'])]
+    public function acceptCritic(Rating $rating, EntityManagerInterface $entityManager): Response
+    {
+        # Met la variable admin à vrai pour que l'utilisateur soit un admin
+        $rating->setEstModere(true);
+
+        # Met à jour la base de données
+        $entityManager->flush();
+        
+        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
+        return $this->redirectToRoute('app_rating_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/declineCritic/{id}', name: 'app_rating_decline_critic', methods: ['GET'])]
+    public function declineCritics(Rating $rating, EntityManagerInterface $entityManager): Response
+    {
+        
+
+        # Met à jour la base de données
+        $entityManager->flush();
+
+        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
+        return $this->redirectToRoute('app_rating_index', [], Response::HTTP_SEE_OTHER);
+    }
+    
 }

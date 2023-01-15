@@ -480,7 +480,7 @@ class Series
     /**
      * @return Collection<int, Rating>
      */
-    public function getRatingsModerate() : Collection
+    public function getRatingsModerate() 
     {
         /** @var \Rating */
         $valueModerate = array();

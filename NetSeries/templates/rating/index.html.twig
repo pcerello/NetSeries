@@ -13,6 +13,8 @@
                 <th>Comment</th>
                 <th>Date</th>
                 <th>actions</th>
+                <th>Is moderate</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -25,6 +27,11 @@
                 <td>
                     <a href="{{ path('app_rating_show', {'id': rating.id}) }}">show</a>
                     <a href="{{ path('app_rating_edit', {'id': rating.id}) }}">edit</a>
+                </td>
+                <td>{{ rating.estModere ? "✅" : "❌" }} </td>
+                <td> 
+                    <a href="">Accept</a> 
+                    <a href="">Decline</a> 
                 </td>
             </tr>
         {% else %}

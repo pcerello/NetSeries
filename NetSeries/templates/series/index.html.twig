@@ -79,7 +79,7 @@
                         {% if series.getRatings()|length == 0 %}
                             <p><strong> Note IMDB :</strong> No note </p>
                         {% else %}
-                            <p class="notes"><strong>Moyenne note : {{ series.getAverageRating() }}/5 </strong>{{ series.getRatings()|length }} avis<img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
+                            <p class="notes"><strong>Moyenne note : {{ series.getAverageRating() }}/5 </strong>{{ series.getRatingsModerate()|length }} avis<img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
                         {% endif %}
                         
                     </div>
