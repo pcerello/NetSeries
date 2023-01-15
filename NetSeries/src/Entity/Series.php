@@ -444,10 +444,12 @@ class Series
 
         // Parcours des notes associées à la série
         foreach ($this->getRatings() as $rating) {
-            // Incrémente la somme total par la nouvelle note
-            $total += $rating->getValue();
-            // Incrémentation du nombre de notes total
-            $count++;
+            if ($rating->isEstModere()){
+                // Incrémente la somme total par la nouvelle note
+                $total += $rating->getValue();
+                // Incrémentation du nombre de notes total
+                $count++;
+            }
         }
 
         // Si au moins une note a été donnée
