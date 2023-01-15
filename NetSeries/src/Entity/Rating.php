@@ -64,6 +64,13 @@ class Rating
      */
     private $user;
 
+    /**
+     * @var bool
+     *
+     * @ORM\Column(name="estModere", type="boolean", nullable=false)
+     */
+    private $estModere = '0';
+
     public function __construct()
     {
         $this->date = new DateTime();
@@ -151,5 +158,17 @@ class Rating
         } elseif ($interval->s > 0) {
             echo "Commentaire posté il y a " . $interval->s . " seconde(s).";
         }
+    }
+
+    public function isEstModere(): ?bool
+    {
+        return $this->estModere;
+    }
+
+    public function setEstModere(bool $estModere): self
+    {
+        $this->estModere = $estModere;
+
+        return $this;
     }
 }

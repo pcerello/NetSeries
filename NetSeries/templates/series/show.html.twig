@@ -135,11 +135,12 @@
             <tbody>
                 {% for r in ratings %}
                     <tr>
-                        
-                        <td class="td">{{ r.user.name }}</td>
-                        <td class="td">{{ r.comment }}</td>
-                        <td class="td">{{ (r.value)/2 }}/5</td>
-                        <td class="td">{{ r.getTime() }}</td>                        
+                        {% if r.isEstModere() %}
+                            <td class="td">{{ r.user.name }}</td>
+                            <td class="td">{{ r.comment }}</td>
+                            <td class="td">{{ (r.value)/2 }}/5</td>
+                            <td class="td">{{ r.getTime() }}</td>                        
+                        {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>
