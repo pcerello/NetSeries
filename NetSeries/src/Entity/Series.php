@@ -477,6 +477,21 @@ class Series
         return $this->ratings;
     }
 
+    /**
+     * @return Collection<int, Rating>
+     */
+    public function getRatingsModerate() : Collection
+    {
+        /** @var \Rating */
+        $valueModerate = array();
+        foreach ($this->getRatings() as $rating) {
+            if ($rating->isEstModere()){
+                $valueModerate->add($rating);
+            }
+        }
+        return $valueModerate;
+    }
+
     public function addRating(Rating $rating): self
     {
         if (!$this->ratings->contains($rating)) {
