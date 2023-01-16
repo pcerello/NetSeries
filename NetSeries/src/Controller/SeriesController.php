@@ -94,22 +94,20 @@ class SeriesController extends AbstractController
                 ->setParameter('maxnote', $maxnote);
         }
 
-        
+
 
         if ($request->query->get('order') == 'noteCroissant') {
             $qb->leftJoin('s.ratings', 'c')
-            ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
-            ->where('c.estModere = true')
-            ->groupBy('s.id')->orderBy('avg_value', 'ASC');
-        }
-
-        else if ($request->query->get('order') == 'noteDecroissant'){
+                ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
+                ->where('c.estModere = true')
+                ->groupBy('s.id')->orderBy('avg_value', 'ASC');
+        } else if ($request->query->get('order') == 'noteDecroissant') {
             $qb->leftJoin('s.ratings', 'd')
-            ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
-            ->where('d.estModere = true')
-            ->groupBy('s.id')->orderBy('avg_value', 'DESC');
+                ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
+                ->where('d.estModere = true')
+                ->groupBy('s.id')->orderBy('avg_value', 'DESC');
 
-        } else if ($request->query->get('order') == 'DESC'){
+        } else if ($request->query->get('order') == 'DESC') {
             $qb->orderBy('s.title', "DESC");
         } else {
             $qb->orderBy('s.title', "ASC");
@@ -127,7 +125,7 @@ class SeriesController extends AbstractController
         // Récupération de tous les genres
         $genres = $entityManager->getRepository(\App\Entity\Genre::class)->findAll();
 
-        
+
 
 
         return $this->render('series/index.html.twig', [
@@ -137,24 +135,68 @@ class SeriesController extends AbstractController
     }
 
 
-    #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/search', name: 'app_series_search', methods: ['GET', 'POST'])]
+    public function new (Request $request, EntityManagerInterface $entityManager): Response
+    {
+        # check if the form is submitted
+        $data = [];
+
+        if ($request->query->get('title')) {
+            $url = "http://www.omdbapi.com/?t=" . $request->query->get('title') . "&apikey=7a8be84b";
+            
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0');
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            $result = curl_exec($curl);
+            curl_close($curl);
+            $data = json_decode($result, true);
+
+        }
+        return $this->render('series/search.html.twig', [
+            'data' => $data,
+        ]);
+    }
+
+    #[Route('/newserie', name: 'app_series_new', methods: ['GET', 'POST'])]
+    public function newserie(Request $request, EntityManagerInterface $entityManager): Response
     {
         $series = new Series();
-        $form = $this->createForm(SeriesType::class, $series);
-        $form->handleRequest($request);
+        $title = $request->query->get('title');
+        $year = $request->query->get('year');
+        $plot = $request->query->get('plot');
+        $genres = $request->query->get('genre');
+        $director = $request->query->get('director');
+        $awards = $request->query->get('awards');
+        $year_start = $request->query->get('year_start');
+        $imdbRating = $request->query->get('imdbRating');
+        $poster = $request->query->get('poster');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($series);
-            $entityManager->flush();
+        $year_start = substr($year_start, 0, 4);
+        
+        $year = intval($year_start);
+        $series->setTitle($title);
+        $series->setYearStart($year);
+        $series->setPlot($plot);
+        $series->addGenre($entityManager->getRepository(Genre::class)->findByOne(['name' => $genres]));
+        $series->setDirector($director);
+        $series->setAwards($awards);
+        $series->setYearStart($year);
+        $series->setImdb($imdbRating);
+        $series->setPoster($poster);
 
-            return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
-        }
+        $entityManager->persist($series);
+        $entityManager->flush();
 
-        return $this->renderForm('series/new.html.twig', [
-            'series' => $series,
-            'form' => $form,
-        ]);
+        return $this->redirectToRoute('app_series_index');
+
+        
+        
+
+    
     }
 
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]

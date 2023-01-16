@@ -21,10 +21,6 @@ class SeriesType extends AbstractType
             ->add('awards')
             ->add('yearStart')
             ->add('yearEnd')
-            ->add('country')
-            ->add('user')
-            ->add('actor')
-            ->add('genre')
         ;
     }
 

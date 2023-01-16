@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Series{% endblock %}
+
+{% block body %}
+    <h1>Import new Series</h1>
+
+    <form method="get">
+        <div class="form-group">
+            <label for="series_name">Name</label>
+            <input type="text" name="title" placeholder="Search a IMDB serie" class="form-control" id="series_name">
+            <input type="submit" value="search" class="btn btn-primary">
+        </div>
+    </form>
+    
+    {% if data.Title is defined %}
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Plot</th>
+            <th>Genre</th>
+            <th>Director</th>
+            <th>Award(s)</th>
+            <th>Year start</th>
+            <th>imdbRating</th>
+            <th>Poster</th>
+            <th>Trailer</th>
+            <th>Actions</th>
+
+        </tr>
+            <tr>
+                <td>{{ data.Title }}</td>
+                <td>{{ data.Year }}</td>
+                <td>{{ data.Plot }}</td>
+                <td>{{ data.Genre }}</td>
+                <td>{{ data.Director }}</td>
+                <td>{{ data.Awards }}</td>
+                <td>{{ data.Year }}</td>
+                <td>{{ data.imdbRating }}</td>
+                <td><img src="{{ data.Poster }}" alt="{{ data.Title }}"></td>
+                <td><a href="https://www.youtube.com/results?search_query={{ data.Title }}+trailer" target="_blank">trailer</a></td>
+                <td>
+                    <a href="{{ path('app_series_new', {'title': data.Title, 'year': data.Year, 'plot': data.Plot, 'genre': data.Genre, 'director': data.Director, 'awards': data.Awards, 'year_start': data.Year, 'imdbRating': data.imdbRating, 'poster': data.Poster}) }}">add</a>
+                </td>
+            </tr>
+    </table>
+{% endif %}
+
+
+    <a href="{{ path('app_series_index') }}">back to list</a>
+{% endblock %}
