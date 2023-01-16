@@ -38,8 +38,9 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email, 'estSuspendu' => false]);
 
-        if (!$user) {
-            throw new AuthenticationException("Invalid email/password combination or account suspended");
+        if (!$user || $user->isEstSuspendu() ) {
+            $request->getSession()->set('suspendedError', "Your account is suspended.");
+            throw new AuthenticationException("Your account is suspended.");
         }
 
         return new Passport(

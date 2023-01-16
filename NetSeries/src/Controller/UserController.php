@@ -99,6 +99,13 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual){
+            return $this->redirectToRoute('app_login');
+        }
+
         // Récupère les séries suivies par l'utilisateur
         $appointmentsQuerySeriesFollowed = $user->getSeries();
 
@@ -170,6 +177,13 @@ class UserController extends AbstractController
     #[Route('/promote/{id}', name: 'app_user_promote', methods: ['GET'])]
     public function promote(User $user, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual || !$userActual->isEstSuspendu()){
+            return $this->redirectToRoute('app_login');
+        }
+
         # Met la variable admin à vrai pour que l'utilisateur soit un admin
         $user->setAdmin(true);
 
@@ -183,6 +197,13 @@ class UserController extends AbstractController
     #[Route('/demote/{id}', name: 'app_user_demote', methods: ['GET'])]
     public function demote(User $user, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual || !$userActual->isEstSuspendu()){
+            return $this->redirectToRoute('app_login');
+        }
+
         # Met la variable admin à faux pour que l'utilisateur soit plus un admin
         $user->setAdmin(false);
 
@@ -196,6 +217,13 @@ class UserController extends AbstractController
     #[Route('/followed/{id}', name: 'app_user_followedSeriesById', methods: ['GET'])]
     public function followedSerie(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual){
+            return $this->redirectToRoute('app_login');
+        }
+
         // if the user is not logged in, redirect to the login page
         $user = $entityManager->getRepository(User::class)->find($request->get('id'));
 
@@ -217,6 +245,13 @@ class UserController extends AbstractController
     #[Route('/generate/{id}', name:'generateUser', methods: ['POST'])]
     public function generateAndInsertUsers(User $user, Request $request) : Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual || !$userActual->isEstSuspendu()){
+            return $this->redirectToRoute('app_login');
+        }
+
         // Récupère le nombre d'utilisateurs à générer
         $user_count = $request->request->get('user_count');
 
@@ -268,6 +303,13 @@ class UserController extends AbstractController
     #[Route('/ban/{id}', name: 'app_user_ban_user', methods: ['GET'])]
     public function ban(User $user, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual || !$userActual->isEstSuspendu()){
+            return $this->redirectToRoute('app_login');
+        }
+
         # Met la variable suspendu à vrai pour que l'utilisateur soit banni
         $user->setEstSuspendu(true);
 
