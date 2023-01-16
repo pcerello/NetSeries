@@ -27,3 +27,20 @@ img {
 a {
     text-decoration: none;
 }
+
+.content {
+    display: grid;
+    place-items: center;
+}
+
+#menu {
+    display: flex !important;
+}
+
+form label {
+    margin-bottom: -20px !important;
+}
+
+.box__auth {
+    margin: 5px 0;
+}
