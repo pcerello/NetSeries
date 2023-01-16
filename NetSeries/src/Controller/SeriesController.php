@@ -76,7 +76,9 @@ class SeriesController extends AbstractController
         if ($minnote = $request->query->get('minnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
                 ->select('AVG(r.value/2)')
+                ->leftJoin('m.user', 'u')
                 ->where('r.series = s AND r.estModere = true')
+                ->andWhere('u.estSuspendu = false')
                 ->getDQL();
 
             $qb->andWhere(sprintf('(%s) >= :minnote', $subquery))
@@ -87,7 +89,9 @@ class SeriesController extends AbstractController
         if ($maxnote = $request->query->get('maxnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('m')
                 ->select('AVG(m.value/2)')
+                ->leftJoin('m.user', 'u')
                 ->where('m.series = s AND m.estModere = true')
+                ->andWhere('u.estSuspendu = false')
                 ->getDQL();
 
             $qb->andWhere(sprintf('(%s) <= :maxnote', $subquery))
@@ -98,15 +102,19 @@ class SeriesController extends AbstractController
 
         if ($request->query->get('order') == 'noteCroissant') {
             $qb->leftJoin('s.ratings', 'c')
+            ->leftJoin('d.user', 'us')
             ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
             ->where('c.estModere = true')
+            ->andWhere('us.estSuspendu = false')
             ->groupBy('s.id')->orderBy('avg_value', 'ASC');
         }
 
         else if ($request->query->get('order') == 'noteDecroissant'){
             $qb->leftJoin('s.ratings', 'd')
+            ->leftJoin('d.user', 'u')
             ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
             ->where('d.estModere = true')
+            ->andWhere('u.estSuspendu = false')
             ->groupBy('s.id')->orderBy('avg_value', 'DESC');
 
         } else if ($request->query->get('order') == 'DESC'){
@@ -117,7 +125,7 @@ class SeriesController extends AbstractController
 
         // Pagination des séries sur la requete faite
         $series = $paginator->paginate(
-            $qb->getQuery(),
+            $qb,
             $request->query->getInt('page', 1),
             12
         );
@@ -221,9 +229,9 @@ class SeriesController extends AbstractController
         for ($i = 0; $i <= 10; $i++) {
             $result[$i] = 0;
         }
-        foreach ($rating as $value) {
-            if ($value->isEstModere()){
-                $noteValue = $value->getValue();
+        foreach ($rating as $r) {
+            if ($r->isEstModere() && !$r->getUser()->isEstSuspendu()){
+                $noteValue = $r->getValue();
                 if (is_int($noteValue)) {
                     $result[$noteValue]++;
                 } else {
