@@ -1,3 +1,60 @@
+.trancheNote{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+}
+
+#my-chart.bar {
+    width: 60%;
+    height: 60%;
+}
+
+.filter{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+}
+
+.ratingFilter{
+    font-size: 0.7em;
+    text-decoration: none;
+    color: black;
+    padding: 0.5em;
+    border: 2px solid rgb(85, 80, 80);
+    border-radius: 16px;
+    text-align: center;
+    margin: 0.5em;
+}
+
+.ratingFilter:hover{
+    color: white;
+    background-color: #222222;
+}
+
+.ratingFilter::after{
+    content: " ";
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #222222;
+    transition: width .3s;
+}
+
+
+/*first child of the column*/
+.graph .composant:nth-child(1) {
+    display: none;
+}
+
+    #my-chart .column .bar {
+        fill: #2c2b2b;
+        fill-opacity: .9;
+        stroke: none;
+    }
 h1 {
     text-align: center;
     margin: 2rem;

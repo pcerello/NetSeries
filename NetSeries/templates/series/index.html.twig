@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+{# Ajout de la feuille de style #}
 {% block stylesheets %}
 {{ parent() }}
     <link href="{{ asset('css/series.css') }}" rel="stylesheet">
@@ -8,11 +9,13 @@
 {% block title %}Series index{% endblock %}
 
 {% block body %}
+    {# Affichage du titre de la page #}
     <h1>Series List</h1>
+
+    {# Affichage de la pagination #}
     <div class="navigation">
         {{ knp_pagination_render(series) }}
     </div>
-
 
     {# Barre de recherche #}
     <form action="{{ path('app_series_index') }}" method="get" class="box_search">
@@ -24,31 +27,30 @@
                 <option value="{{ genre.name }}">{{ genre.name }}</option>
             {% endfor %}
         </select>
-        {# Champs pour filtrer par date de sortie #}
-        <input name='dateMin'type="number" min="1969" max="2099" step="1"/>
-        <input name='dateMax'type="number" min="1969" max="2099" step="1" placeholder="Year"/>
+        <div class="annee">
+            {# Champs pour filtrer par date de sortie #}
+            <input name='dateMin'type="number" min="1969" max="2023" step="1" placeholder="Year Min"/>
+            <input name='dateMax'type="number" min="1969" max="2023" step="1" placeholder="Year Max"/>
+        </div>
         {# Champ pour filtrer par acteur #}
         <input type="text" name="actor" placeholder="Search an actor">
         {# Champ pour filtrer par note #}
         <div class="note">
-{# Champ pour donné une note/moyenne minimum #}
-<input name="minnote" type="number" min="0" max="5" step="0.5" placeholder="Note Min" />
-{# Champ pour donné une note/moyenne maximum #}
-<input name="maxnote" type="number" min="0" max="5" step="0.5" placeholder="Note Max" />
-        </div>
-        
+            {# Champ pour donné une note/moyenne minimum #}
+            <input name="minnote" type="number" min="0" max="5" step="0.5" placeholder="Note Min" />
+            {# Champ pour donné une note/moyenne maximum #}
+            <input name="maxnote" type="number" min="0" max="5" step="0.5" placeholder="Note Max" />
+        </div> 
         {# Menu déroulante pour filtrer par ordre alphabétique ou non #}
         <select name="order">
             <option value="ASC">Order ASC</option>
             <option value="DESC">Order DESC</option>
-            <option value="noteCroissant">Moyenne croissant</option>
-            <option value="noteDecroissant">Moyenne décroissant</option>
+            <option value="noteCroissant">Average ASC</option>
+            <option value="noteDecroissant">Average DESC</option>
         </select>
+        {# Bouton pour lancer la recherche #}
         <input type="submit" value="To search">
-        
     </form>
-
-
 
 
     {# Si un utilisateur est connecté, affichage d'un lien vers les séries suivies #}
@@ -56,63 +58,62 @@
         <a class ="followed" href="{{ path('app_followed_series') }}">See my followed series</a>
     {% endif %}
 
-    <div class="series">
 
+    <div class="series">
         {# On parcours tout les séries existant de la base de donnée#}
         {% for series in series %}
             <div class="serie">
                 {# Lien vers la page de détail de la série #}
-                
                 <a class = "linkSerie" href="{{ path('app_series_show', {'id': series.id}) }}">
-                <div class="boxSerie">
-                    {# Affichage de l'image de la série #}
-                    <div class="imgSerie">
-                        {# Affichage du poster de la série #}  
-                        <img id="poster" src="{{ path('app_poster_show', {'id': series.id}) }}">
-                    </div>
-                    <div class="titleSerie">
-                        {# Affichage du titre de la série #}
-                        {{ series.title }}
-                    </div>
-
-                    <div class="notes">
-                        <div id="note-Imdb">
+                    <div class="boxSerie">
+                        {# Affichage de l'image de la série #}
+                        <div class="imgSerie">
+                            {# Affichage du poster de la série #}  
+                            <img id="poster" src="{{ path('app_poster_show', {'id': series.id}) }}">
+                        </div>
+                        <div class="titleSerie">
+                            {# Affichage du titre de la série #}
+                            {{ series.title }}
+                        </div>
+                        <div class="notes">
                             {# Affichage de la note IMDB de la série #}
-                            <a href="https://www.imdb.com/title/{{series.imdb}}">IMDB :</a>
+                            <div id="note-Imdb">
+                                <a href="https://www.imdb.com/title/{{series.imdb}}">IMDB :</a>
+                                <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                                <p> {{ series.externalRating.value}}</p>
+                            </div>
                             {# Affichage de la note moyenne de la série #}
-                            <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                            <div id="note-User">
+                                <p><strong> Note users:</strong>
+                                    <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                                    {% if series.getAverageRating() == 0 %}
+                                        No note </p>
+                                    {% else %}
+                                        {{ series.getAverageRating() }}/5 </p>
+                                        {# Affichage du nombre d'avis de la série #}
+                                        <div class="nbAvis">
+                                            <p>{{ series.getRatingsModerate()|length }} rating</p>
+                                        </div>
+                                    {% endif %}
+                            </div>
                         </div>
-                        <div id="note-User">
-                            <p> {{ series.externalRating.value}}</p>
-                            {% if series.getAverageRating() == 0 %}
-                                <p><strong> Note :</strong> No note </p>
+                        {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
+                        {% if app.user %}
+                            {# On vérifie si l'utilisateur est un administrateur #}
+                            {% if app.user.isFollowing(series) %}
+                                <span class="eye"><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
                             {% else %}
-                                <p class="notes"><strong>Average users : {{ series.getAverageRating() }}/5 </strong>
-                                    {{ series.getRatingsModerate()|length }} avis<img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
+                                <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
                             {% endif %}
-                        </div>
+                        {% endif %}  
                     </div>
-                </a>
-                    {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
-                    {% if app.user %}
-                        {# On vérifie si l'utilisateur est un administrateur #}
-                        {% if app.user.isFollowing(series) %}
-                            <span class="eye" ><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
-                        {% else %}
-                            <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
-                        {% endif %}
-                    {% endif %}
-                </div>
-                
+                </a> 
             </div>
         {% endfor %}
     </div>
-
 
     {# Permet de mettre en place la pagination des séries #}
     <div class="navigation">
         {{ knp_pagination_render(series) }}
     </div>
-
-    
 {% endblock %}
