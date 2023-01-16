@@ -105,7 +105,7 @@ span.eye{
     background-color: #86858588;
     margin-top: 1rem;
     width: 12rem;
-    height: 19.5rem;
+    height: 21.2rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -129,7 +129,7 @@ span.eye img{
     border-radius: 20px;
     text-decoration: none;
     color: black;
-    margin-top: 30rem; 
+    margin-top: 25rem; 
 }
 
 .boxSerie a.follow:hover{
