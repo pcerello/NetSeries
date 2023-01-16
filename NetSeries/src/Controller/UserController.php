@@ -265,6 +265,19 @@ class UserController extends AbstractController
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
+    #[Route('/ban/{id}', name: 'app_user_ban_user', methods: ['GET'])]
+    public function ban(User $user, EntityManagerInterface $entityManager): Response
+    {
+        # Met la variable suspendu à vrai pour que l'utilisateur soit banni
+        $user->setEstSuspendu(true);
+
+        # Met à jour la base de données
+        $entityManager->flush();
+        
+        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
+        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    }
+
     
     
 }
