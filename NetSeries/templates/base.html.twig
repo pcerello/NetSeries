@@ -7,6 +7,9 @@
         {% block stylesheets %} 
             <link href="{{ asset('css/menu.css') }}" type="text/css" rel="stylesheet">
         {% endblock %}
+        {% block javascripts %} 
+            <script src="{{ asset('js/app.js') }}"></script>
+        {% endblock %}
     </head>
     <style>
         span {
@@ -19,6 +22,16 @@
             <div id="logo">
                 <a href="{{  path('app_home')  }}"><img src={{ asset('images/Logo.png') }} alt="ACME logo"></a>
                 <a id="logo_text" href="{{  path('app_home')  }}"><strong><span>Net</span></strong>Series</a>
+            </div>
+
+            <div id="burger">
+                <div class="burger__line"></div>
+                <div class="burger__line"></div>
+                <div class="burger__line"></div>
+            </div>
+
+            <div class="sidenav" id="mySidenav">
+                
             </div>
 
             <div id="buttons">
