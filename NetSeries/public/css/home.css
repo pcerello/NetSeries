@@ -207,7 +207,7 @@ div.description img {
 
 div.description {
     overflow: hidden; /* or scroll or anything other than `visible` */
-    text-overflow: "...";
+    text-overflow: ellipsis;
     display: block;
     white-space:nowrap
 }
