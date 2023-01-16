@@ -516,15 +516,17 @@ class Series
 
     public function followedSeries(User $user)
     {
-        $firstEpisode = $this->getFirstEpisode();
-        $lastEpisode = $this->getLastEpisode();
-        if($lastEpisode->getUser()->contains($user)){
-            return "Terminée";
-        }elseif($firstEpisode->getUser()->contains($user)){
-            return "En cours";
-        } else {
-            return "Non commencée";
+        if (empty($this->seasons)){
+            $firstEpisode = $this->getFirstEpisode();
+            $lastEpisode = $this->getLastEpisode();
+            if($lastEpisode->getUser()->contains($user)){
+                return "Terminée";
+            }elseif($firstEpisode->getUser()->contains($user)){
+                return "En cours";
+            }
         }
+        return "Non commencée";
+        
     }
 
     public function getFirstEpisode(): ?Episode

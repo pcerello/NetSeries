@@ -102,7 +102,7 @@ class SeriesController extends AbstractController
 
         if ($request->query->get('order') == 'noteCroissant') {
             $qb->leftJoin('s.ratings', 'c')
-            ->leftJoin('d.user', 'us')
+            ->leftJoin('c.user', 'us')
             ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
             ->where('c.estModere = true')
             ->andWhere('us.estSuspendu = false')
