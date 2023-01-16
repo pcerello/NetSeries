@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
 {{ parent() }}
-    <link href={{ asset('css/series.css') }} rel="stylesheet">
+    <link href="{{ asset('css/series.css') }}" rel="stylesheet">
 {% endblock %}
 
 {% block title %}Series index{% endblock %}
@@ -68,7 +68,7 @@
                     {# Affichage de l'image de la série #}
                     <div class="imgSerie">
                         {# Affichage du poster de la série #}  
-                        <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
+                        <img id="poster" src="{{ path('app_poster_show', {'id': series.id}) }}">
                     </div>
                     <div class="titleSerie">
                         {# Affichage du titre de la série #}
@@ -76,16 +76,20 @@
                     </div>
 
                     <div class="notes">
-                        <p>IMDB : <a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
-                        {# Affichage de la note moyenne de la série #}
-                        <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
-                        <p> {{ series.externalRating.value}}</p>
-                        {% if series.getAverageRating() == 0 %}
-                            <p><strong> Note :</strong> No note </p>
-                        {% else %}
-                            <p class="notes"><strong>Average users : {{ series.getAverageRating() }}/5 </strong>{{ series.getRatingsModerate()|length }} avis<img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
-                        {% endif %}
-                        
+                        <div id="note-Imdb">
+                            {# Affichage de la note IMDB de la série #}
+                            <a href="https://www.imdb.com/title/{{series.imdb}}">IMDB :</a>
+                            {# Affichage de la note moyenne de la série #}
+                            <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                        </div>
+                        <div id="note-User">
+                            <p> {{ series.externalRating.value}}</p>
+                            {% if series.getAverageRating() == 0 %}
+                                <p><strong> Note :</strong> No note </p>
+                            {% else %}
+                                <p class="notes"><strong>Average users : {{ series.getAverageRating() }}/5 </strong>
+                                {{ series.getRatingsModerate()|length }} avis<img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
+                            {% endif %}
                         </div>
                     </div>
                 </a>
