@@ -16,6 +16,7 @@ body {
     background: url('../images/background.png') no-repeat center center fixed; 
     background-size: cover;
     font-family: 'poppins', sans-serif;
+    background-color: white;
 }
 
 #logo {

@@ -24,7 +24,7 @@
 
             <p><strong>Year end : </strong>{{ series.yearEnd }}</p>
 
-            <p>IMDB : <a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
+            <p><strong>IMDB : </strong><a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
 
             <p class="notes"> <strong> Note : </strong> <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ series.externalRating.value }} </p>
 
@@ -34,8 +34,33 @@
             <p class="notes"><strong>Note utilisateur : </strong><img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">{{ series.getAverageRating() }}/5</p>
             {% endif %}
 
+            {% if app.user %}
+            {% set episodeCount = 0 %}
+            {% set isSeasonView = true %}
+            {% for seasonNumber, episodes in episodesBySeason %}
+                {% for episode in episodes %}
+                {{ dump(app.user.isView(episode)) }}
+                    {% if app.user.isView(episode) == false %} 
+                        {% set isSeasonView = false %}
+                    {% endif %}
+                {% endfor %}
+            {% endfor %}
+            {% if isSeasonView == true %}
+                <p>Vu</p>
+            {% else %}
+            {# if the first episode of the first season is not seen #}
+            {% if app.user.isView(episodesBySeason[1][0]) == false %}
+                <p>Pas vu</p>
+            {% else %}
+                <p>En cours</p>
+            {% endif %}
+            {% endif %}
+            {% endif %}
 
-            <p><strong>Trailer</strong></p>
+
+            
+
+
             {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
 
             <p><b>Trailer :</b></p>
@@ -55,8 +80,30 @@
                             {# On affiche le titre de la saison #}
                             <div class="card-header">
                                 <a class="card-link" data-toggle="collapse" href="#collapse{{ seasonNumber }}">
-                                    Saison : {{ seasonNumber }}
+                                    Saison : {{ seasonNumber }} 
                                 </a>
+                                {% if app.user %}
+                                {% set isView = true %}
+                                {% for episode in episodes %}
+                                    {% if app.user.isView(episode) == false %} 
+                                        {% set isView = false %}
+                                    {% endif %}
+
+                                        {% endfor %}
+                                    
+                                
+                                {% if isView == true %}
+                                        {# Permet d'enlever vu une saison choisis #}
+                                        <a href="{{ path('app_season_remove_view', {'id1': series.id, 'id2': seasonNumber}) }}"><span class="eyeClosed" ><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></span></a>
+                                    {% else %}
+                                        {# Permet de mettre vu une saison choisis#}
+                                        <a href="{{ path('app_season_view', {'id1': series.id, 'id2': seasonNumber}) }}">
+                                            <span class="eye" >
+                                                <img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png">
+                                            </span>
+                                        </a>
+                                    {% endif %}
+                                {% endif %}
                             </div>
                             <div id="collapse{{ seasonNumber }}" class="collapse show" data-parent="#accordion">
                                 <div class="card-body">
