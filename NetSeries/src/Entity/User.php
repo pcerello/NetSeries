@@ -120,6 +120,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private $ratings;
 
     /**
+     * @var bool
+     *
+     * @ORM\Column(name="estSuspendu", type="boolean", nullable=false)
+     */
+    private $estSuspendu = '0';
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -341,6 +348,18 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
                 $rating->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isEstSuspendu(): ?bool
+    {
+        return $this->estSuspendu;
+    }
+
+    public function setEstSuspendu(bool $estSuspendu): self
+    {
+        $this->estSuspendu = $estSuspendu;
 
         return $this;
     }
