@@ -180,7 +180,7 @@ class UserController extends AbstractController
         /** @var \App\Entity\User */
         $userActual = $this->getUser();
 
-        if (!$userActual || !$userActual->isEstSuspendu()){
+        if (!$userActual || $userActual->isEstSuspendu()){
             return $this->redirectToRoute('app_login');
         }
 
@@ -200,7 +200,7 @@ class UserController extends AbstractController
         /** @var \App\Entity\User */
         $userActual = $this->getUser();
 
-        if (!$userActual || !$userActual->isEstSuspendu()){
+        if (!$userActual || $userActual->isEstSuspendu()){
             return $this->redirectToRoute('app_login');
         }
 
@@ -248,7 +248,7 @@ class UserController extends AbstractController
         /** @var \App\Entity\User */
         $userActual = $this->getUser();
 
-        if (!$userActual || !$userActual->isEstSuspendu()){
+        if (!$userActual || $userActual->isEstSuspendu()){
             return $this->redirectToRoute('app_login');
         }
 
@@ -306,7 +306,7 @@ class UserController extends AbstractController
         /** @var \App\Entity\User */
         $userActual = $this->getUser();
 
-        if (!$userActual || !$userActual->isEstSuspendu()){
+        if (!$userActual || $userActual->isEstSuspendu()){
             return $this->redirectToRoute('app_login');
         }
 
