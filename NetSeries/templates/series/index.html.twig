@@ -13,8 +13,9 @@
         {{ knp_pagination_render(series) }}
     </div>
 
+
     {# Barre de recherche #}
-    <form action="{{ path('app_series_index') }}" method="get">
+    <form action="{{ path('app_series_index') }}" method="get" class="box_search">
         <input type="text" name="search" placeholder="Search a serie">
         {# Liste déroulante pour filtrer par genre #}
         <select name="genres">
@@ -25,25 +26,28 @@
         </select>
         {# Champs pour filtrer par date de sortie #}
         <input name='dateMin'type="number" min="1969" max="2099" step="1"/>
-        <input name='dateMax'type="number" min="1969" max="2099" step="1"/>
+        <input name='dateMax'type="number" min="1969" max="2099" step="1" placeholder="Year"/>
         {# Champ pour filtrer par acteur #}
         <input type="text" name="actor" placeholder="Search an actor">
         {# Champ pour filtrer par note #}
-        <label for="note">Note</label>
-        {# Champ pour donné une note/moyenne minimum #}
-        <input name="minnote" type="number" min="0" max="5" step="0.5" />
-        {# Champ pour donné une note/moyenne maximum #}
-        <input name="maxnote" type="number" min="0" max="5" step="0.5" />
+        <div class="note">
+{# Champ pour donné une note/moyenne minimum #}
+<input name="minnote" type="number" min="0" max="5" step="0.5" placeholder="Note Min" />
+{# Champ pour donné une note/moyenne maximum #}
+<input name="maxnote" type="number" min="0" max="5" step="0.5" placeholder="Note Max" />
+        </div>
+        
         {# Menu déroulante pour filtrer par ordre alphabétique ou non #}
         <select name="order">
-            <option value="ASC">A -> Z</option>
-            <option value="DESC">Z -> A</option>
+            <option value="ASC">Order ASC</option>
+            <option value="DESC">Order DESC</option>
             <option value="noteCroissant">Moyenne croissant</option>
             <option value="noteDecroissant">Moyenne décroissant</option>
         </select>
         <input type="submit" value="To search">
         
     </form>
+
 
 
 
@@ -58,8 +62,8 @@
         {% for series in series %}
             <div class="serie">
                 {# Lien vers la page de détail de la série #}
+                
                 <a class = "linkSerie" href="{{ path('app_series_show', {'id': series.id}) }}">
-
                 <div class="boxSerie">
                     {# Affichage de l'image de la série #}
                     <div class="imgSerie">
@@ -72,18 +76,19 @@
                     </div>
 
                     <div class="notes">
+                        <p>IMDB : <a href="https://www.imdb.com/title/{{series.imdb}}">Lien IMDB</a> </p>
                         {# Affichage de la note moyenne de la série #}
-                        
-                        <p> <strong> IMDB : {{ series.externalRating.value}}</strong>  <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
-                        
-                        {% if series.getRatingsModerate()|length == 0 %}
-                            <p><strong> Average users:</strong> No note </p>
+                        <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
+                        <p> {{ series.externalRating.value}}</p>
+                        {% if series.getAverageRating() == 0 %}
+                            <p><strong> Note :</strong> No note </p>
                         {% else %}
                             <p class="notes"><strong>Average users : {{ series.getAverageRating() }}/5 </strong>{{ series.getRatingsModerate()|length }} avis<img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"></p>
                         {% endif %}
                         
+                        </div>
                     </div>
-
+                </a>
                     {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
                     {% if app.user %}
                         {# On vérifie si l'utilisateur est un administrateur #}
@@ -94,10 +99,11 @@
                         {% endif %}
                     {% endif %}
                 </div>
-                </a>  
+                
             </div>
         {% endfor %}
     </div>
+
 
     {# Permet de mettre en place la pagination des séries #}
     <div class="navigation">
