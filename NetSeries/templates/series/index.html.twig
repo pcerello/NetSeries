@@ -98,6 +98,7 @@
                         {# On vérifie si l'utilisateur est un administrateur #}
                         {% if app.user.isFollowing(series) %}
                             <span class="eye" ><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
+                            {{ series.followedSeries(app.user) }}
                         {% else %}
                             <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
                         {% endif %}

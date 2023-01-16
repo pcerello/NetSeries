@@ -514,4 +514,32 @@ class Series
         return $this;
     }
 
+    public function followedSeries(User $user)
+    {
+        $firstEpisode = $this->getFirstEpisode();
+        $lastEpisode = $this->getLastEpisode();
+        if($lastEpisode->getUser()->contains($user)){
+            return "Terminée";
+        }elseif($firstEpisode->getUser()->contains($user)){
+            return "En cours";
+        } else {
+            return "Non commencée";
+        }
+    }
+
+    public function getFirstEpisode(): ?Episode
+    {
+        $firstSeason = $this->seasons->first();
+        $firstEpisode = $firstSeason->getEpisodes()->first();
+        return $firstEpisode;
+    }
+
+    public function getLastEpisode(): ?Episode
+    {
+        $lastSeason = $this->seasons->last();
+        $lastEpisode = $lastSeason->getEpisodes()->last();
+        return $lastEpisode;
+    }
+    
+
 }

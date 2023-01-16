@@ -122,8 +122,13 @@ class SeriesController extends AbstractController
             12
         );
 
+
+
         // Récupération de tous les genres
         $genres = $entityManager->getRepository(\App\Entity\Genre::class)->findAll();
+
+        
+
 
         return $this->render('series/index.html.twig', [
             'series' => $series,
@@ -369,4 +374,68 @@ class SeriesController extends AbstractController
         # Redirige vers la page où il y a toute les séries suivi
         return $this->redirectToRoute('app_followed_series');
     }
+
+    #[Route('/viewseason/{id1}/{id2}', name: 'app_season_view', methods: ['GET', 'POST'])]
+    public function viewSeason(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        # Récupère l'utilisateur connecté courant
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+
+
+
+        # Récupère la série avec l'ID passé en paramètre de l'URL
+        $series = $entityManager->getRepository(Series::class)->find($request->get('id1'));
+
+        # Récupère la saison avec le numéro de saison de passé en paramètre de l'URL
+        /** @var \App\Entity\Season */
+        $season = $entityManager->getRepository(Season::class)->findOneBy(['series' => $request->get('id1'), 'number' => $request->get('id2')]);
+
+        # Récupère tous les épisodes de la saison
+        /** @var \App\Entity\Episode */
+        $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $season]);
+
+        # Ajoute tous les épisodes de la saison à la liste des épisodes vus par l'utilisateur
+        foreach ($episodes as $episode) {
+            $user->addEpisode($episode);
+        }
+
+        # Met à jour la base de données
+        $entityManager->flush();
+
+        # Redirige vers la page où il y a l'information de la série choisis
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/remove-viewseason/{id1}/{id2}', name: 'app_season_remove_view', methods: ['GET', 'POST'])]
+    public function removeViewSeason(EntityManagerInterface $entityManager, Request $request): Response
+    {
+        # Récupère l'utilisateur connecté courant
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+
+        # Récupère la série avec l'ID passé en paramètre de l'URL
+        $series = $entityManager->getRepository(Series::class)->find($request->get('id1'));
+
+        # Récupère la saison avec le numéro de saison de passé en paramètre de l'URL
+        /** @var \App\Entity\Season */
+        $season = $entityManager->getRepository(Season::class)->findOneBy(['series' => $request->get('id1'), 'number' => $request->get('id2')]);
+
+        # Récupère tous les épisodes de la saison
+        /** @var \App\Entity\Episode */
+        $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $season]);
+
+        # Supprime tous les épisodes de la saison de la liste des épisodes vus par l'utilisateur
+        foreach ($episodes as $episode) {
+            $user->removeEpisode($episode);
+        }
+
+        # Met à jour la base de données
+        $entityManager->flush();
+
+        # Redirige vers la page où il y a l'information de la série choisis
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
+    }
+
+        
 }
