@@ -7,9 +7,6 @@
         {% block stylesheets %} 
             <link href="{{ asset('css/menu.css') }}" type="text/css" rel="stylesheet">
         {% endblock %}
-        {% block javascripts %} 
-            <script src="{{ asset('js/app.js') }}"></script>
-        {% endblock %}
     </head>
     <style>
         span {
@@ -24,18 +21,7 @@
                 <a id="logo_text" href="{{  path('app_home')  }}"><strong><span>Net</span></strong>Series</a>
             </div>
 
-            <div id="burger">
-                <div class="burger__line"></div>
-                <div class="burger__line"></div>
-                <div class="burger__line"></div>
-            </div>
-
-            <div class="sidenav" id="mySidenav">
-                
-            </div>
-
             <div id="buttons">
-
 
                 {% if app.user %}
                     <a class="button square profile" href="{{ path('app_user_edit', {'id': app.user.id}) }}">Edit profil</a>
