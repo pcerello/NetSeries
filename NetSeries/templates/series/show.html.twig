@@ -174,7 +174,7 @@
             <tbody>
                 {% for r in ratings %}
                     <tr>
-                        {% if r.isEstModere() %}
+                        {% if r.isEstModere() and r.user.isEstSuspendu() == false %}
                             <td class="td">{{ r.user.name }}</td>
                             <td class="td">{{ r.comment }}</td>
                             <td class="td">{{ (r.value)/2 }}/5</td>

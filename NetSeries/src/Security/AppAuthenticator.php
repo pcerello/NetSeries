@@ -14,15 +14,20 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordCredentials;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use App\Entity\User;
 
 class AppAuthenticator extends AbstractLoginFormAuthenticator
 {
     use TargetPathTrait;
 
     public const LOGIN_ROUTE = 'app_login';
+    private $entityManager;
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(private UrlGeneratorInterface $urlGenerator, EntityManagerInterface $entityManager)
     {
+        $this->entityManager = $entityManager;
     }
 
     public function authenticate(Request $request): Passport
@@ -30,6 +35,12 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         $email = $request->request->get('email', '');
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
+
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email, 'estSuspendu' => false]);
+
+        if (!$user) {
+            throw new AuthenticationException("Invalid email/password combination or account suspended");
+        }
 
         return new Passport(
             new UserBadge($email),

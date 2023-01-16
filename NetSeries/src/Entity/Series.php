@@ -444,7 +444,7 @@ class Series
 
         // Parcours des notes associées à la série
         foreach ($this->getRatings() as $rating) {
-            if ($rating->isEstModere()){
+            if ($rating->isEstModere() && !$rating->getUser()->isEstSuspendu()){
                 // Incrémente la somme total par la nouvelle note
                 $total += $rating->getValue();
                 // Incrémentation du nombre de notes total
@@ -485,7 +485,7 @@ class Series
         /** @var \Rating */
         $valueModerate = new ArrayCollection();
         foreach ($this->getRatings() as $rating) {
-            if ($rating->isEstModere()){
+            if ($rating->isEstModere() && !$rating->getUser()->isEstSuspendu()){
                 $valueModerate->add($rating);
             }
         }
