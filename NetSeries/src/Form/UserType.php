@@ -15,26 +15,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
+    {  
         $builder
-            ->add('name', null, [
-                'label' => 'Name',
-                'attr' => [
-                    'placeholder' => 'Name',
-                    'class' => 'mb-3 form-control'
-                ],
-                'constraints' => [
-                    new NotBlank([
-                        'message' => 'Please enter your name',
-                    ]),
-                    new Length([
-                        'min' => 2,
-                        'minMessage' => 'Your name should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
-                        'max' => 255,
-                    ]),
-                ],
-            ])
+            ->add('name')
+            ->add('country')
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'New password',
                 'attr' => [
@@ -62,7 +46,6 @@ class UserType extends AbstractType
                     ])
                 ],
             ])
-            ->add('country')
         ;
     }
 
