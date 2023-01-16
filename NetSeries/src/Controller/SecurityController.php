@@ -23,6 +23,8 @@ class SecurityController extends AbstractController
         $lastUsername = $authenticationUtils->getLastUsername();
 
         $suspendedError = $request->getSession()->get('suspendedError');
+
+        $request->getSession()->remove('suspendedError');
         
         return $this->render('security/login.html.twig', 
         ['last_username' => $lastUsername, 

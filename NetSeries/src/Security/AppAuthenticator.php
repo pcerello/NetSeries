@@ -36,12 +36,17 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email, 'estSuspendu' => false]);
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $email, 'estSuspendu' => true]);
 
-        if (!$user || $user->isEstSuspendu() ) {
-            $request->getSession()->set('suspendedError', "Your account is suspended.");
-            throw new AuthenticationException("Your account is suspended.");
+        if ($user){
+            if ($user->isEstSuspendu() ) {
+                $request->getSession()->set('suspendedError', "Your account is suspended.");
+                throw new AuthenticationException("Your account is suspended.");
+            }
         }
+        
+
+        $request->getSession()->remove('suspendedError');
 
         return new Passport(
             new UserBadge($email),
@@ -53,7 +58,9 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
+    {   
+        $request->getSession()->remove('suspendedError');
+
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
