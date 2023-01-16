@@ -16,6 +16,7 @@ block body %}
         <th>Registration Date</th>
         <th>Admin</th>
         <th>Country</th>
+        <th>Ban</th>
       {% endif %}
       <th>actions</th>
 
@@ -35,6 +36,7 @@ block body %}
           </td>
           <td>{{ user.admin ? "✅" : "❌" }}</td>
           <td>{{ user.country }}</td>
+          <td>{{ user.estSuspendu ? "✅" : "❌"  }}</td>
         {% endif %}
         <td class="actions">
         {# Si l'utilisateur courant est un admin #}
@@ -47,7 +49,7 @@ block body %}
             {# Destituer un admin #}
             <a href="{{path('app_user_demote', {'id' : user.id})}}">Demote ⬇</a>
           {% endif %}
-            
+          <a href="">Ban user</a>
         {% endif %}
           {# Lien pour voir la fiche d'un utilisateur #}
           <a href="{{ path('app_user_show', {'id' : user.id} )}}">See this user's profile</a>
