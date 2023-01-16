@@ -18,6 +18,43 @@ body {
     font-family: 'poppins', sans-serif;
 }
 
+#burger {
+    display: none;
+    position: absolute;
+    right: 5px;
+    z-index: 2;
+}
+
+#burger > div {
+    width: 25px;
+    height: 3px;
+    background-color: #2E2E2E;
+    border-radius: 15px;
+    margin: 3px 0;
+}
+
+#burger.close {
+    position: fixed;
+    right: 5px;
+    z-index: 2;
+}
+
+#burger.close > div {
+    width: 30px;
+}
+
+#burger.close > div:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 5px);
+}
+
+#burger.close > div:nth-child(2) {
+    opacity: 0;
+}
+
+#burger.close > div:nth-child(3) {
+    transform: rotate(-45deg) translate(7px, -7px);
+}
+
 #logo {
     display: flex;
     flex-direction: row;
@@ -32,7 +69,7 @@ body {
 #buttons {
     display: flex;
     flex-direction: row;
-    align-items: center;    
+    align-items: center;  
 }
   
 #menu a {
@@ -74,7 +111,7 @@ body {
 }
 
 .button.square.profile {
-    width: 8em;
+    width: auto
 }
 
 .button.square img {
@@ -129,8 +166,17 @@ body {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     background-color: #328eff;
     transition: 0.5
-
 }
+  
+  /* Icône burger */
+  .burger-icon span {
+    display: block;
+    width: 35px;
+    height: 5px;
+    background-color: black;
+    margin: 6px 0;
+  }
+  
 
 @media only screen and (max-width: 500px) {
     #buttons {
@@ -141,6 +187,7 @@ body {
 
 [data-tooltip]:before {            
     position : absolute;
+    vertical-align: bottom;
     content : attr(data-tooltip);
     top: 125%;
     opacity: 0;
@@ -149,8 +196,16 @@ body {
     border-radius: 10px;
     transition: all 0.15s ease;
     box-shadow: 2px 2px 1px silver;
-    width: 150%;
-    left: -25%;
+    width: auto;
+
+    /* Alignement du tooltip avec le bouton */
+    left: 50%;
+    transform: translateX(-50%);
+
+    /* Pour que le tooltip ne sorte pas de la page */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 [data-tooltip]:hover:before {        
@@ -173,3 +228,63 @@ body {
     border-color: transparent transparent white transparent;
     transition: all 0.15s ease;
   }
+
+  /* Icône burger */
+.burger-icon span {
+    display: block;
+    width: 35px;
+    height: 5px;
+    background-color: black;
+    margin: 6px 0;
+}
+  
+
+@media screen and (max-width: 500px) {
+    #menu #buttons {
+        display: none;
+        right: 0;
+        width: 250px;
+    }
+
+    #menu #burger {
+        display: flex;
+        flex-direction: column;
+        margin: 0 1em;
+    }
+
+    #buttons.active {
+        display: flex !important;
+        flex-direction: column;
+        height: 100%;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        padding-top: 60px;
+        transition: right 0.5s ease;
+        box-shadow: 0 0 1rem 0 rgba(0, 0, 0, .2); 
+        border-radius: 5px;
+        background-color: rgba(255, 255, 255, .15);
+        backdrop-filter: blur(5px)
+
+    }
+    
+    .button {
+        padding: 3px 8px;
+        margin: 10px 0;
+        text-decoration: none;
+        font-size: 1rem;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+        width: auto;
+        height: auto;
+        display: grid;
+        place-items: center;
+      }
+    
+    .button.square.profile {
+        font-size: 0.8rem;
+        gap: 15px;
+        text-overflow: ellipsis;
+    }
+}
