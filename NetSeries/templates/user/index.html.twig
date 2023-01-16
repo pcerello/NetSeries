@@ -47,6 +47,7 @@ block body %}
             {# Destituer un admin #}
             <a href="{{path('app_user_demote', {'id' : user.id})}}">Demote ⬇</a>
           {% endif %}
+          <a href="{{ path('app_user_profil', {'id' : user.id}) }}">User profil</a>
             
         {% endif %}
           {# Lien pour voir la fiche d'un utilisateur #}

@@ -9,4 +9,20 @@
 
 {% block body %}
 
+    Profil informations
+    <br>
+    Name of user : {{ user.name }}
+    <br>
+    Mail of user : {{ user.email }}
+    <br>
+    Id of user : {{ user.id }}
+    <br>
+    {% if user.admin == 0 %}
+        This user isn't admin
+    {% else %}
+        This user is admin
+    {% endif %}
+    <br>
+    <a class="button square profile" href="{{ path('app_user_edit', {'id': user.id}) }}">Edit password</a>
+
 {% endblock %}

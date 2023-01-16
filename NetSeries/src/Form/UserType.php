@@ -13,10 +13,18 @@ use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class UserType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    private $user;
+
+    public function __construct(User $user)
     {
+        $this->user = $user;
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {  
         $builder
             ->add('name')
+            ->add('country')
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'New password',
                 
@@ -36,7 +44,6 @@ class UserType extends AbstractType
                     ]),
                 ],
             ])
-            ->add('country')
         ;
     }
 
