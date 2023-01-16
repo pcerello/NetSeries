@@ -92,7 +92,13 @@
                                         {{ series.getAverageRating() }}/5 </p>
                                         {# Affichage du nombre d'avis de la série #}
                                         <div class="nbAvis">
-                                            <p>{{ series.getRatingsModerate()|length }} rating</p>
+                                            <p>{{ series.getRatingsModerate()|length }}
+                                                
+                                                {% if series.getRatingsModerate()|length == 1 %}
+                                                rating</p>
+                                                {% else %}
+                                                ratings</p>
+                                                {% endif %}
                                         </div>
                                     {% endif %}
                             </div>
@@ -102,24 +108,13 @@
                             {# On vérifie si l'utilisateur est un administrateur #}
                             {% if app.user.isFollowing(series) %}
                                 <span class="eye"><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
+                                {{ series.followedSeries(app.user) }}
                             {% else %}
                                 <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
                             {% endif %}
                         {% endif %}  
                     </div>
                 </a>
-                    {# Si l'utilisateur est connecté, affichage d'un lien pour suivre ou ne plus suivre la série #}
-                    {% if app.user %}
-                        {# On vérifie si l'utilisateur est un administrateur #}
-                        {% if app.user.isFollowing(series) %}
-                            <span class="eye" ><img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png"></span>
-                            {{ series.followedSeries(app.user) }}
-                        {% else %}
-                            <a class="follow" href="{{ path('follow_series', {'id': series.id}) }}">Follow</a>
-                        {% endif %}
-                    {% endif %}
-   
-                </a> 
             </div>
         {% endfor %}
     </div>
