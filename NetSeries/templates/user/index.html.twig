@@ -36,7 +36,7 @@ block body %}
           <td>{{ user.admin ? "✅" : "❌" }}</td>
           <td>{{ user.country }}</td>
         {% endif %}
-        <td>
+        <td class="actions">
         {# Si l'utilisateur courant est un admin #}
         {% if app.user.isAdmin() %}
           <a href="{{ path('app_home', {'_switch_user': user.email}) }}">Incarnate 👤</a>

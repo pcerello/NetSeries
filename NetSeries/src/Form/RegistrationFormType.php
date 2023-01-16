@@ -51,6 +51,10 @@ class RegistrationFormType extends AbstractType
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
+                        'message' => 'Your password must contain at least one lowercase letter, one uppercase letter, one number and one special character.'
+                    ])
                 ],
             ])
         ;

@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 
 class UserType extends AbstractType
@@ -16,14 +17,35 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', null, [
+                'label' => 'Name',
+                'attr' => [
+                    'placeholder' => 'Name',
+                    'class' => 'mb-3 form-control'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter your name',
+                    ]),
+                    new Length([
+                        'min' => 2,
+                        'minMessage' => 'Your name should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 255,
+                    ]),
+                ],
+            ])
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'New password',
+                'attr' => [
+                    'placeholder' => 'New password',
+                    'autocomplete' => 'new-password',
+                    'class' => 'mb-3 form-control'
+                ],
                 
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,
-                'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
                         'message' => 'Please enter a password',
@@ -34,6 +56,10 @@ class UserType extends AbstractType
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
+                    new Assert\Regex([
+                        'pattern' => '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*(_|[^\w])).+$/',
+                        'message' => 'Your password must contain at least one lowercase letter, one uppercase letter, one number and one special character.'
+                    ])
                 ],
             ])
             ->add('country')
