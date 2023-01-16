@@ -1,3 +1,7 @@
+/* Style de la page series */
+/* Path: public/css/series.css */
+/* target : series/index.html.twig */
+
 h1{
     text-align: center;
     margin: 2rem;
@@ -5,317 +9,286 @@ h1{
     font-weight: 600;
 }
 
-.followed{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
-    color: black;
-    font-weight: 600;
-}
+/*Si un utilisateur est connecté, affichage d'un lien vers les séries suivies*/
+    .followed{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2rem;
+        color: black;
+        font-weight: 600;
+    }
 
-.series {
-    display: flex;
-    flex-direction:column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-}
+/* affichage generale de tout les séries */
+    .series {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin-top: 2rem;
+        flex-wrap: wrap;
+    }
 
-a.linkSerie{
-    text-decoration: none;
-    color: black;
-    width: 100%;
-    height: 100%;
-}
+/*affichage générale d'une série*/
+    .serie{
+        border-radius: 16px;
+        box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 2px 0px, rgba(14, 30, 37, 0.32) 0px 2px 10px 0px;
+        width: 15rem;
+        height: 35rem;
+        margin: 1rem;
+    }
 
+    a.linkSerie{
+        text-decoration: none;
+        color: black;
+        width: 100%;
+        height: 100%;
+    }
 
-.serie{
-    border-radius: 16px;
-    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 2px 0px, rgba(14, 30, 37, 0.32) 0px 2px 10px 0px;
-    width: 15rem;
-    height: 35rem;
-    margin: 1rem;
-}
+    .serie:hover{
+        background-color: #f5f5f5;
+    }
 
-.serie:hover{
-    background-color: #f5f5f5;
-}
+/* contenu d'une série */
+    .boxSerie{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        height: 100%;
+        width: 100%;
+    }
 
-.boxSerie{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    height: 100%;
-    width: 100%;
+    .boxSerie .titleSerie{
+        font-weight: 600;
+        text-align: center;
+    }
 
-}
+    #poster {
+        height: 100%;
+        width: 100%;
+    }
 
-.imgSerie {
-    height: 75%;
-    width: 80%;
-    display: block;
-    margin-left: auto;
-    margin-right: auto 
-}
+    .titleSerie{
+        font-weight: 600;
+        font-size: 1.2rem;
+        display: flex;
+        flex-direction: column;
+        margin: 1rem;
+        margin-top: 0.5rem;
+    }
 
-.imgSerie img{
-    margin-top: 1rem;
-    height: 100%;
-    width: 100%;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
+    .imgSerie {
+        height: 75%;
+        width: 80%;
+        display: block;
+        margin-left: auto;
+        margin-right: auto 
+    }
 
-
-.titleSerie{
-    font-weight: 600;
-    font-size: 1.2rem;
-    margin-top: 0.5rem;
-}
-
-.notes{
-    
-    display: flex;
-    font-size: 0.7rem;
-    flex-direction: column;
-    align-items: center;
-}
-
-#note-Imdb,#note-User{
-    margin: 0.3em;
-    display: flex;
-    justify-content: space-evenly;
-    flex-direction: row;
-    flex-wrap: wrap;
-}
-
-#note-User img{
-    margin-top: 1rem;
-
-}
-
-span.eye{
-    position: absolute;
-    background-color: #86858588;
-    margin-top: 1rem;
-    width: 12rem;
-    height: 21.2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 16px;
-}
-
-span.eye img{
-    width: 6rem;
-    height: 6rem;
-    filter: brightness(0) invert(1);
+    .imgSerie img{
+        margin-top: 1rem;
+        height: 100%;
+        width: 100%;
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
 
-}
+/* Affichage dynamique de la série suivie */
+    span.eye{
+        position: absolute;
+        background-color: #86858588;
+        margin-top: 1rem;
+        width: 12rem;
+        height: 21rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 16px;
+    }
+
+    span.eye img{
+        width: 6rem;
+        height: 6rem;
+        filter: brightness(0) invert(1);
+    }
+
+    .boxSerie a.follow{
+        position: absolute;
+        border: 1px solid rgb(85, 80, 80);
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        text-decoration: none;
+        color: black;
+        margin-top: 26rem; 
+    }
+
+    .boxSerie a.follow:hover{
+        background-color: #3a3838;
+        color: white;
+    }
 
 
-.boxSerie a.follow{
-    /*make a button*/
-    position: absolute;
-    border: 1px solid rgb(85, 80, 80);
-    padding: 0.5rem 1rem;
-    border-radius: 20px;
-    text-decoration: none;
-    color: black;
-    margin-top: 25rem; 
-}
+/* affichage des notes */
+    .notes{
+        display: flex;
+        font-size: 0.7rem;
+        flex-direction: column;
+        align-items: center;
+    }
 
-.boxSerie a.follow:hover{
-    background-color: #3a3838;
-    color: white;
-}
+    #note-Imdb,#note-User{
+        font-weight: 700;
+        margin: 1em;
+        display: flex;
+        justify-content: space-evenly;
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
 
-.notes img{
-    margin : 0rem 0.2rem 1.2rem 0.2rem;
-    width: 0.7rem;
-    height: 0.7rem;
-}
+    #note-User img{
+        width: 0.7rem;
+        height: 0.7rem;
+        margin-bottom: 0.2rem;
+    }
 
+    .nbAvis{
+        margin-left: 2em;
+    }
 
-.boxSerie .titleSerie{
-    font-weight: 600;
-    text-align: center;
-}
+    .notes img{
+        margin : 0rem 0.2rem 1.2rem 0.2rem;
+        width: 0.7rem;
+        height: 0.7rem;
+    }
 
-#poster {
-    height: 100%;
-    width: 100%;
-}
+/* affichage de la pagination*/
+    .pagination{
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin: 2rem;
 
-.series {
-    display: flex;
-    flex-direction: row;
+    }
+    .pagination span a {
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        border: 2px solid rgb(73, 72, 72);
+        background-color: #f5f5f5;
+        padding: 0.7rem 1rem;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+    .pagination span.current{
+        margin-left: 0.5rem;
+        margin-right: 0.5rem;
+        border: 2px solid rgb(73, 72, 72);
+        background-color: #f5f5f5;
+        padding: 0.7rem 1.2rem;
+        border-radius: 5px;
+        font-weight: 500;
+    }
+    .pagination span a:hover, .pagination span.current{
+        background-color: #5e5b5b;
+        color: white;
+    }
+    .pagination span a{
+        text-decoration: none;
+        color: black;
+    }
 
-}
+/* affichage de la recherche */
+    .box_search{
+        margin: 1em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+        padding: 0.5em 2em;
+    }
 
-#infos {
-    display: flex;
-    flex-direction: row;
-    box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
-    border-radius: 16px;
-}
+    .box_search input, select {
+        margin: 0.5em;
+        padding: 0.5em;
+        display: block;
+        width: 35vw;
+        font-size: 1rem;
+        line-height: 1.5;
+        border: 0.5px solid #909090;
+        box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
+        border-radius: 10px;
+        color: #909090;
+        transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+        padding-left: 55px;
+    }
 
-#titlePoster {
-    display: flex;
-    flex-direction: column;
-    margin: 1rem;
-    
-}
+    .note,.annee{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+    }
 
-#posterShow {
-    height: 35rem;
-    width: 20rem;
-    border-radius: 5px;
-}
+    .note input,.annee input{
+        width: 50%;
+    }
 
-#infoSerie {
-    margin-left: 1rem;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 1rem;
-}
+    input[placeholder="Search a serie"] {
+        background: url(../images/icons/search.svg) no-repeat scroll 14px;
+    }
 
-/* pagination */
-.pagination{
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    margin: 2rem;
+    input[placeholder="Search an actor"] {
+        background: url(../images/icons/user.svg) no-repeat scroll 14px;
+    }
 
-}
+    input[placeholder="Note Min"],input[placeholder="Note Max"]  {
+        background: url(../images/icons/star-rating.svg) no-repeat scroll 14px;
+    }
 
-.pagination span a {
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    /*make a button*/
-    border: 2px solid rgb(73, 72, 72);
-    background-color: #f5f5f5;
-    padding: 0.7rem 1rem;
-    border-radius: 5px;
-    /*mettre en gras*/
-    font-weight: 500;
-}
+    input[placeholder="Year Min"] ,input[placeholder="Year Max"]{
+        background: url(../images/icons/month.svg) no-repeat scroll 14px;
+    }
 
-.pagination span.current{
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    /*make a button*/
-    border: 2px solid rgb(73, 72, 72);
-    background-color: #f5f5f5;
-    padding: 0.5rem 1rem;
-    border-radius: 5px;
-    /*mettre en gras*/
-    font-weight: 500;
-}
-.pagination span a:hover, .pagination span.current{
-    background-color: #5e5b5b;
-    color: white;
-}
+    select {
+        background: url(../images/icons/menu.svg) no-repeat scroll 15px 9px;
+        padding: 0.375rem 3.6rem;
+        padding-left: 55px;
+    }
 
-.pagination span a{
-    text-decoration: none;
-    color: black;
-}
+    input[type=text]:focus, input[type=password]:focus, select:focus,input[type=submit]:focus,input[type=number]:focus {
+        color: var(--bs-body-color);
+        background-color: var(--bs-form-control-bg);
+        border-color: var(--bs-primary);
+        outline: 0;
+        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+    }
 
-.box_search{
-    margin: 1em;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
-    padding: 0.5em 2em;
-}
+    input[type=submit]{
+        background-color: #ffffff;
+        width:7em;
+        text-align: center;
+        margin: 0.5em;
+        padding: 0.7em;
+        font-size: 1rem;
+        line-height: 1.5;
+        border: 0.5px solid #909090;
+    }
 
-.box_search input, select {
-    margin: 0.5em;
-    padding: 0.5em;
-    display: block;
-    width: 35vw;
-    font-size: 1rem;
-    line-height: 1.5;
-    border: 0.5px solid #909090;
-    box-shadow: 0px 5px 5px rgba(0, 0, 0, 0.25);
-    border-radius: 10px;
-    color: #909090;
-    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
-    padding-left: 55px;
-}
-
-.note{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-
-.note input{
-    width: 50%;
-}
-
-input[placeholder="Search a serie"] {
-    background: url(../images/icons/search.svg) no-repeat scroll 14px;
-}
-
-input[placeholder="Search an actor"] {
-    background: url(../images/icons/user.svg) no-repeat scroll 14px;
-}
-
-input[placeholder="Note Min"],input[placeholder="Note Max"]  {
-    background: url(../images/icons/star-rating.svg) no-repeat scroll 14px;
-}
-
-input[placeholder="Year"] {
-    background: url(../images/icons/month.svg) no-repeat scroll 14px;
-}
-
-select {
-    background: url(../images/icons/menu.svg) no-repeat scroll 15px 9px;
-    padding: 0.375rem 3.6rem;
-    padding-left: 55px;
-}
+    input[type=submit]:hover{
+        background-color: #5e5b5b;
+        color: white;
+    }
 
 
-input[type=text]:focus, input[type=password]:focus, select:focus {
-    color: var(--bs-body-color);
-    background-color: var(--bs-form-control-bg);
-    border-color: var(--bs-primary);
-    outline: 0;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-}
-
-input[type=submit]{
-    background-color: #ffffff;
-    width:10%;
-    text-align: center;
-    margin: 0.5em;
-    padding: 0.5em;
-    font-size: 1rem;
-    line-height: 1.5;
-    border: 0.5px solid #909090;
-}
-
-input[type=submit]:hover{
-    background-color: #5e5b5b;
-    color: white;
-}
-
-
+/* responsivité */
 @media only screen and (max-width: 1100px) {
     .series {
         flex-direction: column;
