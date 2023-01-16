@@ -10,19 +10,22 @@
 {% block body %}
     <h1>User</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Name</th>
-                <td>{{ user.name }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-
-        </tbody>
-    </table>
+    <div id='edit'>
+        <div id='nameMail'>
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>Name</th>
+                        <td>{{ user.name }}</td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td>{{ user.email }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 
     {# Tableau des séries suivi pour un utilisateur qui a était choisis #}
     <h2> Series that {{user.name}} watches </h2>

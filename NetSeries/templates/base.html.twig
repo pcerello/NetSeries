@@ -25,6 +25,8 @@
 
 
                 {% if app.user %}
+                    <a class="button square profile" href="{{ path('app_user_edit', {'id': app.user.id}) }}">Edit profil</a>
+
                     <a class="button square profile" data-tooltip="My profile">
                         <div class="user__profile">
                             <img class="" src="{{ asset('images/icons/user-profile.svg') }}">
