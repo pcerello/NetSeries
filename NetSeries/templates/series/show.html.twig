@@ -35,26 +35,7 @@
             {% endif %}
 
             {% if app.user %}
-            {% set episodeCount = 0 %}
-            {% set isSeasonView = true %}
-            {% for seasonNumber, episodes in episodesBySeason %}
-                {% for episode in episodes %}
-                {{ dump(app.user.isView(episode)) }}
-                    {% if app.user.isView(episode) == false %} 
-                        {% set isSeasonView = false %}
-                    {% endif %}
-                {% endfor %}
-            {% endfor %}
-            {% if isSeasonView == true %}
-                <p>Vu</p>
-            {% else %}
-            {# if the first episode of the first season is not seen #}
-            {% if app.user.isView(episodesBySeason[1][0]) == false %}
-                <p>Pas vu</p>
-            {% else %}
-                <p>En cours</p>
-            {% endif %}
-            {% endif %}
+            {{ series.followedSeries(app.user) }}
             {% endif %}
 
 
