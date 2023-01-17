@@ -83,11 +83,23 @@ class SeasonController extends AbstractController
         $serie = $season->getSeries();
 
         if ($this->isCsrfTokenValid('delete'.$season->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($season);
             
+            $entityManager->remove($season);
+            if (!empty($season->getEpisodes())){
+                $this->deleteAllEpisodeForDeleteSeason($season, $entityManager);
+            }
             $entityManager->flush();
+            
         }
 
         return $this->redirectToRoute('app_season_index', ['idSeries' => $serie->getId()], Response::HTTP_SEE_OTHER);
+    }
+
+    public function deleteAllEpisodeForDeleteSeason(Season $season, EntityManagerInterface $entityManager){
+        foreach ($season->getEpisodes() as $episode){
+            $entityManager->remove($episode);
+            $season->removeEpisode($episode);
+        }
+        $entityManager->flush();
     }
 }

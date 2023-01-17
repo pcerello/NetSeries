@@ -20,6 +20,7 @@
                 <td>{{ season.number }}</td>
                 <td>
                     <a href="{{ path('app_season_edit', {'id': season.id}) }}">edit</a>
+                    <a href="{{ path('app_episode_index', {'idSeason': season.id}) }}">View all episodes</a>
                 </td>
             </tr>
         {% else %}
