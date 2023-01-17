@@ -251,14 +251,12 @@ class UserController extends AbstractController
         $seriesFollowedPaginated = $paginator->paginate(
             $seriesFollowed,
             $request->query->getInt('page', 1), /*page number*/
-            7 /*limit per page*/
+            /*7 limit per page*/
         );
         
         return $this->render('user/followedSeriesForUser.html.twig', [
             'series' => $seriesFollowedPaginated,
         ]);
-
-        
     }
 
     #[Route('/generate/{id}', name:'generateUser', methods: ['POST'])]
@@ -343,4 +341,23 @@ class UserController extends AbstractController
 
     
     
+    #[Route('/usersFollowed/{id}', name: 'app_user_usersFollowed', methods: ['GET'])]
+    public function usersFollowed(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        // if the user is not logged in, redirect to the login page
+        $user = $entityManager->getRepository(User::class)->find($request->get('id'));
+
+        $seriesFollowed = $user->getSeries();
+
+        $seriesFollowedPaginated = $paginator->paginate(
+            $seriesFollowed,
+            $request->query->getInt('page', 1), /*page number*/
+            /*7 limit per page*/
+        );
+        
+        return $this->render('user/followedSeriesForUser.html.twig', [
+            'series' => $seriesFollowedPaginated,
+            'user' => $user
+        ]);
+    }
 }

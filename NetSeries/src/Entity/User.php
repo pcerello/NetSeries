@@ -127,6 +127,13 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private $estSuspendu = '0';
 
     /**
+     * @var \User
+     *
+     * @ORM\ManyToMany(targetEntity="User")
+     */
+    private $followUser;
+
+    /**
      * Constructor
      */
     public function __construct()
