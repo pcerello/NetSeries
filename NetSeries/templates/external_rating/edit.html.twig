@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit ExternalRating{% endblock %}
+
+{% block body %}
+    <h1>Edit ExternalRating</h1>
+
+    {{ include('external_rating/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('app_external_rating_index', {'idSeries' : serie.id}) }}">back to list</a>
+
+    {{ include('external_rating/_delete_form.html.twig') }}
+{% endblock %}

@@ -3,6 +3,7 @@
 {% block title %}Series{% endblock %}
 
 {% block body %}
+
 <div id="imageSerie" style="background-image: url('{{ path('app_poster_show', {'id': series.id}) }}');">
 
     <h1 id="serieTitle">{{ series.title }}</h1>
@@ -49,6 +50,18 @@
 
         </div>
     </div>
+
+            <p><strong>Trailer :</strong></p>
+            {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
+
+            <iframe width="560" height="315" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    {% if app.user and app.user.isAdmin() %}
+        <a href="{{ path('app_series_edit', {'id' : series.id} ) }}"> Edit serie</a>
+    {% endif %}
+
     <table class="table">
         <tbody>
             <tr>
@@ -124,7 +137,9 @@
         </tbody>
     </table>
 
-
+    {% if app.user  %}
+        <a href="{{ path('app_series_edit', {'id' : series.id}) }}">Edit serie</a>
+    {% endif %}
 
     {% if app.user %}
         {# On test si l'utilisateur à déjà mis un commentaire/appréciation/critique sur cette séries #}

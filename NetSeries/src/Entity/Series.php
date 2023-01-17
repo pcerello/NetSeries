@@ -34,7 +34,7 @@ class Series
     /**
      * @var string|null
      *
-     * @ORM\Column(name="plot", type="text", length=0, nullable=true)
+     * @ORM\Column(name="plot", type="text", length=200, nullable=true)
      */
     private $plot;
 
@@ -69,7 +69,7 @@ class Series
     /**
      * @var string|null
      *
-     * @ORM\Column(name="awards", type="text", length=0, nullable=true)
+     * @ORM\Column(name="awards", type="text", length=200, nullable=true)
      */
     private $awards;
 
@@ -128,7 +128,7 @@ class Series
      *
      * @ORM\OneToOne(targetEntity="ExternalRating", mappedBy="series")
      */
-    private $externalRating = array();
+    private $externalRating;
 
      /**
      * @var \Rating|null

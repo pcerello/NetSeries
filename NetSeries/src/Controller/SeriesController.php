@@ -76,9 +76,9 @@ class SeriesController extends AbstractController
         if ($minnote = $request->query->get('minnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
                 ->select('AVG(r.value/2)')
-                ->leftJoin('m.user', 'u')
+                ->leftJoin('r.user', 'us')
                 ->where('r.series = s AND r.estModere = true')
-                ->andWhere('u.estSuspendu = false')
+                ->andWhere('us.estSuspendu = false')
                 ->getDQL();
 
             $qb->andWhere(sprintf('(%s) >= :minnote', $subquery))
@@ -148,6 +148,13 @@ class SeriesController extends AbstractController
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual || !$userActual->isAdmin()) {
+            return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
+        } 
+
         $series = new Series();
         $form = $this->createForm(SeriesType::class, $series);
         $form->handleRequest($request);
@@ -253,13 +260,20 @@ class SeriesController extends AbstractController
     #[Route('/{id}/edit', name: 'app_series_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Series $series, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual || !$userActual->isAdmin()) {
+            return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
+        } 
+
         $form = $this->createForm(SeriesType::class, $series);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('series/edit.html.twig', [
@@ -271,13 +285,57 @@ class SeriesController extends AbstractController
     #[Route('/{id}', name: 'app_series_delete', methods: ['POST'])]
     public function delete(Request $request, Series $series, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $userActual = $this->getUser();
+
+        if (!$userActual || !$userActual->isAdmin()) {
+            return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
+        } 
+
         if ($this->isCsrfTokenValid('delete' . $series->getId(), $request->request->get('_token'))) {
             $entityManager->remove($series);
+            if ($series->getExternalRating() != null){
+                $this->deleteAllExternalRatingForDeleteSerie($series, $entityManager);
+            }
+
+            if (!empty($series->getRatings())){
+                $this->deleteAllRatingForDeleteSerie($series, $entityManager);
+            }
+
+            if (!empty($series->getSeasons())){
+                $this->deleteAllSeasonsForDeleteSerie($series, $entityManager);
+            }
+            
+
+
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    private function deleteAllExternalRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
+        $entityManager->remove($serie->getExternalRating());
+    }
+
+    private function deleteAllRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
+        foreach ($serie->getRatings() as $rating){
+            $entityManager->remove($rating);
+        }
+    }
+
+    private function deleteAllSeasonsForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
+        foreach ($serie->getSeasons() as $season){
+            $entityManager->remove($season);
+            if (!empty($season->getEpisodes())){
+                foreach ($season->getEpisodes() as $episode){
+                    $entityManager->remove($episode);
+                }
+            }
+        }
+    }
+
+    
 
     #[Route('/view/{id1}/{id2}', name: 'app_episode_view', methods: ['GET', 'POST'])]
     public function view(EntityManagerInterface $entityManager, Request $request): Response
@@ -285,6 +343,10 @@ class SeriesController extends AbstractController
         # Récupère l'utilisateur connecté courant
         /** @var \App\Entity\User */
         $user = $this->getUser();
+
+        if (!$user ) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        } 
 
         # Récupère l'épisode avec l'ID passé en paramètre de l'URL
         /** @var \App\Entity\Episode */
@@ -326,6 +388,10 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
+        if (!$user ) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        } 
+
         # Récupère l'épisode avec l'ID passé en paramètre de l'URL
         /** @var \App\Entity\Episode */
         $episodes = $entityManager->getRepository(Episode::class)->find($request->get('id1'));
@@ -350,6 +416,10 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
+        if (!$user ) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        } 
+
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('id'));
 
@@ -369,6 +439,10 @@ class SeriesController extends AbstractController
         # Récupère l'utilisateur connecté courant
         /** @var \App\Entity\User */
         $user = $this->getUser();
+
+        if (!$user ) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        } 
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('id'));
@@ -390,7 +464,9 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-
+        if (!$user ) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        } 
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('id1'));
@@ -421,6 +497,10 @@ class SeriesController extends AbstractController
         # Récupère l'utilisateur connecté courant
         /** @var \App\Entity\User */
         $user = $this->getUser();
+
+        if (!$user ) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        } 
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('id1'));
