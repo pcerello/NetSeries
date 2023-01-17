@@ -15,23 +15,22 @@
             </tr>
         </thead>
         <tbody>
-        {% for external_rating in external_ratings %}
+        {% if externalRatings %}
             <tr>
-                <td>{{ external_rating.id }}</td>
-                <td>{{ external_rating.value }}</td>
-                <td>{{ external_rating.votes }}</td>
+                <td>{{ externalRatings.id }}</td>
+                <td>{{ externalRatings.value }}</td>
+                <td>{{ externalRatings.votes }}</td>
                 <td>
-                    <a href="{{ path('app_external_rating_show', {'id': external_rating.id}) }}">show</a>
-                    <a href="{{ path('app_external_rating_edit', {'id': external_rating.id}) }}">edit</a>
+                    <a href="{{ path('app_external_rating_edit', {'id': externalRatings.id, 'idSerie' : serie.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
             <tr>
                 <td colspan="4">no records found</td>
+                <a href="{{ path('app_external_rating_new', {'idSerie' : serie.id}) }}">New external rating</a>
+
             </tr>
-        {% endfor %}
+        {% endif %}
         </tbody>
     </table>
-
-    <a href="{{ path('app_external_rating_new') }}">Create new</a>
 {% endblock %}

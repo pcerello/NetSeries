@@ -128,7 +128,7 @@ class Series
      *
      * @ORM\OneToOne(targetEntity="ExternalRating", mappedBy="series")
      */
-    private $externalRating = array();
+    private $externalRating;
 
      /**
      * @var \Rating|null

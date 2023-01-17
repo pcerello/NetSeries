@@ -22,12 +22,12 @@ class ExternalRatingController extends AbstractController
         $externalRatings = $serie->getExternalRating();
 
         return $this->render('external_rating/index.html.twig', [
-            'external_ratings' => $externalRatings,
+            'externalRatings' => $externalRatings,
             'serie' => $serie,
         ]);
     }
 
-    #[Route('/new', name: 'app_external_rating_new', methods: ['GET', 'POST'])]
+    #[Route('/new/{idSeries}', name: 'app_external_rating_new', methods: ['GET', 'POST'])]
     public function new(int $idSeries, Request $request, EntityManagerInterface $entityManager): Response
     {
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
@@ -38,6 +38,7 @@ class ExternalRatingController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($externalRating);
+            $serie->setExternalRating($externalRating);
             $entityManager->flush();
 
             return $this->redirectToRoute('app_external_rating_index', ['idSeries' => $serie->getId()], Response::HTTP_SEE_OTHER);
@@ -58,9 +59,11 @@ class ExternalRatingController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_external_rating_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, ExternalRating $externalRating, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/{idSerie}/edit', name: 'app_external_rating_edit', methods: ['GET', 'POST'])]
+    public function edit(int $idSerie, Request $request, ExternalRating $externalRating, EntityManagerInterface $entityManager): Response
     {
+        $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
+
         $form = $this->createForm(ExternalRatingType::class, $externalRating);
         $form->handleRequest($request);
 
@@ -73,6 +76,7 @@ class ExternalRatingController extends AbstractController
         return $this->renderForm('external_rating/edit.html.twig', [
             'external_rating' => $externalRating,
             'form' => $form,
+            'serie' => $serie,
         ]);
     }
 

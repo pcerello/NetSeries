@@ -7,5 +7,5 @@
 
     {{ include('external_rating/_form.html.twig') }}
 
-    <a href="{{ path('app_external_rating_index') }}">back to list</a>
+    <a href="{{ path('app_external_rating_index', {'idSeries' : serie.id}) }}">back to list</a>
 {% endblock %}

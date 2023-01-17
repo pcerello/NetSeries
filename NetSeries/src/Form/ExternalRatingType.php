@@ -14,7 +14,6 @@ class ExternalRatingType extends AbstractType
         $builder
             ->add('value')
             ->add('votes')
-            ->add('series')
             ->add('source')
         ;
     }
