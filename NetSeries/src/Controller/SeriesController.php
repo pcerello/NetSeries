@@ -273,11 +273,53 @@ class SeriesController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete' . $series->getId(), $request->request->get('_token'))) {
             $entityManager->remove($series);
+            if ($series->getExternalRating() != null){
+                $this->deleteAllExternalRatingForDeleteSerie($series, $entityManager);
+            }
+
+            if (!empty($series->getRatings())){
+                $this->deleteAllRatingForDeleteSerie($series, $entityManager);
+            }
+
+            if (!empty($series->getSeasons())){
+                $this->deleteAllSeasonsForDeleteSerie($series, $entityManager);
+            }
+            
+
+
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    private function deleteAllExternalRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
+        $serie->getExternalRating()->setSeries(null);
+        $entityManager->remove($serie->getExternalRating());
+    }
+
+    private function deleteAllRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
+        foreach ($serie->getRatings() as $rating){
+            $entityManager->remove($rating);
+            $rating->setSeries(null);
+            $serie->removeRating($rating);
+        }
+    }
+
+    private function deleteAllSeasonsForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
+        foreach ($serie->getSeasons() as $season){
+            $entityManager->remove($season);
+            $serie->removeSeason($season);
+            if (!empty($season->getEpisodes())){
+                foreach ($season->getEpisodes() as $episode){
+                    $entityManager->remove($episode);
+                    $season->removeEpisode($episode);
+                }
+            }
+        }
+    }
+
+    
 
     #[Route('/view/{id1}/{id2}', name: 'app_episode_view', methods: ['GET', 'POST'])]
     public function view(EntityManagerInterface $entityManager, Request $request): Response
