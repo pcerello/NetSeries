@@ -14,15 +14,19 @@
     </form>
     
     {% if data.Title is defined %}
+{# data.Year is defined like "yearStart-yearEnd" so we need to split it #}
+{% set yearStart = data.Year|split('–')|first %}
+{% set yearEnd = data.Year|split('–')|last %}
     <table>
         <tr>
             <th>Title</th>
-            <th>Year</th>
             <th>Plot</th>
             <th>Genre</th>
             <th>Director</th>
+            <th>Actors</th>
             <th>Award(s)</th>
             <th>Year start</th>
+            <th>Year end</th>
             <th>imdbRating</th>
             <th>Poster</th>
             <th>Trailer</th>
@@ -31,20 +35,73 @@
         </tr>
             <tr>
                 <td>{{ data.Title }}</td>
-                <td>{{ data.Year }}</td>
                 <td>{{ data.Plot }}</td>
                 <td>{{ data.Genre }}</td>
                 <td>{{ data.Director }}</td>
+                <td>{{ data.Actors }}</td>
                 <td>{{ data.Awards }}</td>
-                <td>{{ data.Year }}</td>
+                <td>{{ yearStart }}</td>
+                <td>{{ yearEnd }}</td>
                 <td>{{ data.imdbRating }}</td>
                 <td><img src="{{ data.Poster }}" alt="{{ data.Title }}"></td>
-                <td><a href="https://www.youtube.com/results?search_query={{ data.Title }}+trailer" target="_blank">trailer</a></td>
                 <td>
-                    <a href="{{ path('app_series_new', {'title': data.Title, 'year': data.Year, 'plot': data.Plot, 'genre': data.Genre, 'director': data.Director, 'awards': data.Awards, 'year_start': data.Year, 'imdbRating': data.imdbRating, 'poster': data.Poster}) }}">add</a>
-                </td>
+
+                <a href="{{ videoUrl }}" target="_blank">trailer</a></td>
+                <td>
+                    <form method="post" action="{{ path('app_series_import') }}">
+                        <input type="hidden" name="title" value="{{ data.Title }}">
+                        <input type="hidden" name="plot" value="{{ data.Plot }}">
+                        <input type="hidden" name="genre" value="{{ data.Genre }}">
+                        <input type="hidden" name="director" value="{{ data.Director }}">
+                        <input type="hidden" name="actors" value="{{ data.Actors }}">
+                        <input type="hidden" name="awards" value="{{ data.Awards }}">
+                        <input type="hidden" name="yearStart" value="{{ yearStart }}">
+                        <input type="hidden" name="yearEnd" value="{{ yearEnd }}">
+                        <input type="hidden" name="imdbRating" value="{{ data.imdbRating }}">
+                        <input type="hidden" name="poster" value="{{ data.Poster }}">
+                        <input type="hidden" name="trailer" value="{{ videoUrl }}">
+                        <input type="hidden" name="imdbID" value="{{ data.imdbID }}">
+                        <input type="hidden" name="token" value="{{ csrf_token('series') }}">
+                        <input type="submit" value="Import" class="btn btn-primary">
+                    </form>
+                    </td>
             </tr>
+            
     </table>
+    {% endif %}
+
+    {% if episodesData is defined %}
+
+    <table>
+        <tr>
+            <th>Season</th>
+            <th>Episode</th>
+            <th>Title</th>
+            <th>Released</th>
+            <th>imdbRating</th>
+            <th>imdbID</th>
+        </tr>
+        <tr>
+        <tr>
+        {% for seasonData in episodesData %}
+        {% if seasonData.Response == 'True' %}
+            {% for episode in seasonData.Episodes %}
+                    <td>Season {{ seasonData.Season }}</td>
+                    <td>{{ episode.Episode }}</td>
+                    <td>{{ episode.Title }}</td>
+                    <td>{{ episode.Released }}</td>
+                    <td>{{ episode.imdbRating }}</td>
+                    <td>{{ episode.imdbID }}</td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        {% endfor %}
+        </tr>
+    </table>
+
+
+
+
 {% endif %}
 
 

@@ -4,7 +4,10 @@
 
 {% block body %}
     
-{% endif %}
+
+    <h1>Create new Series</h1>
+
+    {{ include('series/_form.html.twig') }}
 
 
     <a href="{{ path('app_series_index') }}">back to list</a>
