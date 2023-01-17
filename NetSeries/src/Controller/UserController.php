@@ -344,20 +344,33 @@ class UserController extends AbstractController
     #[Route('/usersFollowed/{id}', name: 'app_user_usersFollowed', methods: ['GET'])]
     public function usersFollowed(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        // if the user is not logged in, redirect to the login page
-        $user = $entityManager->getRepository(User::class)->find($request->get('id'));
+        # Met la variable admin à vrai pour que l'utilisateur soit un admin
 
-        $seriesFollowed = $user->getSeries();
+        /** @var App\Entity\User */
+        $userCurrant = $this->getUser();
 
-        $seriesFollowedPaginated = $paginator->paginate(
-            $seriesFollowed,
-            $request->query->getInt('page', 1), /*page number*/
-            /*7 limit per page*/
-        );
+        $userCurrant->addFollowUser($user);
+
+        //$allUsers =$user->getFollowUser();
+
+        # Met à jour la base de données
+        $entityManager->flush();
+
         
-        return $this->render('user/followedSeriesForUser.html.twig', [
-            'series' => $seriesFollowedPaginated,
-            'user' => $user
+        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
+        return $this->redirectToRoute('app_user_index', [
+        ], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/listUsersFollowed/{id}', name: 'app_user_listUsersFollowed', methods: ['GET'])]
+    public function listUsersFollowed(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        # Met la variable admin à vrai pour que l'utilisateur soit un admin
+
+        $allUsers =$user->getFollowUser();
+        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
+        return $this->render('user/follow.html.twig', [
+            'users' => $allUsers,
         ]);
     }
 }

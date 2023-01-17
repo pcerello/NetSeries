@@ -5,15 +5,16 @@
     <link href={{ asset('css/ficheUtilisateur.css') }} rel="stylesheet">
 {% endblock %}
 
-{% block title %}User{% endblock %}
+{% block title %}List user{% endblock %}
 
 {% block body %}
 
-    <a class="button square profile" href="{{ path('app_user_followedSeriesById', {'id': user.id}) }}">Edit password</a>
 
     
-    {% for u in user %}
-        {{ u.id }}
+    {% for u in users %}
+        {{ u.name }}
+        <br>
+        {{ u.email }}
     {% endfor %}
 
 {% endblock %}

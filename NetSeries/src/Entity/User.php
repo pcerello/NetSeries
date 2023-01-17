@@ -131,7 +131,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
      *
      * @ORM\ManyToMany(targetEntity="User")
      */
-    private $followUser;
+    private $followUser = array();
 
     /**
      * Constructor
@@ -142,6 +142,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->episode = new \Doctrine\Common\Collections\ArrayCollection();
         $this->ratings = new ArrayCollection();
         $this->registerDate = new DateTime();
+        $this->followUser = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -369,5 +370,33 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         $this->estSuspendu = $estSuspendu;
 
         return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getFollowUser(): Collection
+    {
+        return $this->followUser;
+    }
+
+    public function addFollowUser(User $followUser): self
+    {
+        if (!$this->followUser->contains($followUser)) {
+            $this->followUser->add($followUser);
+        }
+
+        return $this;
+    }
+
+    public function removeFollowUser(User $followUser): self
+    {
+        $this->followUser->removeElement($followUser);
+
+        return $this;
+    }
+
+    public function isFollowingUser(User $user): bool {
+        return $this->followUser->contains($user);
     }
 }

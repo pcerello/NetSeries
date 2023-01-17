@@ -6,6 +6,8 @@ block body %}
     <input type="text" name="search" placeholder="Search user account...">
 </form>
 
+<a href="{{ path('app_user_listUsersFollowed', {'id': app.user.id}) }}">List follow</a>
+
 <table class="table">
   <thead>
     <tr>
@@ -18,6 +20,7 @@ block body %}
         <th>Country</th>
         <th>Ban</th>
       {% endif %}
+      <th>Follow</th>
       <th>actions</th>
 
     </tr>
@@ -38,6 +41,13 @@ block body %}
           <td>{{ user.country }}</td>
           <td>{{ user.estSuspendu ? "✅" : "❌"  }}</td>
         {% endif %}
+
+        {% if app.user.isFollowingUser(user) %}
+          <td>Followed</td>
+        {% else %}
+          <td><a href="{{ path('app_user_usersFollowed', {'id': user.id}) }}">Follow</a></td>
+        {% endif %}
+
         <td class="actions">
         {# Si l'utilisateur courant est un admin #}
         {% if app.user.isAdmin() %}
