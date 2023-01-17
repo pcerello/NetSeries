@@ -3,9 +3,12 @@
 namespace App\Form;
 
 use App\Entity\Series;
+use App\Entity\Country;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+
 
 class SeriesType extends AbstractType
 {
@@ -22,9 +25,6 @@ class SeriesType extends AbstractType
             ->add('yearStart')
             ->add('yearEnd')
             ->add('country')
-            ->add('user')
-            ->add('actor')
-            ->add('genre')
         ;
     }
 
