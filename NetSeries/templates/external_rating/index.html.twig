@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}ExternalRating index{% endblock %}
+
+{% block body %}
+    <h1>ExternalRating index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Value</th>
+                <th>Votes</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for external_rating in external_ratings %}
+            <tr>
+                <td>{{ external_rating.id }}</td>
+                <td>{{ external_rating.value }}</td>
+                <td>{{ external_rating.votes }}</td>
+                <td>
+                    <a href="{{ path('app_external_rating_show', {'id': external_rating.id}) }}">show</a>
+                    <a href="{{ path('app_external_rating_edit', {'id': external_rating.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_external_rating_new') }}">Create new</a>
+{% endblock %}

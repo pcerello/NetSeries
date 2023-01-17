@@ -18,7 +18,6 @@ class SeriesType extends AbstractType
             ->add('title')
             ->add('plot')
             ->add('imdb')
-            ->add('poster')
             ->add('director')
             ->add('youtubeTrailer')
             ->add('awards')

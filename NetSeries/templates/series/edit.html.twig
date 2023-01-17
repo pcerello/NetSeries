@@ -7,10 +7,10 @@
 
     {{ include('series/_form.html.twig', {'button_label': 'Update'}) }}
 
-    <a href="{{ path('app_season_index', {'idSeries' : series.id}) }}">Edit a Season</a>
+    <a href="{{ path('app_season_index', {'idSeries' : series.id}) }}">Edit a Seasons</a>
     <a href="{{ path('app_actor_index', {'idSeries' : series.id}) }}">Edit a actors</a>
     <a href="{{ path('app_genre_index', {'idSeries' : series.id}) }}">Edit a genres</a>
-
+    <a href="{{ path('app_external_rating_index', {'idSeries' : series.id}) }}">Edit a external rating</a>
 
     <a href="{{ path('app_series_index') }}">back to list</a>
 
