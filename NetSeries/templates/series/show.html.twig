@@ -38,16 +38,16 @@
             {{ series.followedSeries(app.user) }}
             {% endif %}
 
-
-            
-
-
             <p><strong>Trailer :</strong></p>
             {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
 
             <iframe width="560" height="315" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
+
+    {% if app.user and app.user.isAdmin() %}
+        <a href="{{ path('app_series_edit', {'id' : series.id} ) }}"> Edit serie</a>
+    {% endif %}
 
     <table class="table">
         <tbody>
