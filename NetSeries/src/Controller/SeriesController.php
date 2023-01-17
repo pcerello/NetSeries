@@ -273,7 +273,7 @@ class SeriesController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('series/edit.html.twig', [
