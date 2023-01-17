@@ -47,6 +47,9 @@
             <p><strong>Year start : </strong>{{ series.yearStart }}</p>
 
             <p><strong>Year end : </strong>{{ series.yearEnd }}</p>
+            {% if app.user  %}
+                <a href="{{ path('app_series_edit', {'id' : series.id}) }}">Edit serie</a>
+            {% endif %}
 
         </div>
     </div>
@@ -136,10 +139,6 @@
             </tr>
         </tbody>
     </table>
-
-    {% if app.user  %}
-        <a href="{{ path('app_series_edit', {'id' : series.id}) }}">Edit serie</a>
-    {% endif %}
 
     {% if app.user %}
         {# On test si l'utilisateur à déjà mis un commentaire/appréciation/critique sur cette séries #}
