@@ -76,9 +76,9 @@ class SeriesController extends AbstractController
         if ($minnote = $request->query->get('minnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
                 ->select('AVG(r.value/2)')
-                ->leftJoin('m.user', 'u')
+                ->leftJoin('r.user', 'us')
                 ->where('r.series = s AND r.estModere = true')
-                ->andWhere('u.estSuspendu = false')
+                ->andWhere('us.estSuspendu = false')
                 ->getDQL();
 
             $qb->andWhere(sprintf('(%s) >= :minnote', $subquery))
