@@ -294,26 +294,21 @@ class SeriesController extends AbstractController
     }
 
     private function deleteAllExternalRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
-        $serie->getExternalRating()->setSeries(null);
         $entityManager->remove($serie->getExternalRating());
     }
 
     private function deleteAllRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
         foreach ($serie->getRatings() as $rating){
             $entityManager->remove($rating);
-            $rating->setSeries(null);
-            $serie->removeRating($rating);
         }
     }
 
     private function deleteAllSeasonsForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
         foreach ($serie->getSeasons() as $season){
             $entityManager->remove($season);
-            $serie->removeSeason($season);
             if (!empty($season->getEpisodes())){
                 foreach ($season->getEpisodes() as $episode){
                     $entityManager->remove($episode);
-                    $season->removeEpisode($episode);
                 }
             }
         }
