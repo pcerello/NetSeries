@@ -7,5 +7,5 @@
 
     {{ include('actor/_form.html.twig') }}
 
-    <a href="{{ path('app_actor_index') }}">back to list</a>
+    <a href="{{ path('app_actor_index', {'idSeries' : serie.id}) }}">back to list</a>
 {% endblock %}

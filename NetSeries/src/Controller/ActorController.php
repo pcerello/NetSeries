@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Actor;
+use App\Entity\Series;
 use App\Form\ActorType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,35 +14,39 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/actor')]
 class ActorController extends AbstractController
 {
-    #[Route('/', name: 'app_actor_index', methods: ['GET'])]
-    public function index(EntityManagerInterface $entityManager): Response
+    #[Route('/{idSeries}', name: 'app_actor_index', methods: ['GET'])]
+    public function index(int $idSeries, EntityManagerInterface $entityManager): Response
     {
-        $actors = $entityManager
-            ->getRepository(Actor::class)
-            ->findAll();
+        $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
+
+        $actors = $serie->getActor();
 
         return $this->render('actor/index.html.twig', [
             'actors' => $actors,
+            'serie' => $serie,
         ]);
     }
 
-    #[Route('/new', name: 'app_actor_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/new/{idSerie}', name: 'app_actor_new', methods: ['GET', 'POST'])]
+    public function new(int $idSerie, Request $request, EntityManagerInterface $entityManager): Response
     {
+        $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
         $actor = new Actor();
         $form = $this->createForm(ActorType::class, $actor);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($actor);
+            $serie->addActor($actor);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_actor_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_actor_index', ['idSeries' => $serie->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('actor/new.html.twig', [
             'actor' => $actor,
             'form' => $form,
+            'serie' => $serie,
         ]);
     }
 
@@ -53,32 +58,37 @@ class ActorController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_actor_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Actor $actor, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/{idSerie}/edit', name: 'app_actor_edit', methods: ['GET', 'POST'])]
+    public function edit(int $idSerie, Request $request, Actor $actor, EntityManagerInterface $entityManager): Response
     {
+        $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
+
         $form = $this->createForm(ActorType::class, $actor);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_actor_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_actor_index', ['idSeries' => $serie->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('actor/edit.html.twig', [
             'actor' => $actor,
             'form' => $form,
+            'serie' => $serie,
         ]);
     }
 
-    #[Route('/{id}', name: 'app_actor_delete', methods: ['POST'])]
-    public function delete(Request $request, Actor $actor, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/{idSerie}', name: 'app_actor_delete', methods: ['POST'])]
+    public function delete(int $idSerie, Request $request, Actor $actor, EntityManagerInterface $entityManager): Response
     {
+        $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
+
         if ($this->isCsrfTokenValid('delete'.$actor->getId(), $request->request->get('_token'))) {
             $entityManager->remove($actor);
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_actor_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_actor_index', ['idSeries' => $serie->getId()], Response::HTTP_SEE_OTHER);
     }
 }

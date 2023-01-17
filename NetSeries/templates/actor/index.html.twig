@@ -19,8 +19,7 @@
                 <td>{{ actor.id }}</td>
                 <td>{{ actor.name }}</td>
                 <td>
-                    <a href="{{ path('app_actor_show', {'id': actor.id}) }}">show</a>
-                    <a href="{{ path('app_actor_edit', {'id': actor.id}) }}">edit</a>
+                    <a href="{{ path('app_actor_edit', {'id': actor.id, 'idSerie' : serie.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +30,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_actor_new') }}">Create new</a>
+    <a href="{{ path('app_actor_new', {'idSerie' : serie.id}) }}">Create new</a>
 {% endblock %}
