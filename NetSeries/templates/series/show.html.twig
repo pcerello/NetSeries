@@ -40,27 +40,18 @@
         </div>
     </div>
     <div id="infoSerieSecondaire">
-    <p><strong>Director : </strong>{{ series.Director }}</p>
+        <p><strong>Director : </strong>{{ series.Director }}</p>
 
-            <p><strong>Award(s) : </strong>{{ series.awards }}</p>
+        <p><strong>Award(s) : </strong>{{ series.awards }}</p>
 
-            <p><strong>Year start : </strong>{{ series.yearStart }}</p>
+        <p><strong>Year start : </strong>{{ series.yearStart }}</p>
 
-            <p><strong>Year end : </strong>{{ series.yearEnd }}</p>
-            {% if app.user  %}
-                <a href="{{ path('app_series_edit', {'id' : series.id}) }}">Edit serie</a>
-            {% endif %}
+        <p><strong>Year end : </strong>{{ series.yearEnd }}</p>
 
-        </div>
     </div>
 
-            <p><strong>Trailer :</strong></p>
-            {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
 
-            <iframe width="560" height="315" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-        </div>
-    </div>
-
+        
     {% if app.user and app.user.isAdmin() %}
         <a href="{{ path('app_series_edit', {'id' : series.id} ) }}"> Edit serie</a>
     {% endif %}
