@@ -31,13 +31,15 @@ class ExternalRatingController extends AbstractController
     public function new(int $idSeries, Request $request, EntityManagerInterface $entityManager): Response
     {
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
-
+        
         $externalRating = new ExternalRating();
         $form = $this->createForm(ExternalRatingType::class, $externalRating);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            
             $entityManager->persist($externalRating);
+            $externalRating->setSeries($serie);
             $serie->setExternalRating($externalRating);
             $entityManager->flush();
 

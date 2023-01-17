@@ -80,7 +80,7 @@
                             <div id="note-Imdb">
                                 <a href="https://www.imdb.com/title/{{series.imdb}}">IMDB :</a>
                                 <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
-                                <p> {{ series.externalRating.value}}</p>
+                                <p> {{ series.externalRating == null ? 'No external rating' :  series.externalRating.value}}</p>
                             </div>
                             {# Affichage de la note moyenne de la série #}
                             <div id="note-User">
@@ -90,6 +90,7 @@
                                         No note </p>
                                     {% else %}
                                         {{ series.getAverageRating() }}/5 </p>
+
                                         {# Affichage du nombre d'avis de la série #}
                                         <div class="nbAvis">
                                             <p>{{ series.getRatingsModerate()|length }}

@@ -27,9 +27,8 @@
         {% else %}
             <tr>
                 <td colspan="4">no records found</td>
-                <a href="{{ path('app_external_rating_new', {'idSerie' : serie.id}) }}">New external rating</a>
-
             </tr>
+            <a href="{{ path('app_external_rating_new', {'idSeries' : serie.id}) }}">New external rating</a>
         {% endif %}
         </tbody>
     </table>
