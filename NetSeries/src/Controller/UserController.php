@@ -318,7 +318,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/generate/{id}', name:'generateUser', methods: ['POST'])]
-    public function generateAndInsertUsers(User $user, Request $request): Response
+    public function generateAndInsertUsers(User $user, Request $request, EntityManagerInterface $em): Response
     {
         /** @var \App\Entity\User */
         $userActual = $this->getUser();
@@ -360,15 +360,11 @@ class UserController extends AbstractController
             $user->setPassword($passwordAllUser);
             // Ajoute le pays aléatoire à l'utilisateur
             $user->setCountry($randomCountry);
-            if (($i % $batchSize) === 0) {
-                $this->entityManager->flush();
-                $this->entityManager->clear();
-            }
-        }
 
-        // mise à jour de la base de données
-        $this->entityManager->flush();
-        $this->entityManager->clear();
+            // mise à jour de la base de données
+            $em->persist($user);
+            $em->flush();
+        }
 
         // redirige vers la page d'index des utilisateurs
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
