@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Edit User ({{user.name}}){% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -12,7 +12,7 @@
 
     <div class="content">
         <div class="box__auth">
-            <h1  class="h3 mb-3 font-weight-normal">Edit User</h1>
+            <h1  class="h3 mb-3 font-weight-normal">Edit User: {{user.email}}</h1>
             {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
 
             {{ include('user/_delete_form.html.twig') }}

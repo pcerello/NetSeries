@@ -7,6 +7,7 @@ use App\Entity\Country;
 use App\Entity\Rating;
 use App\Entity\Series;
 use App\Form\UserType;
+use App\Form\UserPasswordByAdminType;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Entity;
@@ -159,8 +160,15 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
+        if ($userActual->isAdmin() && !$userActual->getId() != $user->getId()){
+            $form = $this->createForm(UserPasswordByAdminType::class, $user);
+            $form->handleRequest($request);
+        } else {
+            $form = $this->createForm(UserType::class, $user);
+            $form->handleRequest($request);
+        }
+
+        
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('plainPassword')->getData() != null) {
@@ -205,6 +213,8 @@ class UserController extends AbstractController
             'form' => $form,
         ]);
     }
+
+    
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
