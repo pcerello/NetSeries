@@ -67,8 +67,6 @@ class RatingController extends AbstractController
 
         # Vérifie si un enregistrement de note existe déjà pour cette série et cet utilisateur
         $existingRating = $entityManager->getRepository(Rating::class)->findOneBy(['series' => $series, 'user' => $user]);
-        
-
 
         # Création du formulaire pour la note
         $form = $this->createForm(RatingType::class, $rating);

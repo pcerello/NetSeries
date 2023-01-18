@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+{# Ajout de feuilles de style #}
 {% block stylesheets %}
     {{ parent() }}
     <link href={{ asset('css/ficheUtilisateur.css') }} rel="stylesheet">
@@ -9,12 +10,13 @@
 
 {% block body %}
 
-
+   {# Boucle pour afficher les noms et les emails des utilisateurs que l'utilisateur connecté suit#}
     <table class="table">
         <thead>
             <tr>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -23,6 +25,7 @@
             <tr>
                 <td>{{ u.name }}</td>
                 <td>{{ u.email }}</td>
+                <td> <a href="{{ path('app_user_show', {'id' : u.id} )}}">See this user's profile</a> </td>
             </tr>
         {% endfor %}
         </tbody>
