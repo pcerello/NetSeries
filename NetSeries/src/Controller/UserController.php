@@ -275,7 +275,7 @@ class UserController extends AbstractController
         }
 
         // Récupère le nombre d'utilisateurs à générer
-        $user_count = $request->request->get('user_count');
+        $userCount = $request->request->get('user_count');
 
         // Initialise Faker pour pouvoir faire des comptes cohérent
         $faker = Faker::create();
@@ -296,7 +296,7 @@ class UserController extends AbstractController
         $passwordAllUser = password_hash($faker->password(), PASSWORD_DEFAULT);
 
         // Boucle pour générer un nombre d'utilisateurs
-        for ($i = 0; $i < $user_count; $i++) {
+        for ($i = 0; $i < $userCount; $i++) {
             $user = new User();
             // Génère un nom d'utilisateur unique
             $user->setName($faker->unique()->userName);
@@ -306,8 +306,6 @@ class UserController extends AbstractController
             $user->setPassword($passwordAllUser);
             // Ajoute le pays aléatoire à l'utilisateur
             $user->setCountry($randomCountry);
-            // Persiste l'utilisateur
-            $this->entityManager->persist($user);
             if (($i % $batchSize) === 0) {
                 $this->entityManager->flush();
                 $this->entityManager->clear();
@@ -404,7 +402,7 @@ class UserController extends AbstractController
 
         # Met la variable admin à vrai pour que l'utilisateur soit un admin
         $allUsers =$user->getFollowUser();
-        
+
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->render('user/follow.html.twig', [
             'users' => $allUsers,
