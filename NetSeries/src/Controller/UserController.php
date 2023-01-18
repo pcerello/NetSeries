@@ -78,6 +78,14 @@ class UserController extends AbstractController
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        //Si une personne n'est pas connecté on lui demande de ce connecté
+        if (!$userActual) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -143,6 +151,14 @@ class UserController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        //Si une personne n'est pas connecté on lui demande de ce connecté
+        if (!$userActual) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
@@ -164,6 +180,14 @@ class UserController extends AbstractController
     #[Route('/{id}/profil', name: 'app_user_profil', methods: ['GET', 'POST'])]
     public function profil(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        //Si une personne n'est pas connecté on lui demande de ce connecté
+        if (!$userActual) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
