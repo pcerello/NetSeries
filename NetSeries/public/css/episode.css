@@ -236,26 +236,6 @@ li .Viewed {
     background-color: #f5f5f5;
 }
 
-.card-header{
-    border: 2px solid rgb(85, 80, 80);
-    background-color: #2c2b2b;
-}
-
-.card-header a{
-    text-decoration: none;
-    color: whitesmoke;
-    font-size: 1.5rem;
-    font-weight: 1000;
-    background-color: #2c2b2b;
-}
-
-.card-header:hover{
-    color: white;
-    background-color: #222222;
-}
-
-
-
 
 .linkComment{
     padding: 1rem;
@@ -449,6 +429,61 @@ table {
     }
 
     #imageSerie::before {
-        height: 90em;
+        height: 92em;
     }
 }
+
+@media only screen and (min-width: 630px) {
+    #imageSerie::before {
+        height: 75em;
+    }
+
+}
+@media only screen and (min-width: 800px) {
+    #imageSerie::before {
+        height: 70em;
+    }
+}
+@media only screen and (min-width: 1000px) {
+    #imageSerie::before {
+        height: 69em;
+    }
+
+}
+
+.div_box {
+    display: none;
+  }
+
+
+  .checkbox:checked + label +.div_box {
+    display: block;
+  }
+
+
+    .checkbox {
+        display: none;
+    }
+
+
+
+
+label{
+    width: 8em;
+    padding: 0.5em;
+    border-radius: 16px;
+    background-color: #f5f5f5;
+    font-weight: 700;
+    box-shadow: rgba(14, 30, 37, 0.12) 0px 1px 1px 0px, rgba(14, 30, 37, 0.32) 0px 1px 4px 0px;
+    margin: 0.5em;
+    border: #222222 1px solid;
+    cursor: pointer;
+}
+
+label:hover {
+    background-color: #222222;
+    color: #f5f5f5;
+}
+
+
+
