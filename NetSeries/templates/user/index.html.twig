@@ -2,11 +2,23 @@
 block body %}
 <h1>Search an existing user</h1>
 
-<form action="{{ path('app_user_index') }}" method="get"> 
-    <input type="text" name="search" placeholder="Search user account...">
-</form>
-
 <a href="{{ path('app_user_listUsersFollowed', {'id': app.user.id}) }}">List follow</a>
+
+<form action="{{ path('app_user_index') }}" method="get" class="box_search">
+        
+        {# Menu déroulante pour filtrer par ordre alphabétique ou non #}
+        <input type="text" name="search" placeholder="Search user account...">
+        <select name="order">
+            <option value="NameASC">Email ASC</option>
+            <option value="NameDESC">Email DESC</option>
+            <option value="DateASC">Date conecting recent</option>
+            <option value="DateDESC">Date conecting older</option>
+            <option value="DateCreateASC">Date create recent</option>
+            <option value="DateCreateDESC">Date create older</option>
+        </select>
+        {# Bouton pour lancer la recherche #}
+        <input type="submit" value="Search">
+    </form>
 
 <table class="table">
   <thead>

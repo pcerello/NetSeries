@@ -45,18 +45,40 @@ class UserController extends AbstractController
         }
 
         // Récupère le repository des séries
-        $appointmentsRepository = $entityManager->getRepository(User::class);
+        $qrUser = $entityManager->getRepository(User::class)->createQueryBuilder('search');
+
+        
 
         // Crée une requête pour sélectionner toutes les séries
-        $allAppointmentsQuery = $appointmentsRepository->createQueryBuilder('search')
-            ->orderBy('search.email', 'ASC')
+        $qrUser->orderBy('search.email', 'ASC')
             ->where('search.email LIKE :search')
-            ->setParameter('search', '%' . $request->query->get('search') . '%')
-            ->getQuery();
+            ->setParameter('search', '%' . $request->query->get('search') . '%');
+            
+
+        //On regarde si on trie par date récent ou non
+        if ($request->query->get('order') == 'NameDESC') {
+            $qrUser->orderBy('search.email', 'DESC');
+        } elseif ($request->query->get('order') == 'DateASC') {
+            $qrUser->orderBy('search.last_activity_at', 'DESC');
+        }
+        elseif ($request->query->get('order') == 'DateDESC') {
+            $qrUser->orderBy('search.last_activity_at', 'ASC');
+        }
+        elseif ($request->query->get('order') == 'DateCreateASC') {
+            $qrUser->orderBy('search.registerDate', 'DESC');
+        }
+        elseif ($request->query->get('order') == 'DateCreateDESC') {
+            $qrUser->orderBy('search.registerDate', 'ASC');
+        }
+        else {
+            $qrUser->orderBy('search.email', 'ASC');
+        }
+
+
 
         // Pagination des résultats (5 séries par pages maximum)
         $appointments = $paginator->paginate(
-            $allAppointmentsQuery,
+            $qrUser->getQuery(),
             $request->query->getInt('page', 1),
             10
         );
