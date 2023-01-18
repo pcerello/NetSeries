@@ -181,6 +181,7 @@ class SeriesController extends AbstractController
                         curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
                         $result = curl_exec($curl);
                         curl_close($curl);
+
                         $dataEpisode = json_decode($result, true);
                         $episodesData[] = $dataEpisode;
                     }
@@ -234,29 +235,8 @@ class SeriesController extends AbstractController
                 ]);
             }
         }
-    }
-
-    #[Route('/search/episodes', name: 'app_series_import_episodes', methods: ['GET', 'POST'])]
-    public function importEpisodes(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $request->query->get('data');
-        $totalSeasons = $request->query->get('totalSeasons');
-        $imdbID = $request->query->get('imdbID');
-        $data = [];
-        for ($i = 1; $i <= $totalSeasons; $i++) {
-            $url = "http://www.omdbapi.com/?i=" . $imdbID . "&apikey=7a8be84b&Season=" . $i;
-            $curl = curl_init();
-            curl_setopt($curl, CURLOPT_URL, $url);
-            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
-            curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0');
-            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-            $result = curl_exec($curl);
-            curl_close($curl);
-            $data = json_decode($result, true);
-        }
-
-        return $this->render('series/episodes.html.twig', [
+        $this->addFlash('danger', 'Aucune série trouvée');
+        return $this->render('series/search.html.twig', [
             'data' => $data,
         ]);
     }
@@ -265,7 +245,6 @@ class SeriesController extends AbstractController
     public function newserie(Request $request, EntityManagerInterface $entityManager): Response
     {
         $series = new Series();
-        
         $title = $request->request->get('title');
         $plot = $request->request->get('plot');
         $genres = $request->request->get('genre');
@@ -276,6 +255,15 @@ class SeriesController extends AbstractController
         $yearEnd = $request->request->get('yearEnd');
         $imdbRating = $request->request->get('imdbRating');
         $poster = $request->request->get('poster');
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $poster);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0');
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        $data = curl_exec($curl);
+        curl_close($curl);
+
         $trailer = $request->request->get('trailer');
         $imdbID = $request->request->get('imdbID');
 
@@ -293,31 +281,72 @@ class SeriesController extends AbstractController
             $actorName = trim($actorName);
             /** @var \App\Entity\Actor */
             $actor = $entityManager->getRepository(Actor::class)->findOneBy(['name' => $actorName]);
-            if ($actor) {
-                $series->addActor($actor);
+            if ($actor === null) {
+                /** @var \App\Entity\Actor */
+                $actor = new Actor();
+                $actor->setName($actorName);
+                $entityManager->persist($actor);
             }
+            $series->addActor($actor);
         }
 
         $series->setTitle($title);
         $series->setPlot($plot);
-        $series->setDirector($director);
+        if ($director != "N/A") {
+            $series->setDirector($director);
+        }
         $series->setAwards($awards);
         $series->setYearStart($yearStart);
-        $series->setYearEnd($yearEnd);
+        if ($yearEnd) {
+            $series->setYearEnd($yearEnd);
+        }
         $series->setImdb($imdbID);
-        $series->setPoster($poster);
+        $series->setPoster($data);
         $series->setYoutubeTrailer($trailer);
         $externalRating = new ExternalRating();
-        $externalRating->setValue($imdbRating.'/10');
+        $externalRating->setValue($imdbRating . '/10');
         /** @var \App\Entity\ExternalRatingSource */
         $externalRatingSource = $entityManager->getRepository(ExternalRatingSource::class)->findOneBy(['name' => 'Internet Movie Database']);
         $externalRating->setSource($externalRatingSource);
         $externalRating->setSeries($series);
         $series->setExternalRating($externalRating);
 
-        
+
+
+        $episodesData = $request->request->get('episodesData');
+        $episodesData = json_decode($episodesData, true);
+        foreach ($episodesData as $seasonData) {
+            if (array_key_exists('Season', $seasonData)) {
+                /** @var \App\Entity\Season */
+                $season = new Season();
+                $seasonnumber = intval($seasonData['Season']);
+                $season->setNumber($seasonnumber);
+                $season->setSeries($series);
+                # for each episode in seasonData
+                foreach ($seasonData['Episodes'] as $episodeData) {
+                    /** @var \App\Entity\Episode */
+                    $episode = new Episode();
+                    $episode->setNumber($episodeData['Episode']);
+                    $episode->setTitle($episodeData['Title']);
+                    $episode->setDate(new \DateTime($episodeData['Released']));
+                    $imdbRating = floatval($episodeData['imdbRating']);
+                    $episode->setImdbRating($imdbRating);
+                    $episode->setImdb($episodeData['imdbID']);
+                    $episode->setSeason($season);
+                    $season->addEpisode($episode);
+                    $entityManager->persist($episode);
+                }
+
+                $entityManager->persist($season);
+            }
+        }
+
+
+
+
         $entityManager->persist($series);
         $entityManager->persist($externalRating);
+        $entityManager->persist($actor);
         $entityManager->flush();
         $entityManager->clear();
 

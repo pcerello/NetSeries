@@ -112,7 +112,7 @@ class Series
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Actor", mappedBy="series")
+     * @ORM\ManyToMany(targetEntity="Actor", mappedBy="series", cascade={"persist"})
      */
     private $actor = array();
 
