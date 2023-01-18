@@ -65,6 +65,12 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
+        // Get current user
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $request->request->get('email', '')]);
+
+        // Set lastActivityAt to now
+        $user->setLastActivityAt(new \DateTime());
+
         return new RedirectResponse($this->urlGenerator->generate('app_series_index'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
