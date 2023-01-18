@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Episode;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -49,8 +50,6 @@ class EpisodeRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-
-
 
 //    /**
 //     * @return Episode[] Returns an array of Episode objects

@@ -240,6 +240,7 @@ h1{
         flex-direction: row;
         align-items: center;
         justify-content: center;
+        width: 39%;
     }
 
     .note input,.annee input{

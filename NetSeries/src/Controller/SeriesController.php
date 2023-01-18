@@ -13,16 +13,12 @@ use App\Entity\ExternalRating;
 use App\Entity\ExternalRatingSource;
 use App\Form\SeriesType;
 use App\Repository\EpisodeRepository;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\Entity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Knp\Component\Pager\PaginatorInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
-use Doctrine\ORM\Query\ResultSetMapping;
 
 #[Route('/series')]
 class SeriesController extends AbstractController
@@ -62,20 +58,20 @@ class SeriesController extends AbstractController
                 ->setParameter('dateMin', $date);
         }
 
-        // Vérifie si il y a une date maximum qui a était donnée
+        // Vérifie si il y a une date maximum qui a été donnée
         if ($date = $request->query->get('dateMax')) {
             $qb->andWhere('s.yearStart <= :dateMax')
                 ->setParameter('dateMax', $date);
         }
 
-        // Vérifie si il y a un acteur qui a était donnée
+        // Vérifie si il y a un acteur qui a été donnée
         if ($actor = $request->query->get('actor')) {
             $qb->leftJoin('s.actor', 'a')
                 ->andWhere('a.name LIKE :actor')
                 ->setParameter('actor', '%' . $actor . '%');
         }
 
-        // Vérifie si il y a une note minimale qui a était donnée
+        // Vérifie si il y a une note minimale qui a été donnée
         if ($minnote = $request->query->get('minnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('r')
                 ->select('AVG(r.value/2)')
@@ -88,7 +84,7 @@ class SeriesController extends AbstractController
                 ->setParameter('minnote', $minnote);
         }
 
-        // Vérifie si il y a une note maximale qui a était donnée
+        // Vérifie si il y a une note maximale qui a été donnée
         if ($maxnote = $request->query->get('maxnote')) {
             $subquery = $entityManager->getRepository(Rating::class)->createQueryBuilder('m')
                 ->select('AVG(m.value/2)')
@@ -130,14 +126,12 @@ class SeriesController extends AbstractController
             12
         );
 
-
+        // Récupère l'utilisateur courant
+        $user = $this->getUser();
 
         // Récupération de tous les genres
         $genres = $entityManager->getRepository(\App\Entity\Genre::class)->findAll();
-
-
-
-
+        
         return $this->render('series/index.html.twig', [
             'series' => $series,
             'genres' => $genres,

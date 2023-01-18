@@ -19,7 +19,6 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
-
     App\Entity\User: ~
     
     App\Form\UserType:

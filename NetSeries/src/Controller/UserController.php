@@ -61,11 +61,14 @@ class UserController extends AbstractController
         );
 
         //On récupère tout les séries existant
+        $now = new \DateTime();
+
         $series = $entityManager->getRepository(Series::class)->findAll();
 
         return $this->render('user/index.html.twig', [
             'users' => $appointments,
             'series' => $series,
+            'now' => $now,
         ]);
 
         // if the user is logged in but is not admin, redirect to the homepage
