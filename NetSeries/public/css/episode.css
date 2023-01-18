@@ -143,6 +143,7 @@ a.back:hover {
     background-repeat: no-repeat;
     /*make infos background transparent*/
     z-index: 2;
+    height: 100%;
 }
 
 #imageSerie::before {
