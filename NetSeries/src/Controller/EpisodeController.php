@@ -20,6 +20,18 @@ class EpisodeController extends AbstractController
     #[Route('/{idSeason}', name: 'app_episode_index', methods: ['GET'])]
     public function index(int $idSeason, EpisodeRepository $episodeRepository, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
         
         //On récupère la saison associé à l'id mis dans l'URL
         $season = $entityManager->getRepository(Season::class)->findOneBy(['id' => $idSeason]);
@@ -36,6 +48,19 @@ class EpisodeController extends AbstractController
     #[Route('/new/{idSeason}', name: 'app_episode_new', methods: ['GET', 'POST'])]
     public function new(int $idSeason, Request $request, EpisodeRepository $episodeRepository, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la saison associé à l'id mis dans l'URL
         $season = $entityManager->getRepository(Season::class)->findOneBy(['id' => $idSeason]);
 
@@ -70,6 +95,19 @@ class EpisodeController extends AbstractController
     #[Route('/{id}/edit', name: 'app_episode_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Episode $episode, EpisodeRepository $episodeRepository): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la saison associé à l'épisode concerné
         $season = $episode->getSeason();
 
@@ -92,6 +130,19 @@ class EpisodeController extends AbstractController
     #[Route('/{id}', name: 'app_episode_delete', methods: ['POST'])]
     public function delete(Request $request, Episode $episode, EpisodeRepository $episodeRepository): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la saison associé à l'épisode concerné
         $season = $episode->getSeason();
 
