@@ -13,9 +13,20 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
 
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
 
-    #[Route(path: '/login', name: 'app_login')]
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
+
+    /**
+     * @Route("/login", name="app_login")
+     */
     public function login(AuthenticationUtils $authenticationUtils, Request $request): Response
     {
         // if ($this->getUser()) {
@@ -40,21 +51,13 @@ class SecurityController extends AbstractController
         );
     }
 
-    #[Route(path: '/logout', name: 'app_logout')]
+    /**
+     * @Route("/logout", name="app_logout")
+     */
     public function logout(): void
     {
-
-        // Set lastActivityAt to null
-        /** @var App\Entity\User $user */
-        $user = $this->getUser();
-
-        $user->setLastActivity(null);
-
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
 
-    public function __construct(EntityManagerInterface $em)
-    {
-        $this->em = $em;
-    }
+    
 }

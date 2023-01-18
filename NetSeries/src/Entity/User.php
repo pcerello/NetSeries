@@ -134,6 +134,14 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
     private $followUser = array();
 
     /**
+     * Date/Time of the last activity
+     *
+     * @var \Datetime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $last_activity_at;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -408,13 +416,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this->followUser->contains($user);
     }
 
-    /**
-     * Date/Time of the last activity
-     *
-     * @var \Datetime
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $last_activity_at;
+    
 
     /**
      * @param \Datetime $lastActivityAt

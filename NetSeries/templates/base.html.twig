@@ -71,7 +71,7 @@
                     
                     
                     <div class="button square">
-                        <a href="{{  path('app_logout')  }}" data-tooltip="Logout"><img src="{{ asset('images/icons/logout.svg') }}"></a>
+                        <a href="{{  path('app_user_disconect', {'id' : app.user.id})  }}" data-tooltip="Logout"><img src="{{ asset('images/icons/logout.svg') }}"></a>
                     </div>
 
                     {% else %}

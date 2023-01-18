@@ -162,12 +162,10 @@ class UserController extends AbstractController
 
         if ($userActual->isAdmin() && !$userActual->getId() != $user->getId()){
             $form = $this->createForm(UserPasswordByAdminType::class, $user);
-            $form->handleRequest($request);
         } else {
             $form = $this->createForm(UserType::class, $user);
-            $form->handleRequest($request);
         }
-
+        $form->handleRequest($request);
         
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -446,5 +444,20 @@ class UserController extends AbstractController
         return $this->render('user/follow.html.twig', [
             'users' => $allUsers,
         ]);
+    }
+
+
+    #[Route('/disconect/{id}', name: 'app_user_disconect', methods: ['GET'])]
+    public function disconect(User $user, EntityManagerInterface $em){
+        // Set lastActivityAt to null
+        /** @var App\Entity\User $user */
+        $user = $this->getUser();
+
+        $user->setLastActivityAt(null);
+
+        $em->persist($user);
+        $em->flush();
+
+        return $this->redirectToRoute('app_logout');
     }
 }
