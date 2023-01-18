@@ -190,7 +190,7 @@ class UserController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_home', [], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/promote/{id}', name: 'app_user_promote', methods: ['GET'])]
@@ -344,27 +344,54 @@ class UserController extends AbstractController
     #[Route('/usersFollowed/{id}', name: 'app_user_usersFollowed', methods: ['GET'])]
     public function usersFollowed(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
-        # Met la variable admin à vrai pour que l'utilisateur soit un admin
-
         /** @var App\Entity\User */
         $userCurrant = $this->getUser();
 
-        $userCurrant->addFollowUser($user);
+        if (!$userCurrant) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        }
 
-        //$allUsers =$user->getFollowUser();
+        $userCurrant->addFollowUser($user);
 
         # Met à jour la base de données
         $entityManager->flush();
 
         
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
-        return $this->redirectToRoute('app_user_index', [
+        return $this->redirectToRoute('app_user_show', [
+            'id' => $user->getId(),
+        ], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/usersUnfollowed/{id}', name: 'app_user_usersUnfollowed', methods: ['GET'])]
+    public function usersUnfollowed(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
+    {
+        /** @var App\Entity\User */
+        $userCurrant = $this->getUser();
+
+        if (!$userCurrant) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        }
+
+        $userCurrant->removeFollowUser($user);
+
+        # Met à jour la base de données
+        $entityManager->flush();
+
+        
+        # Redirige vers la page où il y a toute la liste des utilisateurs connecté
+        return $this->redirectToRoute('app_user_show', [
+            'id' => $user->getId(),
         ], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/listUsersFollowed/{id}', name: 'app_user_listUsersFollowed', methods: ['GET'])]
     public function listUsersFollowed(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
+        if (!$user) {
+            return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
+        }
+
         # Met la variable admin à vrai pour que l'utilisateur soit un admin
 
         $allUsers =$user->getFollowUser();

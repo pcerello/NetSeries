@@ -20,8 +20,7 @@ block body %}
         <th>Country</th>
         <th>Ban</th>
       {% endif %}
-      <th>Follow</th>
-      <th>actions</th>
+        <th>Actions</th>
 
     </tr>
   </thead>
@@ -40,12 +39,6 @@ block body %}
           <td>{{ user.admin ? "✅" : "❌" }}</td>
           <td>{{ user.country }}</td>
           <td>{{ user.estSuspendu ? "✅" : "❌"  }}</td>
-        {% endif %}
-
-        {% if app.user.isFollowingUser(user) %}
-          <td>Followed</td>
-        {% else %}
-          <td><a href="{{ path('app_user_usersFollowed', {'id': user.id}) }}">Follow</a></td>
         {% endif %}
 
         <td class="actions">

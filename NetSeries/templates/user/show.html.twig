@@ -20,7 +20,19 @@
                     </tr>
                     <tr>
                         <th>Email</th>
-                        <td>{{ user.email }}</td>
+                            <td>{{ user.email }}</td>
+                    </tr>
+                    <tr>
+                        <th>Action</th>
+                        {% if app.user != user %}
+                            {% if app.user.isFollowingUser(user) %}
+                                <td><a href="{{ path('app_user_usersUnfollowed', {'id': user.id}) }}">Unfollow</a></td>
+                            {% else %}
+                                <td><a href="{{ path('app_user_usersFollowed', {'id': user.id}) }}">Follow</a></td>
+                            {% endif %}
+                        {% else %}
+                            <td>You can't follow yourself.</td>
+                        {% endif %}
                     </tr>
                 </tbody>
             </table>

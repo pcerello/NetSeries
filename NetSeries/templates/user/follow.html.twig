@@ -10,11 +10,22 @@
 {% block body %}
 
 
-    
-    {% for u in users %}
-        {{ u.name }}
-        <br>
-        {{ u.email }}
-    {% endfor %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+
+        {% for u in users %}
+            <tr>
+                <td>{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
 {% endblock %}
