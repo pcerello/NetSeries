@@ -106,22 +106,19 @@ class SeriesController extends AbstractController
 
         if ($request->query->get('order') == 'noteCroissant') {
             $qb->leftJoin('s.ratings', 'c')
-            ->leftJoin('c.user', 'us')
-            ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
-            ->where('c.estModere = true')
-            ->andWhere('us.estSuspendu = false')
-            ->groupBy('s.id')->orderBy('avg_value', 'ASC');
-        }
-
-        else if ($request->query->get('order') == 'noteDecroissant'){
+                ->leftJoin('c.user', 'us')
+                ->addSelect('AVG(c.value/2) as HIDDEN avg_value')
+                ->where('c.estModere = true')
+                ->andWhere('us.estSuspendu = false')
+                ->groupBy('s.id')->orderBy('avg_value', 'ASC');
+        } else if ($request->query->get('order') == 'noteDecroissant') {
             $qb->leftJoin('s.ratings', 'd')
-            ->leftJoin('d.user', 'u')
-            ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
-            ->where('d.estModere = true')
-            ->andWhere('u.estSuspendu = false')
-            ->groupBy('s.id')->orderBy('avg_value', 'DESC');
-
-        } else if ($request->query->get('order') == 'DESC'){
+                ->leftJoin('d.user', 'u')
+                ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
+                ->where('d.estModere = true')
+                ->andWhere('u.estSuspendu = false')
+                ->groupBy('s.id')->orderBy('avg_value', 'DESC');
+        } else if ($request->query->get('order') == 'DESC') {
             $qb->orderBy('s.title', "DESC");
         } else {
             $qb->orderBy('s.title', "ASC");
@@ -324,31 +321,33 @@ class SeriesController extends AbstractController
 
 
 
-        $episodesData = $request->request->get('episodesData');
-        $episodesData = json_decode($episodesData, true);
-        foreach ($episodesData as $seasonData) {
-            if (array_key_exists('Season', $seasonData)) {
-                /** @var \App\Entity\Season */
-                $season = new Season();
-                $seasonnumber = intval($seasonData['Season']);
-                $season->setNumber($seasonnumber);
-                $season->setSeries($series);
-                # for each episode in seasonData
-                foreach ($seasonData['Episodes'] as $episodeData) {
-                    /** @var \App\Entity\Episode */
-                    $episode = new Episode();
-                    $episode->setNumber($episodeData['Episode']);
-                    $episode->setTitle($episodeData['Title']);
-                    $episode->setDate(new \DateTime($episodeData['Released']));
-                    $imdbRating = floatval($episodeData['imdbRating']);
-                    $episode->setImdbRating($imdbRating);
-                    $episode->setImdb($episodeData['imdbID']);
-                    $episode->setSeason($season);
-                    $season->addEpisode($episode);
-                    $entityManager->persist($episode);
-                }
+        if ($request->request->get('episodesData')) {
+            $episodesData = $request->request->get('episodesData');
+            $episodesData = json_decode($episodesData, true);
+            foreach ($episodesData as $seasonData) {
+                if (array_key_exists('Season', $seasonData)) {
+                    /** @var \App\Entity\Season */
+                    $season = new Season();
+                    $seasonnumber = intval($seasonData['Season']);
+                    $season->setNumber($seasonnumber);
+                    $season->setSeries($series);
+                    # for each episode in seasonData
+                    foreach ($seasonData['Episodes'] as $episodeData) {
+                        /** @var \App\Entity\Episode */
+                        $episode = new Episode();
+                        $episode->setNumber($episodeData['Episode']);
+                        $episode->setTitle($episodeData['Title']);
+                        $episode->setDate(new \DateTime($episodeData['Released']));
+                        $imdbRating = floatval($episodeData['imdbRating']);
+                        $episode->setImdbRating($imdbRating);
+                        $episode->setImdb($episodeData['imdbID']);
+                        $episode->setSeason($season);
+                        $season->addEpisode($episode);
+                        $entityManager->persist($episode);
+                    }
 
-                $entityManager->persist($season);
+                    $entityManager->persist($season);
+                }
             }
         }
 
@@ -373,7 +372,7 @@ class SeriesController extends AbstractController
 
         if (!$userActual || !$userActual->isAdmin()) {
             return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         $series = new Series();
         $form = $this->createForm(SeriesType::class, $series);
@@ -459,7 +458,7 @@ class SeriesController extends AbstractController
             $result[$i] = 0;
         }
         foreach ($rating as $r) {
-            if ($r->isEstModere() && !$r->getUser()->isEstSuspendu()){
+            if ($r->isEstModere() && !$r->getUser()->isEstSuspendu()) {
                 $noteValue = $r->getValue();
                 if (is_int($noteValue)) {
                     $result[$noteValue]++;
@@ -487,7 +486,7 @@ class SeriesController extends AbstractController
 
         if (!$userActual || !$userActual->isAdmin()) {
             return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         $form = $this->createForm(SeriesType::class, $series);
         $form->handleRequest($request);
@@ -512,22 +511,22 @@ class SeriesController extends AbstractController
 
         if (!$userActual || !$userActual->isAdmin()) {
             return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         if ($this->isCsrfTokenValid('delete' . $series->getId(), $request->request->get('_token'))) {
             $entityManager->remove($series);
-            if ($series->getExternalRating() != null){
+            if ($series->getExternalRating() != null) {
                 $this->deleteAllExternalRatingForDeleteSerie($series, $entityManager);
             }
 
-            if (!empty($series->getRatings())){
+            if (!empty($series->getRatings())) {
                 $this->deleteAllRatingForDeleteSerie($series, $entityManager);
             }
 
-            if (!empty($series->getSeasons())){
+            if (!empty($series->getSeasons())) {
                 $this->deleteAllSeasonsForDeleteSerie($series, $entityManager);
             }
-            
+
 
 
             $entityManager->flush();
@@ -536,28 +535,31 @@ class SeriesController extends AbstractController
         return $this->redirectToRoute('app_series_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    private function deleteAllExternalRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
+    private function deleteAllExternalRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager)
+    {
         $entityManager->remove($serie->getExternalRating());
     }
 
-    private function deleteAllRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
-        foreach ($serie->getRatings() as $rating){
+    private function deleteAllRatingForDeleteSerie(Series $serie, EntityManagerInterface $entityManager)
+    {
+        foreach ($serie->getRatings() as $rating) {
             $entityManager->remove($rating);
         }
     }
 
-    private function deleteAllSeasonsForDeleteSerie(Series $serie, EntityManagerInterface $entityManager){
-        foreach ($serie->getSeasons() as $season){
+    private function deleteAllSeasonsForDeleteSerie(Series $serie, EntityManagerInterface $entityManager)
+    {
+        foreach ($serie->getSeasons() as $season) {
             $entityManager->remove($season);
-            if (!empty($season->getEpisodes())){
-                foreach ($season->getEpisodes() as $episode){
+            if (!empty($season->getEpisodes())) {
+                foreach ($season->getEpisodes() as $episode) {
                     $entityManager->remove($episode);
                 }
             }
         }
     }
 
-    
+
 
     #[Route('/view/{id1}/{id2}', name: 'app_episode_view', methods: ['GET', 'POST'])]
     public function view(EntityManagerInterface $entityManager, Request $request): Response
@@ -566,9 +568,9 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        if (!$user ) {
+        if (!$user) {
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         # Récupère l'épisode avec l'ID passé en paramètre de l'URL
         /** @var \App\Entity\Episode */
@@ -610,9 +612,9 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        if (!$user ) {
+        if (!$user) {
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         # Récupère l'épisode avec l'ID passé en paramètre de l'URL
         /** @var \App\Entity\Episode */
@@ -638,9 +640,9 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        if (!$user ) {
+        if (!$user) {
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('id'));
@@ -662,9 +664,9 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        if (!$user ) {
+        if (!$user) {
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('id'));
@@ -686,9 +688,9 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        if (!$user ) {
+        if (!$user) {
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('id1'));
@@ -720,9 +722,9 @@ class SeriesController extends AbstractController
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
-        if (!$user ) {
+        if (!$user) {
             return $this->redirectToRoute('app_login', [], Response::HTTP_SEE_OTHER);
-        } 
+        }
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('id1'));

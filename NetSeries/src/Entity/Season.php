@@ -27,6 +27,7 @@ class Season
      * @var int
      *
      * @ORM\Column(name="number", type="integer", nullable=false)
+     * @ORM\OrderBy({"number" = "ASC"})
      */
     private $number;
 

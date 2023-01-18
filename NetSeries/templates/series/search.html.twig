@@ -48,7 +48,7 @@
 
                 <a href="{{ videoUrl }}" target="_blank">trailer</a></td>
                 <td>
-                    {% if episodesData is defined %}
+                    
                         <form method="post" action="{{ path('app_series_import') }}">
                         <input type="hidden" name="title" value="{{ data.Title }}">
                         <input type="hidden" name="plot" value="{{ data.Plot }}">
@@ -62,11 +62,13 @@
                         <input type="hidden" name="poster" value="{{ data.Poster }}">
                         <input type="hidden" name="trailer" value="{{ videoUrl }}">
                         <input type="hidden" name="imdbID" value="{{ data.imdbID }}">
+                        {% if episodesData is defined %}
                         <input type="hidden" name="episodesData" value="{{ episodesData|json_encode }}">
+                        {% endif %}
                         <input type="hidden" name="token" value="{{ csrf_token('series') }}">
                         <input type="submit" value="Import" class="btn btn-primary">
                     </form>
-                    {% endif %}
+                    
                     </td>
             </tr>
             

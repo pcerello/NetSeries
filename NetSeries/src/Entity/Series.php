@@ -130,7 +130,7 @@ class Series
      */
     private $externalRating;
 
-     /**
+    /**
      * @var \Rating|null
      *
      * @ORM\OneToMany(targetEntity="Rating", mappedBy="series")
@@ -353,12 +353,12 @@ class Series
         return $this->genre;
     }
 
-    public function getStringGenre():string
+    public function getStringGenre(): string
     {
-        $res ="";
+        $res = "";
 
         foreach ($this->genre as $g) {
-            $res= $res.$g->__toString()." | ";
+            $res = $res . $g->__toString() . " | ";
         }
         $res = substr($res, 0, -2);
         return $res;
@@ -444,7 +444,7 @@ class Series
 
         // Parcours des notes associées à la série
         foreach ($this->getRatings() as $rating) {
-            if ($rating->isEstModere() && !$rating->getUser()->isEstSuspendu()){
+            if ($rating->isEstModere() && !$rating->getUser()->isEstSuspendu()) {
                 // Incrémente la somme total par la nouvelle note
                 $total += $rating->getValue();
                 // Incrémentation du nombre de notes total
@@ -462,7 +462,7 @@ class Series
         }
 
         //Mais la moyenne sur 5
-        $averageRating = $averageRating/2;
+        $averageRating = $averageRating / 2;
         // Arrondi à 0.5 près
         $averageRating = round($averageRating * 2) / 2;
 
@@ -472,7 +472,7 @@ class Series
     /**
      * @return Collection<int, Rating>
      */
-    public function getRatings() : Collection
+    public function getRatings(): Collection
     {
         return $this->ratings;
     }
@@ -480,12 +480,12 @@ class Series
     /**
      * @return Collection<int, Rating>
      */
-    public function getRatingsModerate() 
+    public function getRatingsModerate()
     {
         /** @var \Rating */
         $valueModerate = new ArrayCollection();
         foreach ($this->getRatings() as $rating) {
-            if ($rating->isEstModere() && !$rating->getUser()->isEstSuspendu()){
+            if ($rating->isEstModere() && !$rating->getUser()->isEstSuspendu()) {
                 $valueModerate->add($rating);
             }
         }
@@ -521,17 +521,15 @@ class Series
      */
     public function followedSeries(User $user)
     {
-        if (empty($this->seasons)){
-            $firstEpisode = $this->getFirstEpisode();
-            $lastEpisode = $this->getLastEpisode();
-            if($lastEpisode->getUser()->contains($user)){
-                return "Terminée";
-            }elseif($firstEpisode->getUser()->contains($user)){
-                return "En cours";
-            }
+
+        $firstEpisode = $this->getFirstEpisode();
+        $lastEpisode = $this->getLastEpisode();
+        if ($lastEpisode->getUser()->contains($user)) {
+            return "Terminée";
+        } elseif ($firstEpisode->getUser()->contains($user)) {
+            return "En cours";
         }
         return "Non commencée";
-        
     }
 
     public function getFirstEpisode(): ?Episode
@@ -547,6 +545,4 @@ class Series
         $lastEpisode = $lastSeason->getEpisodes()->last();
         return $lastEpisode;
     }
-    
-
 }
