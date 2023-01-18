@@ -16,8 +16,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Faker\Factory as Faker;
-
-
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasher;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
@@ -25,7 +23,6 @@ use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 #[Route('/user')]
 class UserController extends AbstractController
 {
-
     /** @var EntityManagerInterface */
     private $entityManager;
 
@@ -42,7 +39,7 @@ class UserController extends AbstractController
         $user = $this->getUser();
 
         //Si une personne n'est pas connecté on lui demande de ce connecté
-        if (!$user){
+        if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -70,7 +67,7 @@ class UserController extends AbstractController
             'users' => $appointments,
             'series' => $series,
         ]);
-        
+
         // if the user is logged in but is not admin, redirect to the homepage
         //return $this->redirectToRoute("app_series_index");
     }
@@ -102,7 +99,7 @@ class UserController extends AbstractController
         $userActual = $this->getUser();
 
         //Si une personne n'est pas connecté on lui demande de ce connecté
-        if (!$userActual){
+        if (!$userActual) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -111,7 +108,7 @@ class UserController extends AbstractController
 
         // Récupère l'utilisateur via son ID passé à l'URL
         $user = $entityManager->getRepository(User::class)->find($request->get('id'));
-    
+
         // Récupère les notes de l'utilisateur
         $appointmentsQueryRating = $user->getRatings();
 
@@ -150,7 +147,7 @@ class UserController extends AbstractController
             if ($form->get('plainPassword')->getData() != null) {
                 $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
             }
-            
+
             $entityManager->flush();
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -171,7 +168,7 @@ class UserController extends AbstractController
             if ($form->get('plainPassword')->getData() != null) {
                 $user->setPassword($userPasswordHasher->hashPassword($user, $form->get('plainPassword')->getData()));
             }
-            
+
             $entityManager->flush();
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -185,7 +182,7 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->request->get('_token'))) {
             $entityManager->remove($user);
             $entityManager->flush();
         }
@@ -200,7 +197,7 @@ class UserController extends AbstractController
         $userActual = $this->getUser();
 
         //Si une personne n'est pas connecté ou qu'il est suspendu on lui demande de ce connecté
-        if (!$userActual || $userActual->isEstSuspendu()){
+        if (!$userActual || $userActual->isEstSuspendu()) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -209,7 +206,7 @@ class UserController extends AbstractController
 
         # Met à jour la base de données
         $entityManager->flush();
-        
+
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -221,7 +218,7 @@ class UserController extends AbstractController
         $userActual = $this->getUser();
 
         //Si une personne n'est pas connecté ou qu'il est suspendu on lui demande de ce connecté
-        if (!$userActual || $userActual->isEstSuspendu()){
+        if (!$userActual || $userActual->isEstSuspendu()) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -242,7 +239,7 @@ class UserController extends AbstractController
         $userActual = $this->getUser();
 
          //Si une personne n'est pas connecté on lui demande de ce connecté
-        if (!$userActual){
+        if (!$userActual) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -257,20 +254,20 @@ class UserController extends AbstractController
             $request->query->getInt('page', 1), /*page number*/
             /*7 limit per page*/
         );
-        
+
         return $this->render('user/followedSeriesForUser.html.twig', [
             'series' => $seriesFollowedPaginated,
         ]);
     }
 
     #[Route('/generate/{id}', name:'generateUser', methods: ['POST'])]
-    public function generateAndInsertUsers(User $user, Request $request) : Response
+    public function generateAndInsertUsers(User $user, Request $request): Response
     {
         /** @var \App\Entity\User */
         $userActual = $this->getUser();
 
          //Si une personne n'est pas connecté ou qu'il est suspendu on lui demande de ce connecté
-        if (!$userActual || $userActual->isEstSuspendu()){
+        if (!$userActual || $userActual->isEstSuspendu()) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -285,7 +282,7 @@ class UserController extends AbstractController
 
         // Récupère tous les pays
         $countries = $this->entityManager->getRepository(Country::class)->findAll();
-        
+
         // Mélange les pays
         shuffle($countries);
 
@@ -327,7 +324,7 @@ class UserController extends AbstractController
         $userActual = $this->getUser();
 
          //Si une personne n'est pas connecté ou qu'il est suspendu on lui demande de ce connecté
-        if (!$userActual || $userActual->isEstSuspendu()){
+        if (!$userActual || $userActual->isEstSuspendu()) {
             return $this->redirectToRoute('app_login');
         }
 
@@ -336,15 +333,15 @@ class UserController extends AbstractController
 
         # Met à jour la base de données
         $entityManager->flush();
-        
+
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    
 
-    
-    
+
+
+
     #[Route('/usersFollowed/{id}', name: 'app_user_usersFollowed', methods: ['GET'])]
     public function usersFollowed(User $user, EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator): Response
     {
@@ -362,7 +359,7 @@ class UserController extends AbstractController
         # Met à jour la base de données
         $entityManager->flush();
 
-        
+
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_user_show', [
             'id' => $user->getId(),
@@ -401,7 +398,7 @@ class UserController extends AbstractController
         }
 
         # Met la variable admin à vrai pour que l'utilisateur soit un admin
-        $allUsers =$user->getFollowUser();
+        $allUsers = $user->getFollowUser();
 
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->render('user/follow.html.twig', [

@@ -107,6 +107,4 @@ class Season
 
         return $this;
     }
-
-
 }

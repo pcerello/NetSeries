@@ -88,18 +88,17 @@ class SeasonController extends AbstractController
          //On récupère la série associé à la saison
         $serie = $season->getSeries();
 
-        if ($this->isCsrfTokenValid('delete'.$season->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $season->getId(), $request->request->get('_token'))) {
             //On enlève la saison
             $entityManager->remove($season);
-     
-            if (!empty($season->getEpisodes())){
+
+            if (!empty($season->getEpisodes())) {
                 //On enlève tout les épisode associé à la saison
                 $this->deleteAllEpisodeForDeleteSeason($season, $entityManager);
             }
 
-            //On met à jour la base de donnée   
+            //On met à jour la base de donnée
             $entityManager->flush();
-            
         }
 
         return $this->redirectToRoute('app_season_index', ['idSeries' => $serie->getId()], Response::HTTP_SEE_OTHER);
@@ -107,14 +106,15 @@ class SeasonController extends AbstractController
 
     /**
      * Méthode permettant de supprimer tout les épisodes associé à la saison concerné
-     * 
+     *
      * @param Season $season la saison à supprimmer
      * @param EntityManagerInterface $entityManager
      */
-    public function deleteAllEpisodeForDeleteSeason(Season $season, EntityManagerInterface $entityManager){
+    public function deleteAllEpisodeForDeleteSeason(Season $season, EntityManagerInterface $entityManager)
+    {
 
         //On parcours tout les épisode de la saison
-        foreach ($season->getEpisodes() as $episode){
+        foreach ($season->getEpisodes() as $episode) {
             //On supprime l'épisode
             $entityManager->remove($episode);
             //On enlève la relation entre la saison et l'épisode

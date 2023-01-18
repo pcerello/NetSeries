@@ -19,7 +19,7 @@ use DateTime;
  * @ORM\Entity
  */
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class User implements PasswordAuthenticatedUserInterface, UserInterface 
+class User implements PasswordAuthenticatedUserInterface, UserInterface
 {
     /**
      * @var int
@@ -306,24 +306,31 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this->episode->contains($episode);
     }
 
-    public function getUserIdentifier(): string { return $this->getEmail(); }
+    public function getUserIdentifier(): string
+    {
+        return $this->getEmail();
+    }
 
     /**
-     * Méthode qui va donner le role d'un utilisateur selon 
+     * Méthode qui va donner le role d'un utilisateur selon
      * si il est administrateur ou non
-     * 
+     *
      * @return array La liste des roles de l'utilisateur
      */
-    public function getRoles(): array { 
+    public function getRoles(): array
+    {
         //Si est admin
-        if ($this->isAdmin()){
+        if ($this->isAdmin()) {
             //Alors son role est un admin
             return ['ROLE_ADMIN'];
-        } 
+        }
         //Sinon un simple utilisateur
-        return ['ROLE_USER']; }
-    
-    public function eraseCredentials() { }
+        return ['ROLE_USER'];
+    }
+
+    public function eraseCredentials()
+    {
+    }
 
     public function __toString()
     {
@@ -396,7 +403,8 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this;
     }
 
-    public function isFollowingUser(User $user): bool {
+    public function isFollowingUser(User $user): bool
+    {
         return $this->followUser->contains($user);
     }
 }

@@ -25,12 +25,14 @@ class SecurityController extends AbstractController
         $suspendedError = $request->getSession()->get('suspendedError');
 
         $request->getSession()->remove('suspendedError');
-        
-        return $this->render('security/login.html.twig', 
-        ['last_username' => $lastUsername, 
-        'error' => $error,
-        'suspendedError' => $suspendedError,
-    ]);
+
+        return $this->render(
+            'security/login.html.twig',
+            ['last_username' => $lastUsername,
+            'error' => $error,
+            'suspendedError' => $suspendedError,
+            ]
+        );
     }
 
     #[Route(path: '/logout', name: 'app_logout')]

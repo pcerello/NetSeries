@@ -144,7 +144,8 @@ class Rating
     /**
      * Méthode permettant d'avoir une unité de temps dynamique par rapport à la date
      */
-    public function getTime() {
+    public function getTime()
+    {
         $now = new DateTime(); // date actuelle
         $interval = $this->date->diff($now); // calcul de la différence entre les deux dates
 

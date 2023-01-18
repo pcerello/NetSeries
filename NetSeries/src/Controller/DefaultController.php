@@ -11,9 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class DefaultController extends AbstractController
 {
-    public function __construct(private ManagerRegistry $doctrine) 
+    public function __construct(private ManagerRegistry $doctrine)
     {
-        
     }
 
     #[Route('/', name: 'app_home')]
@@ -24,7 +23,7 @@ class DefaultController extends AbstractController
         $sql = "SELECT * FROM series ORDER BY RAND() LIMIT 4";
 
         // Create the ResultSetMapping object
-        $rsm = new \Doctrine\ORM\Query\ResultSetMapping;
+        $rsm = new \Doctrine\ORM\Query\ResultSetMapping();
 
         // Add entity results
         $rsm->addEntityResult(Series::class, 's');

@@ -5,6 +5,20 @@
 {% block body %}
     <h1>Import new Series</h1>
 
+    {% for flash in app.flashes('danger') %}
+        {% if flash == 'Cette série est déjà dans la base de données' %}
+            <div class="alert alert-danger">
+                {{ flash }}
+            </div>
+        {% endif %}
+    {% endfor %}
+
+    {% for flash in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ flash }}
+        </div>
+    {% endfor %}
+
     <form method="get">
         <div class="form-group">
             <label for="series_name">Name</label>

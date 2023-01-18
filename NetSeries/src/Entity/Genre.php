@@ -93,5 +93,4 @@ class Genre
 
         return $this;
     }
-
 }

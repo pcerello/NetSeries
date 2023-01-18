@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints\Choice;
 
 class RatingType extends AbstractType
 {
-    
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

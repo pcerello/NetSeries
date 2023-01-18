@@ -92,7 +92,7 @@ class ActorController extends AbstractController
          //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 
-        if ($this->isCsrfTokenValid('delete'.$actor->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $actor->getId(), $request->request->get('_token'))) {
             $entityManager->remove($actor);
             $entityManager->flush();
         }

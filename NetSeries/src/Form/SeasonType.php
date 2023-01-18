@@ -13,7 +13,7 @@ class SeasonType extends AbstractType
     {
         $builder
             ->add('number')
-            
+
         ;
     }
 

@@ -34,15 +34,14 @@ class ExternalRatingController extends AbstractController
     {
         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
-        
-        //Création d'une nouvelle note externe IMBM 
+
+        //Création d'une nouvelle note externe IMBM
         $externalRating = new ExternalRating();
-        
+
         $form = $this->createForm(ExternalRatingType::class, $externalRating);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            
             $entityManager->persist($externalRating);
             $externalRating->setSeries($serie);
             $serie->setExternalRating($externalRating);
@@ -94,11 +93,11 @@ class ExternalRatingController extends AbstractController
         //On récupère la série associé à l'external rating (note externe IMBM)
         $serie = $externalRating->getSeries();
 
-        if ($this->isCsrfTokenValid('delete'.$externalRating->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $externalRating->getId(), $request->request->get('_token'))) {
             $entityManager->remove($externalRating);
             $entityManager->flush();
         }
- 
+
         return $this->redirectToRoute('app_external_rating_index', ['idSeries' => $serie->getId()], Response::HTTP_SEE_OTHER);
     }
 }

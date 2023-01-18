@@ -94,7 +94,7 @@ class EpisodeController extends AbstractController
         //On récupère la saison associé à l'épisode concerné
         $season = $episode->getSeason();
 
-        if ($this->isCsrfTokenValid('delete'.$episode->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $episode->getId(), $request->request->get('_token'))) {
             $episodeRepository->remove($episode, true);
         }
 

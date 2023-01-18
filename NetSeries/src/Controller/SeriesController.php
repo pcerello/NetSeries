@@ -20,7 +20,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use Knp\Component\Pager\PaginatorInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Doctrine\ORM\Query\ResultSetMapping;
@@ -111,14 +110,14 @@ class SeriesController extends AbstractController
                 ->where('c.estModere = true')
                 ->andWhere('us.estSuspendu = false')
                 ->groupBy('s.id')->orderBy('avg_value', 'ASC');
-        } else if ($request->query->get('order') == 'noteDecroissant') {
+        } elseif ($request->query->get('order') == 'noteDecroissant') {
             $qb->leftJoin('s.ratings', 'd')
                 ->leftJoin('d.user', 'u')
                 ->addSelect('AVG(d.value/2) as HIDDEN avg_value')
                 ->where('d.estModere = true')
                 ->andWhere('u.estSuspendu = false')
                 ->groupBy('s.id')->orderBy('avg_value', 'DESC');
-        } else if ($request->query->get('order') == 'DESC') {
+        } elseif ($request->query->get('order') == 'DESC') {
             $qb->orderBy('s.title', "DESC");
         } else {
             $qb->orderBy('s.title', "ASC");
@@ -252,6 +251,14 @@ class SeriesController extends AbstractController
     #[Route('/newserie', name: 'app_series_import', methods: ['GET', 'POST'])]
     public function newserie(Request $request, EntityManagerInterface $entityManager): Response
     {
+
+        $imdbID = $request->request->get('imdbID');
+        # if the serie is already in the database
+        $serie = $entityManager->getRepository(Series::class)->findOneBy(['imdb' => $imdbID]);
+        if ($serie) {
+            $this->addFlash('danger', 'Cette série est déjà dans la base de données');
+            return $this->redirectToRoute('app_series_search');
+        }
         $series = new Series();
         $title = $request->request->get('title');
         $plot = $request->request->get('plot');
@@ -273,7 +280,6 @@ class SeriesController extends AbstractController
         curl_close($curl);
 
         $trailer = $request->request->get('trailer');
-        $imdbID = $request->request->get('imdbID');
 
         $genreNames = explode(',', $genres);
         foreach ($genreNames as $genreName) {
@@ -587,7 +593,6 @@ class SeriesController extends AbstractController
         if ($exepisode->getSeason()->getNumber() > 1) {
             $seasons = $entityManager->getRepository(Season::class)->findBy(['series' => $request->get('id2'), 'number' => range(1, $exepisode->getSeason()->getNumber() - 1)]);
             foreach ($seasons as $season) {
-
                 $episodes = $entityManager->getRepository(Episode::class)->findBy(['season' => $season]);
                 foreach ($episodes as $episode) {
                     $user->addEpisode($episode);
@@ -602,7 +607,7 @@ class SeriesController extends AbstractController
         $entityManager->flush();
 
         # Redirige vers la page où il y a l'information de la série choisis
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/remove-view/{id1}/{id2}', name: 'app_episode_remove_view', methods: ['GET', 'POST'])]
@@ -630,7 +635,7 @@ class SeriesController extends AbstractController
         $entityManager->flush();
 
         # Redirige vers la page où il y a l'information de la série choisis
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/suivre/{id}', name: 'follow_series', methods: ['GET', 'POST'])]
@@ -712,7 +717,7 @@ class SeriesController extends AbstractController
         $entityManager->flush();
 
         # Redirige vers la page où il y a l'information de la série choisis
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
     }
 
     #[Route('/remove-viewseason/{id1}/{id2}', name: 'app_season_remove_view', methods: ['GET', 'POST'])]
@@ -746,6 +751,6 @@ class SeriesController extends AbstractController
         $entityManager->flush();
 
         # Redirige vers la page où il y a l'information de la série choisis
-        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()], Response::HTTP_SEE_OTHER);
     }
 }

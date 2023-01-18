@@ -5,13 +5,10 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
 use App\Entity\Series;
-
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Knp\Component\Pager\PaginatorInterface;
-
 
 #[Route('/followedSeries')]
 class FollowedSeriesController extends AbstractController
@@ -35,13 +32,9 @@ class FollowedSeriesController extends AbstractController
             $request->query->getInt('page', 1), /*page number*/
             7 /*limit per page*/
         );
-        
+
         return $this->render('followed_series/index.html.twig', [
             'series' => $seriesFollowedPaginated,
         ]);
     }
-
-    
-
-    
 }

@@ -32,11 +32,11 @@
             {% if series.getAverageRating() == 0 %}
                 <p><strong> Note :</strong> No note </p>
             {% else %}
-            <p class="notes"><strong>Note utilisateur : </strong><img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">{{ series.getAverageRating() }}/5</p>
+                <p class="notes"><strong>Note utilisateur : </strong><img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">{{ series.getAverageRating() }}/5</p>
             {% endif %}
-            <p><strong>Description : </strong>{{ series.plot }}</p>
+                <p><strong>Description : </strong>{{ series.plot }}</p>
             {% if app.user %}
-            {{ series.followedSeries(app.user) }}
+                {{ series.followedSeries(app.user) }}
             {% endif %}
             <p><strong>Trailer :</strong></p>
             {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}

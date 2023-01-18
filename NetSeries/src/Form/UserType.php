@@ -11,11 +11,10 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 class UserType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {  
+    {
         $builder
             ->add('name')
             ->add('country')
@@ -26,7 +25,7 @@ class UserType extends AbstractType
                     'autocomplete' => 'new-password',
                     'class' => 'mb-3 form-control'
                 ],
-                
+
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
                 'mapped' => false,

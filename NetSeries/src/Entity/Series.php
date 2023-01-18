@@ -458,7 +458,7 @@ class Series
             $averageRating = $total / $count;
         } else {
             // Si aucune note n'a été donnée, la note moyenne est null
-            $averageRating = NULL;
+            $averageRating = null;
         }
 
         //Mais la moyenne sur 5

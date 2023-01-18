@@ -107,6 +107,4 @@ class ExternalRating
 
         return $this;
     }
-
-
 }

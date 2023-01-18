@@ -27,16 +27,16 @@ class RatingController extends AbstractController
         /** @var App\Entity\User */
         $user = $this->getUser();
 
-        //Si pas de compte connecté alors on lui dit de ce connecté 
-        if (!$user ){
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
             return $this->redirectToRoute('app_login');
         }
 
         //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
-        if (!$user->isAdmin()){
+        if (!$user->isAdmin()) {
             return $this->redirectToRoute('app_home');
         }
-        
+
         //On prend tout les notes qui ne sont pas modéré
         $ratings = $entityManager
             ->getRepository(Rating::class)
@@ -55,7 +55,7 @@ class RatingController extends AbstractController
     }
 
     #[Route('/new/{idSerie}', name: 'app_rating_new', methods: ['GET', 'POST'])]
-    public function new(Request $request ,EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         //Crée une nouvelle rating/note d'un utilisateur sur une série
         $rating = new Rating();
@@ -91,7 +91,7 @@ class RatingController extends AbstractController
             # Redirection vers la liste des notes
             return $this->redirectToRoute('app_series_show', ['id' => $request->get('idSerie')], Response::HTTP_SEE_OTHER);
         }
-        
+
         # Ajoute la note à l'utilisateur et à la série
         $user->addRating($rating);
         $series->addRating($rating);
@@ -132,7 +132,7 @@ class RatingController extends AbstractController
     #[Route('/{id}', name: 'app_rating_delete', methods: ['POST'])]
     public function delete(Request $request, Rating $rating, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$rating->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $rating->getId(), $request->request->get('_token'))) {
             $entityManager->remove($rating);
             $entityManager->flush();
         }
@@ -141,7 +141,7 @@ class RatingController extends AbstractController
     }
 
     #[Route('/generateCritic/{id}', name:'generateCritic', methods: ['POST'])]
-    public function generateCritic(Request $request, EntityManagerInterface $em) : Response
+    public function generateCritic(Request $request, EntityManagerInterface $em): Response
     {
 
         // Récupère le nombre de critique à générer
@@ -160,12 +160,12 @@ class RatingController extends AbstractController
                 ->getSingleScalarResult();
 
         // Sélectionne un utilisateur aléatoire
-        $randomUser = $em->getRepository(User::class)->findBy([], null, 1, rand(0, $nbTotalUsers-1));
+        $randomUser = $em->getRepository(User::class)->findBy([], null, 1, rand(0, $nbTotalUsers - 1));
 
         // Boucle pour générer un nombre d'utilisateurs
         for ($i = 0; $i < $critic_count; $i++) {
             $rating = new Rating();
-            
+
             $rating->setUser($randomUser[0]);
 
             $rating->setSeries($series[$i]);
@@ -174,7 +174,6 @@ class RatingController extends AbstractController
 
 
             $em->persist($rating);
-
         }
 
         // mise à jour de la base de données
@@ -192,7 +191,7 @@ class RatingController extends AbstractController
         $user = $this->getUser();
 
         //On regarde que c'est bien un admin qui a les droit pour accepter une critique
-        if (!$user || !$user->isAdmin()){
+        if (!$user || !$user->isAdmin()) {
             return $this->redirectToRoute('app_home');
         }
 
@@ -201,7 +200,7 @@ class RatingController extends AbstractController
 
         # Met à jour la base de données
         $entityManager->flush();
-        
+
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_rating_index', [], Response::HTTP_SEE_OTHER);
     }
@@ -213,7 +212,7 @@ class RatingController extends AbstractController
         $user = $this->getUser();
 
         //On regarde que c'est bien un admin qui a les droit pour réfuser une critique
-        if (!$user || !$user->isAdmin()){
+        if (!$user || !$user->isAdmin()) {
             return $this->redirectToRoute('app_home');
         }
 
@@ -226,5 +225,4 @@ class RatingController extends AbstractController
         # Redirige vers la page où il y a toute la liste des utilisateurs connecté
         return $this->redirectToRoute('app_rating_index', [], Response::HTTP_SEE_OTHER);
     }
-    
 }

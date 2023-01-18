@@ -49,6 +49,4 @@ class ExternalRatingSource
     {
         return $this->name;
     }
-
-
 }
