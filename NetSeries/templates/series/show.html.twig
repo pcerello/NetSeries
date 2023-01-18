@@ -63,35 +63,33 @@
                     <div id="accordion">
                         {# On parcourt les saisons et leurs épisodes #}
                         {% for seasonNumber, episodes in episodesBySeason %}
-                        <div class="card">
-                            {# On affiche le titre de la saison #}
+                        {# On affiche le titre de la saison #}
+                        <input type="checkbox" class="checkbox" id="checkbox{{ seasonNumber }}">
+                            <label for="checkbox{{ seasonNumber }}">
                             <div class="card-header">
-                                <a class="card-link" data-toggle="collapse" href="#collapse{{ seasonNumber }}">
                                     Saison : {{ seasonNumber }} 
-                                </a>
                                 {% if app.user %}
                                 {% set isView = true %}
                                 {% for episode in episodes %}
                                     {% if app.user.isView(episode) == false %} 
                                         {% set isView = false %}
                                     {% endif %}
-
-                                        {% endfor %}
-                                    
-                                
+                                {% endfor %}
                                 {% if isView == true %}
-                                        {# Permet d'enlever vu une saison choisis #}
-                                        <a href="{{ path('app_season_remove_view', {'id1': series.id, 'id2': seasonNumber}) }}"><span class="eyeClosed" ><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></span></a>
-                                    {% else %}
-                                        {# Permet de mettre vu une saison choisis#}
-                                        <a href="{{ path('app_season_view', {'id1': series.id, 'id2': seasonNumber}) }}">
-                                            <span class="eye" >
-                                                <img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png">
-                                            </span>
-                                        </a>
+                                    {# Permet d'enlever vu une saison choisis #}
+                                    <a href="{{ path('app_season_remove_view', {'id1': series.id, 'id2': seasonNumber}) }}"><span class="eyeClosed" ><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></span></a>
+                                {% else %}
+                                    {# Permet de mettre vu une saison choisis#}
+                                    <a href="{{ path('app_season_view', {'id1': series.id, 'id2': seasonNumber}) }}">
+                                        <span class="eye" >
+                                            <img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png">
+                                        </span>
+                                    </a>
                                     {% endif %}
                                 {% endif %}
                             </div>
+                            </label>
+                            <div class="div_box">
                             <div id="collapse{{ seasonNumber }}" class="collapse show" data-parent="#accordion">
                                 <div class="card-body">
                                     <ul class="nameEpisode">
@@ -120,9 +118,11 @@
                                         </li>
                                     {% endfor %}
                                     </ul>
-                                </div>
                             </div>
                         </div>
+                    </div>
+                    </div>
+
                         {% endfor %}
                     </div>
                 </th>
