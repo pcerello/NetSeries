@@ -331,6 +331,11 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
+        //Test si l'utilisateur choisi et connecté ou pas
+        if ($user->getLastActivityAt() != null) {
+            return $this->redirectToRoute('app_home');
+        }
+
         # Met la variable suspendu à vrai pour que l'utilisateur soit banni
         $user->setEstSuspendu(true);
 
