@@ -17,8 +17,10 @@ class GenreController extends AbstractController
     #[Route('/{idSeries}', name: 'app_genre_index', methods: ['GET'])]
     public function index(int $idSeries, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
 
+        //On récupère tout les genres de la série concerné
         $genres = $serie->getGenre();
 
         return $this->render('genre/index.html.twig', [
@@ -30,12 +32,17 @@ class GenreController extends AbstractController
     #[Route('/new/{idSerie}', name: 'app_genre_new', methods: ['GET', 'POST'])]
     public function new(int $idSerie, Request $request, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
+
+        //Création d'un nouveau genre
         $genre = new Genre();
+
         $form = $this->createForm(GenreType::class, $genre);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //On l'ajoute à la base de données
             $entityManager->persist($genre);
             $serie->addGenre($genre);
             $entityManager->flush();
@@ -61,11 +68,14 @@ class GenreController extends AbstractController
     #[Route('/{id}/{idSerie}/edit/', name: 'app_genre_edit', methods: ['GET', 'POST'])]
     public function edit(int $idSerie, Request $request, Genre $genre, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
+
         $form = $this->createForm(GenreType::class, $genre);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            //Met à jour la base de donnée
             $entityManager->flush();
 
             return $this->redirectToRoute('app_genre_index', ['idSeries' => $serie->getId()], Response::HTTP_SEE_OTHER);
@@ -81,6 +91,7 @@ class GenreController extends AbstractController
     #[Route('/{id}/{idSerie}', name: 'app_genre_delete', methods: ['POST'])]
     public function delete(int $idSerie, Request $request, Genre $genre, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 
         if ($this->isCsrfTokenValid('delete'.$genre->getId(), $request->request->get('_token'))) {

@@ -83,12 +83,14 @@ block body %}
 
   {# Et que c'est un admin #}
   {% if app.user.isAdmin() %}  
+    {# On gère la génération des utilisateurs #}
     <form action="{{ path('generateUser', {'id': app.user.id}) }}" method="POST" >
       <label for="user_count">Generate users : </label>
       <input type="number" name="user_count" id="user_count" min="1" required>
       <input type="submit" value="Generate">
     </form>
 
+    {# On gère la génération des critique #}
     <form action="{{ path('generateCritic', {'id': app.user.id}) }}" method="POST" >
       <label for="critic_count">Generate critic on a random user : </label>
       <input type="number" name="critic_count" id="critic_count" min="1" max="{{series|length}}" required>

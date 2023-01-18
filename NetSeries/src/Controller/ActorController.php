@@ -17,8 +17,10 @@ class ActorController extends AbstractController
     #[Route('/{idSeries}', name: 'app_actor_index', methods: ['GET'])]
     public function index(int $idSeries, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
 
+        //On récupère les acteurs associé à la série
         $actors = $serie->getActor();
 
         return $this->render('actor/index.html.twig', [
@@ -30,8 +32,12 @@ class ActorController extends AbstractController
     #[Route('/new/{idSerie}', name: 'app_actor_new', methods: ['GET', 'POST'])]
     public function new(int $idSerie, Request $request, EntityManagerInterface $entityManager): Response
     {
+         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
+
+        //On crée un nouvel acteur
         $actor = new Actor();
+
         $form = $this->createForm(ActorType::class, $actor);
         $form->handleRequest($request);
 
@@ -61,6 +67,7 @@ class ActorController extends AbstractController
     #[Route('/{id}/{idSerie}/edit', name: 'app_actor_edit', methods: ['GET', 'POST'])]
     public function edit(int $idSerie, Request $request, Actor $actor, EntityManagerInterface $entityManager): Response
     {
+         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 
         $form = $this->createForm(ActorType::class, $actor);
@@ -82,6 +89,7 @@ class ActorController extends AbstractController
     #[Route('/{id}/{idSerie}', name: 'app_actor_delete', methods: ['POST'])]
     public function delete(int $idSerie, Request $request, Actor $actor, EntityManagerInterface $entityManager): Response
     {
+         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 
         if ($this->isCsrfTokenValid('delete'.$actor->getId(), $request->request->get('_token'))) {

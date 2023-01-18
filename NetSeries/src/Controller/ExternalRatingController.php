@@ -17,8 +17,10 @@ class ExternalRatingController extends AbstractController
     #[Route('/{idSeries}', name: 'app_external_rating_index', methods: ['GET'])]
     public function index(int $idSeries, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
 
+        //On récupère les note IMBM associé à la série concerné
         $externalRatings = $serie->getExternalRating();
 
         return $this->render('external_rating/index.html.twig', [
@@ -30,9 +32,12 @@ class ExternalRatingController extends AbstractController
     #[Route('/new/{idSeries}', name: 'app_external_rating_new', methods: ['GET', 'POST'])]
     public function new(int $idSeries, Request $request, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
         
+        //Création d'une nouvelle note externe IMBM 
         $externalRating = new ExternalRating();
+        
         $form = $this->createForm(ExternalRatingType::class, $externalRating);
         $form->handleRequest($request);
 
@@ -64,6 +69,7 @@ class ExternalRatingController extends AbstractController
     #[Route('/{id}/{idSerie}/edit', name: 'app_external_rating_edit', methods: ['GET', 'POST'])]
     public function edit(int $idSerie, Request $request, ExternalRating $externalRating, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 
         $form = $this->createForm(ExternalRatingType::class, $externalRating);
@@ -85,6 +91,7 @@ class ExternalRatingController extends AbstractController
     #[Route('/{id}', name: 'app_external_rating_delete', methods: ['POST'])]
     public function delete(Request $request, ExternalRating $externalRating, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la série associé à l'external rating (note externe IMBM)
         $serie = $externalRating->getSeries();
 
         if ($this->isCsrfTokenValid('delete'.$externalRating->getId(), $request->request->get('_token'))) {

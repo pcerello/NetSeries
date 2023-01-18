@@ -514,6 +514,11 @@ class Series
         return $this;
     }
 
+    /**
+     * Méthode premettant d'avoir de dire si un utilisateur qui suit une séries il a terminé, pas fini ou pas commencé
+     * @param User $user un utilisateur
+     * @return string Terminé, En cours ou Non commencé
+     */
     public function followedSeries(User $user)
     {
         if (empty($this->seasons)){

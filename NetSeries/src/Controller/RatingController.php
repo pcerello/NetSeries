@@ -27,10 +27,12 @@ class RatingController extends AbstractController
         /** @var App\Entity\User */
         $user = $this->getUser();
 
+        //Si pas de compte connecté alors on lui dit de ce connecté 
         if (!$user ){
             return $this->redirectToRoute('app_login');
         }
 
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
         if (!$user->isAdmin()){
             return $this->redirectToRoute('app_home');
         }
@@ -40,6 +42,7 @@ class RatingController extends AbstractController
             ->getRepository(Rating::class)
             ->findBy(['estModere' => false]);
 
+        //On fait la pagination de tout les notes en attende d'être modéré
         $paginatorRatings = $paginator->paginate(
             $ratings,
             $request->query->getInt('page', 1),
@@ -54,6 +57,7 @@ class RatingController extends AbstractController
     #[Route('/new/{idSerie}', name: 'app_rating_new', methods: ['GET', 'POST'])]
     public function new(Request $request ,EntityManagerInterface $entityManager): Response
     {
+        //Crée une nouvelle rating/note d'un utilisateur sur une série
         $rating = new Rating();
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
@@ -102,8 +106,6 @@ class RatingController extends AbstractController
     #[Route('/{id}', name: 'app_rating_show', methods: ['GET'])]
     public function show(Rating $rating): Response
     {
-        
-
         return $this->render('rating/show.html.twig', [
             'rating' => $rating,
         ]);

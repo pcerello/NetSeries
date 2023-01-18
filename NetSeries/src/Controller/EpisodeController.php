@@ -20,8 +20,10 @@ class EpisodeController extends AbstractController
     #[Route('/{idSeason}', name: 'app_episode_index', methods: ['GET'])]
     public function index(int $idSeason, EpisodeRepository $episodeRepository, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la saison associé à l'id mis dans l'URL
         $season = $entityManager->getRepository(Season::class)->findOneBy(['id' => $idSeason]);
 
+        //On récupère tout les épisode associé à la saison concerné
         $episode = $season->getEpisodes();
 
         return $this->render('episode/index.html.twig', [
@@ -33,8 +35,10 @@ class EpisodeController extends AbstractController
     #[Route('/new/{idSeason}', name: 'app_episode_new', methods: ['GET', 'POST'])]
     public function new(int $idSeason, Request $request, EpisodeRepository $episodeRepository, EntityManagerInterface $entityManager): Response
     {
+        //On récupère la saison associé à l'id mis dans l'URL
         $season = $entityManager->getRepository(Season::class)->findOneBy(['id' => $idSeason]);
 
+        //création d'un nouvel épisode
         $episode = new Episode();
         $form = $this->createForm(EpisodeType::class, $episode);
         $form->handleRequest($request);
@@ -65,7 +69,9 @@ class EpisodeController extends AbstractController
     #[Route('/{id}/edit', name: 'app_episode_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Episode $episode, EpisodeRepository $episodeRepository): Response
     {
+        //On récupère la saison associé à l'épisode concerné
         $season = $episode->getSeason();
+
         $form = $this->createForm(EpisodeType::class, $episode);
         $form->handleRequest($request);
 
@@ -85,6 +91,7 @@ class EpisodeController extends AbstractController
     #[Route('/{id}', name: 'app_episode_delete', methods: ['POST'])]
     public function delete(Request $request, Episode $episode, EpisodeRepository $episodeRepository): Response
     {
+        //On récupère la saison associé à l'épisode concerné
         $season = $episode->getSeason();
 
         if ($this->isCsrfTokenValid('delete'.$episode->getId(), $request->request->get('_token'))) {
