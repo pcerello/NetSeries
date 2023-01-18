@@ -34,7 +34,7 @@ class Series
     /**
      * @var string|null
      *
-     * @ORM\Column(name="plot", type="text", length=200, nullable=true)
+     * @ORM\Column(name="plot", type="text", length=500, nullable=true)
      */
     private $plot;
 
@@ -112,7 +112,7 @@ class Series
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\ManyToMany(targetEntity="Actor", mappedBy="series")
+     * @ORM\ManyToMany(targetEntity="Actor", mappedBy="series", cascade={"persist"})
      */
     private $actor = array();
 

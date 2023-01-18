@@ -23,7 +23,11 @@
         <div id="infoSerie">
             <p class="notes"> 
                 <a href="https://www.imdb.com/title/{{series.imdb}}"> IMDB : </a>
-            <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ series.externalRating.value }} </p>
+            {% if series.externalRating.value == "N/A/10" %}
+                <p><strong> Note :</strong> No note </p>
+            {% else %}
+                <p class="notes"> <strong> Note : </strong> <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ series.externalRating.value }} </p>
+            {% endif %}
 
             {% if series.getAverageRating() == 0 %}
                 <p><strong> Note :</strong> No note </p>

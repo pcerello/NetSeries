@@ -7,6 +7,10 @@ use App\Entity\Season;
 use App\Entity\Series;
 use App\Entity\Rating;
 use App\Entity\User;
+use App\Entity\Genre;
+use App\Entity\Actor;
+use App\Entity\ExternalRating;
+use App\Entity\ExternalRatingSource;
 use App\Form\SeriesType;
 use App\Repository\EpisodeRepository;
 use Doctrine\ORM\EntityManager;
@@ -98,7 +102,7 @@ class SeriesController extends AbstractController
                 ->setParameter('maxnote', $maxnote);
         }
 
-        
+
 
         if ($request->query->get('order') == 'noteCroissant') {
             $qb->leftJoin('s.ratings', 'c')
@@ -135,7 +139,7 @@ class SeriesController extends AbstractController
         // Récupération de tous les genres
         $genres = $entityManager->getRepository(\App\Entity\Genre::class)->findAll();
 
-        
+
 
 
         return $this->render('series/index.html.twig', [
@@ -144,6 +148,222 @@ class SeriesController extends AbstractController
         ]);
     }
 
+
+    #[Route('/search', name: 'app_series_search', methods: ['GET', 'POST'])]
+    public function search(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        # check if the form is submitted
+        $data = [];
+
+        $youtubeApiKey = 'AIzaSyAUM21-ZFmzqdAoK1Yyr9BNDrE93ikxaBE';
+
+        if ($request->query->get('title')) {
+            $title = $request->query->get('title');
+            $title = str_replace(' ', '+', $title);
+            $url = "http://www.omdbapi.com/?t=" . $title . "&apikey=7a8be84b&type=series";
+
+
+            $curl = curl_init();
+            curl_setopt($curl, CURLOPT_URL, $url);
+            curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+            curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+            curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0');
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            $result = curl_exec($curl);
+            curl_close($curl);
+            $data = json_decode($result, true);
+            if ($data['Response'] == 'False') {
+                $this->addFlash('danger', 'Aucune série trouvée');
+                return $this->render('series/search.html.twig', [
+                    'data' => $data,
+                ]);
+            } else {
+                $this->addFlash('success', 'Série trouvée');
+                $totalSeasons = $data['totalSeasons'];
+                if ($totalSeasons != "N/A") {
+                    $episodesData = array();
+                    for ($i = 1; $i <= $totalSeasons; $i++) {
+                        $urlEpisode = "http://www.omdbapi.com/?i=" . $data['imdbID'] . "&apikey=7a8be84b&Season=" . $i;
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $urlEpisode);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0');
+                        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                        $result = curl_exec($curl);
+                        curl_close($curl);
+
+                        $dataEpisode = json_decode($result, true);
+                        $episodesData[] = $dataEpisode;
+                    }
+                    $titlefull = $data['Title'];
+                    $titlefull = str_replace(' ', '+', $titlefull);
+                    $searchUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=" . $titlefull . "+trailer&key=" . $youtubeApiKey . "&maxResults=1&chart=mostPopular";
+                    $curl = curl_init();
+                    curl_setopt($curl, CURLOPT_URL, $searchUrl);
+                    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                    curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0');
+                    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                    $result = curl_exec($curl);
+                    curl_close($curl);
+                    $searchResults = json_decode($result, true);
+                    foreach ($searchResults['items'] as $searchResult) {
+                        if ($searchResult['id']['kind'] === 'youtube#video') {
+                            $videoId = $searchResult['id']['videoId'];
+                            $videoUrl = "https://www.youtube.com/watch?v=$videoId";
+                        }
+                    }
+
+                    return $this->render('series/search.html.twig', [
+                        'data' => $data,
+                        'episodesData' => $episodesData,
+                        'videoUrl' => $videoUrl,
+                    ]);
+                }
+                $this->addFlash('danger', 'Aucune série trouvée');
+                $titlefull = $data['Title'];
+                $titlefull = str_replace(' ', '+', $titlefull);
+                $searchUrl = "https://www.googleapis.com/youtube/v3/search?part=snippet&q=" . $titlefull . "+trailer&key=" . $youtubeApiKey . "&maxResults=1&chart=mostPopular";
+                $curl = curl_init();
+                curl_setopt($curl, CURLOPT_URL, $searchUrl);
+                curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+                curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0');
+                curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+                $result = curl_exec($curl);
+                curl_close($curl);
+                $searchResults = json_decode($result, true);
+                foreach ($searchResults['items'] as $searchResult) {
+                    if ($searchResult['id']['kind'] === 'youtube#video') {
+                        $videoId = $searchResult['id']['videoId'];
+                        $videoUrl = "https://www.youtube.com/watch?v=$videoId";
+                    }
+                }
+                return $this->render('series/search.html.twig', [
+                    'data' => $data,
+                    'videoUrl' => $videoUrl,
+                ]);
+            }
+        }
+        $this->addFlash('danger', 'Aucune série trouvée');
+        return $this->render('series/search.html.twig', [
+            'data' => $data,
+        ]);
+    }
+
+    #[Route('/newserie', name: 'app_series_import', methods: ['GET', 'POST'])]
+    public function newserie(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $series = new Series();
+        $title = $request->request->get('title');
+        $plot = $request->request->get('plot');
+        $genres = $request->request->get('genre');
+        $director = $request->request->get('director');
+        $actors = $request->request->get('actors');
+        $awards = $request->request->get('awards');
+        $yearStart = $request->request->get('yearStart');
+        $yearEnd = $request->request->get('yearEnd');
+        $imdbRating = $request->request->get('imdbRating');
+        $poster = $request->request->get('poster');
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_URL, $poster);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+        curl_setopt($curl, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0');
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        $data = curl_exec($curl);
+        curl_close($curl);
+
+        $trailer = $request->request->get('trailer');
+        $imdbID = $request->request->get('imdbID');
+
+        $genreNames = explode(',', $genres);
+        foreach ($genreNames as $genreName) {
+            $genreName = trim($genreName);
+            /** @var \App\Entity\Genre */
+            $genre = $entityManager->getRepository(Genre::class)->findOneBy(['name' => $genreName]);
+            if ($genre) {
+                $series->addGenre($genre);
+            }
+        }
+        $actorsNames = explode(',', $actors);
+        foreach ($actorsNames as $actorName) {
+            $actorName = trim($actorName);
+            /** @var \App\Entity\Actor */
+            $actor = $entityManager->getRepository(Actor::class)->findOneBy(['name' => $actorName]);
+            if ($actor === null) {
+                /** @var \App\Entity\Actor */
+                $actor = new Actor();
+                $actor->setName($actorName);
+                $entityManager->persist($actor);
+            }
+            $series->addActor($actor);
+        }
+
+        $series->setTitle($title);
+        $series->setPlot($plot);
+        if ($director != "N/A") {
+            $series->setDirector($director);
+        }
+        $series->setAwards($awards);
+        $series->setYearStart($yearStart);
+        if ($yearEnd) {
+            $series->setYearEnd($yearEnd);
+        }
+        $series->setImdb($imdbID);
+        $series->setPoster($data);
+        $series->setYoutubeTrailer($trailer);
+        $externalRating = new ExternalRating();
+        $externalRating->setValue($imdbRating . '/10');
+        /** @var \App\Entity\ExternalRatingSource */
+        $externalRatingSource = $entityManager->getRepository(ExternalRatingSource::class)->findOneBy(['name' => 'Internet Movie Database']);
+        $externalRating->setSource($externalRatingSource);
+        $externalRating->setSeries($series);
+        $series->setExternalRating($externalRating);
+
+
+
+        $episodesData = $request->request->get('episodesData');
+        $episodesData = json_decode($episodesData, true);
+        foreach ($episodesData as $seasonData) {
+            if (array_key_exists('Season', $seasonData)) {
+                /** @var \App\Entity\Season */
+                $season = new Season();
+                $seasonnumber = intval($seasonData['Season']);
+                $season->setNumber($seasonnumber);
+                $season->setSeries($series);
+                # for each episode in seasonData
+                foreach ($seasonData['Episodes'] as $episodeData) {
+                    /** @var \App\Entity\Episode */
+                    $episode = new Episode();
+                    $episode->setNumber($episodeData['Episode']);
+                    $episode->setTitle($episodeData['Title']);
+                    $episode->setDate(new \DateTime($episodeData['Released']));
+                    $imdbRating = floatval($episodeData['imdbRating']);
+                    $episode->setImdbRating($imdbRating);
+                    $episode->setImdb($episodeData['imdbID']);
+                    $episode->setSeason($season);
+                    $season->addEpisode($episode);
+                    $entityManager->persist($episode);
+                }
+
+                $entityManager->persist($season);
+            }
+        }
+
+
+
+
+        $entityManager->persist($series);
+        $entityManager->persist($externalRating);
+        $entityManager->persist($actor);
+        $entityManager->flush();
+        $entityManager->clear();
+
+
+        return $this->redirectToRoute('app_series_show', ['id' => $series->getId()]);
+    }
 
     #[Route('/new', name: 'app_series_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -172,6 +392,7 @@ class SeriesController extends AbstractController
         ]);
     }
 
+
     #[Route('/{id}', name: 'app_series_show', methods: ['GET'])]
     public function show(Series $series, EntityManagerInterface $em, Request $request, PaginatorInterface $paginator): Response
     {
@@ -189,7 +410,7 @@ class SeriesController extends AbstractController
         $rating = $em->getRepository(Rating::class)->findOneBy(['user' => $user, 'series' => $series]);
 
 
-        if ($val = $request->query->get('valueChoice')){
+        if ($val = $request->query->get('valueChoice')) {
             $ratings = $em->getRepository(Rating::class)->findBy(['series' => $series, 'value' => $val]);
         } else {
             $ratings = $series->getRatings();
@@ -215,7 +436,7 @@ class SeriesController extends AbstractController
         }
 
         $criticByValue = $this->compteNombreAvis($series, $em);
-        
+
 
         // Retourne les détails de la série, les épisodes par saison, si l'utilisateur a noté la série, et les statistiques de notes
         return $this->render('series/show.html.twig', [
@@ -230,7 +451,8 @@ class SeriesController extends AbstractController
     /**
      * Compte le nombre de notes qui a sur une séries à une valeur de note donnée
      */
-    private function compteNombreAvis(Series $series, EntityManagerInterface $em) {
+    private function compteNombreAvis(Series $series, EntityManagerInterface $em)
+    {
         $rating = $em->getRepository(Rating::class)->findBy(['series' => $series]);
         $result = array();
         for ($i = 0; $i <= 10; $i++) {
@@ -246,7 +468,7 @@ class SeriesController extends AbstractController
                 }
             }
         }
-    
+
         return $result;
     }
 
@@ -524,6 +746,4 @@ class SeriesController extends AbstractController
         # Redirige vers la page où il y a l'information de la série choisis
         return $this->redirectToRoute('app_series_show', ['id' => $series->getId()],  Response::HTTP_SEE_OTHER);
     }
-
-        
 }
