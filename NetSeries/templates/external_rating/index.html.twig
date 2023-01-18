@@ -5,6 +5,7 @@
 {% block body %}
     <h1>ExternalRating index</h1>
 
+    {# On affiche la note externe imdb si la séries on a une#}
     <table class="table">
         <thead>
             <tr>
@@ -15,19 +16,24 @@
             </tr>
         </thead>
         <tbody>
+        {# On test si externalRatings n'est pas vide #}
         {% if externalRatings %}
+            {# Affichage des ces informations #}
             <tr>
                 <td>{{ externalRatings.id }}</td>
                 <td>{{ externalRatings.value }}</td>
                 <td>{{ externalRatings.votes }}</td>
                 <td>
+                    {# Lien pour modifier la note externe imdb #}
                     <a href="{{ path('app_external_rating_edit', {'id': externalRatings.id, 'idSerie' : serie.id}) }}">edit</a>
                 </td>
             </tr>
+        {# Sinon on affiche qu'il contient pas de note externe imdb #}
         {% else %}
             <tr>
                 <td colspan="4">no records found</td>
             </tr>
+            {# Ajout d'une note externe imdb #}
             <a href="{{ path('app_external_rating_new', {'idSeries' : serie.id}) }}">New external rating</a>
         {% endif %}
         </tbody>
