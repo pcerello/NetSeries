@@ -16,7 +16,24 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', null, [
+                'label' => 'Name',
+                'attr' => [
+                    'class' => 'mb-3 form-control'
+                ],
+                'constraints' => [
+                    new Length([
+                        'min' => 3,
+                        'minMessage' => 'Your name should be at least {{ limit }} characters',
+                        // max length allowed by Symfony for security reasons
+                        'max' => 128,
+                    ]),
+                    new Assert\Regex([
+                        'pattern' => '/^[a-zA-Z0-9]+$/',
+                        'message' => 'Your name must contain only letters and numbers.'
+                    ])
+                ],
+            ])
             ->add('country')
             ->add('plainPassword', PasswordType::class, [
                 'label' => 'New password',
