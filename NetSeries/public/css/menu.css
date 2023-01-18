@@ -37,7 +37,7 @@ body {
 #burger.close {
     position: fixed;
     right: 5px;
-    z-index: 2;
+    z-index: 98;
 }
 
 #burger.close > div {
@@ -262,7 +262,7 @@ div.warning {
         flex-direction: column;
         height: 100%;
         position: fixed;
-        z-index: 99;
+        z-index: 97;
         top: 0;
         padding-top: 60px;
         transition: right 0.5s ease;
