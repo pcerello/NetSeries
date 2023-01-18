@@ -71,6 +71,8 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
         // Set lastActivityAt to now
         $user->setLastActivityAt(new \DateTime());
 
+        $this->entityManager->flush();
+
         return new RedirectResponse($this->urlGenerator->generate('app_series_index'));
         //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
