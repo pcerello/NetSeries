@@ -29,20 +29,28 @@
                 <p class="notes"> <strong> Note : </strong> <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png"> {{ series.externalRating.value }} </p>
             {% endif %}
 
+            {# On regarde si la moyenne des notes des utilisateur pour une série est à 0 #}
             {% if series.getAverageRating() == 0 %}
+                {# Alors on affiche que sa moyenne et de 0 #}
                 <p><strong> Note :</strong> No note </p>
             {% else %}
+                {# Sinon on affiche sa vrai moyenne #}
                 <p class="notes"><strong>Note utilisateur : </strong><img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">{{ series.getAverageRating() }}/5</p>
             {% endif %}
-                <p><strong>Description : </strong>{{ series.plot }}</p>
+
+            <p><strong>Description : </strong>{{ series.plot }}</p>
+            
+            {# Bouton permettant se suivre un utilisateur #}
             {% if app.user %}
                 {{ series.followedSeries(app.user) }}
             {% endif %}
+            
             <p><strong>Trailer :</strong></p>
             {% set embed_url = series.youtubeTrailer|replace({'watch?v=': 'embed/'}) %}
             <iframe width="560" height="315" src="{{ embed_url }}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
+    {# On affiche les autres informations de la série concerné #}
     <div id="infoSerieSecondaire">
         <p><strong>Director : </strong>{{ series.Director }}</p>
 
@@ -56,8 +64,7 @@
 
 </div>
 
-    {# On regarde si un utilisateur est connecté #}
-        
+    {# On regarde si un utilisateur est connecté et qu'il est admin#}
     {% if app.user and app.user.isAdmin() %}
         <a href="{{ path('app_series_edit', {'id' : series.id} ) }}"> Edit serie</a>
     {% endif %}
@@ -69,32 +76,40 @@
                     <div id="accordion">
                         {# On parcourt les saisons et leurs épisodes #}
                         {% for seasonNumber, episodes in episodesBySeason %}
-                        {# On affiche le titre de la saison #}
-                        <input type="checkbox" class="checkbox" id="checkbox{{ seasonNumber }}">
+                            {# Pour replier les onglet des epidodes #}
+                            <input type="checkbox" class="checkbox" id="checkbox{{ seasonNumber }}">
                             <label for="checkbox{{ seasonNumber }}">
+
                             <div class="card-header">
-                                    Saison : {{ seasonNumber }} 
+                                Saison : {{ seasonNumber }} 
+
+                                {# On regarde si un utilisateur est connecté #}
                                 {% if app.user %}
-                                {% set isView = true %}
-                                {% for episode in episodes %}
-                                    {% if app.user.isView(episode) == false %} 
-                                        {% set isView = false %}
-                                    {% endif %}
-                                {% endfor %}
-                                {% if isView == true %}
-                                    {# Permet d'enlever vu une saison choisis #}
-                                    <a href="{{ path('app_season_remove_view', {'id1': series.id, 'id2': seasonNumber}) }}"><span class="eyeClosed" ><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></span></a>
-                                {% else %}
-                                    {# Permet de mettre vu une saison choisis#}
-                                    <a href="{{ path('app_season_view', {'id1': series.id, 'id2': seasonNumber}) }}">
-                                        <span class="eye" >
-                                            <img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png">
-                                        </span>
-                                    </a>
+                                    {% set isView = true %}
+                                    {# On parcours les épisodes pour regarder si ces épisodes son en vu #}
+                                    {% for episode in episodes %}
+                                        {# Test si si l'utilisateur à vus l'épisode #}
+                                        {% if app.user.isView(episode) == false %} 
+                                            {% set isView = false %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {# Test si un épisode est en vu #}
+                                    {% if isView == true %}
+                                        {# Permet d'enlever vu à une saison choisis #}
+                                        <a href="{{ path('app_season_remove_view', {'id1': series.id, 'id2': seasonNumber}) }}"><span class="eyeClosed" ><img src="https://cdn-icons-png.flaticon.com/512/2652/2652481.png"></span></a>
+                                    {% else %}
+                                        {# Permet de mettre vu une saison choisis#}
+                                        <a href="{{ path('app_season_view', {'id1': series.id, 'id2': seasonNumber}) }}">
+                                            <span class="eye" >
+                                                <img src="https://cdn-icons-png.flaticon.com/512/8573/8573012.png">
+                                            </span>
+                                        </a>
                                     {% endif %}
                                 {% endif %}
                             </div>
                             </label>
+
                             <div class="div_box">
                             <div id="collapse{{ seasonNumber }}" class="collapse show" data-parent="#accordion">
                                 <div class="card-body">
@@ -124,32 +139,34 @@
                                         </li>
                                     {% endfor %}
                                     </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    </div>
-
                         {% endfor %}
                     </div>
                 </th>
-
             </tr>
         </tbody>
     </table>
 
+    {# On regarde si un utilisateur est connecté #}
     {% if app.user %}
         {# On test si l'utilisateur à déjà mis un commentaire/appréciation/critique sur cette séries #}
         {% if userHasRated %}
             <p>You already put an appreciation on this series</p>
         {% else %}
+            {# Si non, alors il peut ajouter une critique #}
             <a class="linkComment" href="{{ path('app_rating_new', {'idSerie' : series.id}) }}"><img src="https://cdn-icons-png.flaticon.com/512/4922/4922073.png"> <p> Add a comment</p></a>
         {% endif %}
     {% endif %}
 
-
+    {# Partie pour la tranche des notes #}
     <div class="trancheNote">
         <h1>Rating</h1>
         <table class="charts-css bar multiple show-labels show-heading show-primary-axis hide-data" id="my-chart">
+
+            {# Affichage de l'histogramme des nombres d'avis sur une note précise #}
             <tbody class="graph">
                 {% for i in 0..10 %}
                     <tr class="composant">
@@ -162,29 +179,37 @@
     </div>
     
     <h1>Comments list</h1>
+    {# gestion des filtres pour chaque tranche de notes #}
     <div class="filter">
         {% for i in 0..10 %}
-        <a class="ratingFilter" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=0{{i}}"> {{i/2}} ⭐ : {{criticByValue[i]}} opinions </a>
+            {# Sert a filtrer les critiques par rapport à une note choisi #}
+            <a class="ratingFilter" href="{{ path('app_series_show', {'id' : series.id}) }}?valueChoice=0{{i}}"> {{i/2}} ⭐ : {{criticByValue[i]}} opinions </a>
         {% endfor %}
+        {# Filtre pour voir tout les critique #}
         <a class="ratingFilter" href="{{ path('app_series_show', {'id' : series.id}) }}"> ALL opinions </a> 
         </div>
+
+    {# Partie affichage de tout les critique, nom des colonne des table #}
     <div class="tbl-header">
-    <table cellpadding="0" cellspacing="0" border="0">
-        <thead class="thead">
-            <tr class="tr">
-                <th class="th">User</th>
-                <th class="th">Comment</th>
-                <th class="th">Rating</th>
-                <th class="th">Date</th>
-            </tr>
-        </thead>
-    </table>
+        <table cellpadding="0" cellspacing="0" border="0">
+            <thead class="thead">
+                <tr class="tr">
+                    <th class="th">User</th>
+                    <th class="th">Comment</th>
+                    <th class="th">Rating</th>
+                    <th class="th">Date</th>
+                </tr>
+            </thead>
+        </table>
     </div>
+
+    {# Partie affichage de tout les critque modéré #}
     <div class="tbl-content">
         <table cellpadding="0" cellspacing="0" border="0">
             <tbody>
                 {% for r in ratings %}
                     <tr>
+                        {# On vérifie que la critique est modéré, si oui on affiche la critique sur une série #}
                         {% if r.isEstModere() and r.user.isEstSuspendu() == false %}
                             <td class="td">{{ r.user.name }}</td>
                             <td class="td">{{ r.comment }}</td>
@@ -197,6 +222,7 @@
         </table>
     </div>
 
+    {# Pagination des critiques des utilisateurs #}
     <div class="navigation">
         {{ knp_pagination_render(ratings) }}
     </div>

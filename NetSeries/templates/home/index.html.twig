@@ -10,6 +10,7 @@
 {% block body %}
     <div class="content">
         <div class="wrapper">
+            {# Titre de la page d'accueil #}
             <h1 class="title">Explore with us the <span>wonderful</span> world of series and animes.</h1>
             <p>Have you ever gotten lost in your viewing experience because you started a multitude of series without ever finishing them? Next time, use NetSeries!</p> 
             <p>NetSeries is <span>the solution</span> to keep tracking the series that you've already seen, the ones you're currently watching and the ones you've completed!</p>
@@ -26,17 +27,20 @@
         </div>
         <div class="search_section"> 
             <h5>Recommendations</h2>  
+            {# On parcours les séries pris en random et on les affiches avec quelque information #}
             {% for series in random_series %}
-            <a href="{{ path('app_series_show', {'id': series.id}) }}" class="series">
-                <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
-                <div class="description">
-                    <h6>{{ series.title }}</h6>
-                    <div>
-                        <h6>IMDb</h6>
-                        <p><img src="{{ asset('images/icons/star-rating.svg') }}">{{ series.externalRating.value }}</p>
+                <a href="{{ path('app_series_show', {'id': series.id}) }}" class="series">
+                    <img id="poster" src='{{ path('app_poster_show', {'id': series.id}) }}'>
+                    
+                    {# Quelque description de la séries concerné #}
+                    <div class="description">
+                        <h6>{{ series.title }}</h6>
+                        <div>
+                            <h6>IMDb</h6>
+                            <p><img src="{{ asset('images/icons/star-rating.svg') }}">{{ series.externalRating.value }}</p>
+                        </div>
                     </div>
-                </div>
-            </a>
+                </a>
             {% endfor %}
         </div>
     </div>

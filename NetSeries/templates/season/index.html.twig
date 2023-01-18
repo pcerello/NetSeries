@@ -14,10 +14,12 @@
             </tr>
         </thead>
         <tbody>
+        {# On parcour toute les sésons donné et on affiche ces informations#}
         {% for season in seasons %}
             <tr>
                 <td>{{ season.id }}</td>
                 <td>{{ season.number }}</td>
+                {# Bouton pour édité une saison et voir les épisodes associé #}
                 <td>
                     <a href="{{ path('app_season_edit', {'id': season.id}) }}">edit</a>
                     <a href="{{ path('app_episode_index', {'idSeason': season.id}) }}">View all episodes</a>

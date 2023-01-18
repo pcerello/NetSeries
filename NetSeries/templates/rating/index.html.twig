@@ -24,6 +24,8 @@
             </tr>
         </thead>
         <tbody>
+
+        {# On parcours toute les critiques des utilisateurs et on affiches ces informations #}
         {% for rating in ratings %}
             <tr>
                 <td> <img id="poster" src='{{ path('app_poster_show', {'id': rating.series.id}) }}'> </td>
@@ -33,6 +35,7 @@
                 <td>{{ rating.comment }}</td>
                 <td>{{ rating.date ? rating.date|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ rating.estModere ? "✅" : "❌" }} </td>
+                {# Bouton pour accepté ou refusé une critique #}
                 <td> 
                     <a href="{{ path('app_rating_accept_critic', {'id' : rating.id}) }}">Accept</a> 
                     <a href="{{ path('app_rating_decline_critic', {'id' : rating.id}) }}">Decline</a> 
