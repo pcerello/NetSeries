@@ -14,14 +14,17 @@
             </tr>
         </thead>
         <tbody>
+        {# On parcours tout les genres et on affiche leurs informations #}
         {% for genre in genres %}
             <tr>
                 <td>{{ genre.id }}</td>
                 <td>{{ genre.name }}</td>
                 <td>
+                    {# Lien pour modifier le genre concerné #}
                     <a href="{{ path('app_genre_edit', {'id': genre.id, 'idSerie' : serie.id}) }}">edit</a>
                 </td>
             </tr>
+        {# Sinon on affiche qu'il y a pas de genre #}
         {% else %}
             <tr>
                 <td colspan="3">no records found</td>
