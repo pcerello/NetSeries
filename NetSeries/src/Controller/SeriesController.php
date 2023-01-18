@@ -142,6 +142,18 @@ class SeriesController extends AbstractController
     #[Route('/search', name: 'app_series_search', methods: ['GET', 'POST'])]
     public function search(Request $request, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        //Si une personne n'est pas connecté ou que ce n'est pas un on lui demande de ce connecté
+        if (!$userActual) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($userActual->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         # check if the form is submitted
         $data = [];
 
@@ -245,6 +257,18 @@ class SeriesController extends AbstractController
     #[Route('/newserie', name: 'app_series_import', methods: ['GET', 'POST'])]
     public function newserie(Request $request, EntityManagerInterface $entityManager): Response
     {
+
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        //Si une personne n'est pas connecté ou que ce n'est pas un on lui demande de ce connecté
+        if (!$userActual) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if ($userActual->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
 
         $imdbID = $request->request->get('imdbID');
         # if the serie is already in the database
