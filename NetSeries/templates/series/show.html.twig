@@ -62,12 +62,14 @@
 
     </div>
 
-</div>
-
-    {# On regarde si un utilisateur est connecté et qu'il est admin#}
+    {# On regarde si un utilisateur est connecté et qu'il est admin pour pouvoir modifier une série #}
     {% if app.user and app.user.isAdmin() %}
         <a href="{{ path('app_series_edit', {'id' : series.id} ) }}"> Edit serie</a>
     {% endif %}
+
+</div>
+
+    
 
     <table class="table">
         <tbody>
