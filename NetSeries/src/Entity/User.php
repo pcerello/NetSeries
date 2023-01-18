@@ -344,4 +344,39 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
 
         return $this;
     }
+
+    /**
+     * Date/Time of the last activity
+     *
+     * @var \Datetime
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $last_activity_at;
+
+    /**
+     * @param \Datetime $lastActivityAt
+     */
+    public function setLastActivityAt($lastActivityAt)
+    {
+        $this->last_activity_at = $lastActivityAt;
+    }
+
+    /**
+     * @return \Datetime
+     */
+    public function getLastActivityAt()
+    {
+        return $this->last_activity_at;
+    }
+
+    /**
+     * @return Bool Whether the user is active or not
+     */
+    public function isActiveNow()
+    {
+        // Delay during wich the user will be considered as still active
+        $delay = new \DateTime('2 minutes ago');
+
+        return ( $this->getLastActivityAt() > $delay );
+    }
 }

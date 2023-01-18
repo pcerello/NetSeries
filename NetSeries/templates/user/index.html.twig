@@ -17,6 +17,7 @@ block body %}
         <th>Admin</th>
         <th>Country</th>
       {% endif %}
+      <th>Connected</th>
       <th>actions</th>
 
     </tr>
@@ -35,6 +36,13 @@ block body %}
           </td>
           <td>{{ user.admin ? "✅" : "❌" }}</td>
           <td>{{ user.country }}</td>
+        {% endif %}
+        {% if user.getLastActivityAt() is not null %}
+          {% set lastActivity = user.getLastActivityAt() %}
+          {% set diff = lastActivity.diff(now) %}
+           <td>🟢 {{ diff.format('%dd %hh %im') }} ago</td>
+        {% else %}
+          <td>🔴</td>
         {% endif %}
         <td class="actions">
         {# Si l'utilisateur courant est un admin #}
