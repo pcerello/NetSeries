@@ -32,6 +32,19 @@ class ExternalRatingController extends AbstractController
     #[Route('/new/{idSeries}', name: 'app_external_rating_new', methods: ['GET', 'POST'])]
     public function new(int $idSeries, Request $request, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
 
@@ -68,6 +81,19 @@ class ExternalRatingController extends AbstractController
     #[Route('/{id}/{idSerie}/edit', name: 'app_external_rating_edit', methods: ['GET', 'POST'])]
     public function edit(int $idSerie, Request $request, ExternalRating $externalRating, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 
@@ -90,6 +116,19 @@ class ExternalRatingController extends AbstractController
     #[Route('/{id}', name: 'app_external_rating_delete', methods: ['POST'])]
     public function delete(Request $request, ExternalRating $externalRating, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la série associé à l'external rating (note externe IMBM)
         $serie = $externalRating->getSeries();
 

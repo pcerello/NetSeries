@@ -57,13 +57,27 @@ class RatingController extends AbstractController
     #[Route('/new/{idSerie}', name: 'app_rating_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        //Crée une nouvelle rating/note d'un utilisateur sur une série
-        $rating = new Rating();
+        
+        /** @var \App\Entity\User */
+        $user = $this->getUser();
+
+        //Si une personne n'est pas connecté ou que ce n'est pas un on lui demande de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('idSerie'));
-        /** @var \App\Entity\User */
-        $user = $this->getUser();
+        
+
+        //Crée une nouvelle rating/note d'un utilisateur sur une série
+        $rating = new Rating();
+
+        
 
         # Associe la note à la série et à l'utilisateur
         $rating->setSeries($series);
@@ -114,6 +128,19 @@ class RatingController extends AbstractController
     #[Route('/{id}/edit', name: 'app_rating_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Rating $rating, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         $form = $this->createForm(RatingType::class, $rating);
         $form->handleRequest($request);
 
@@ -132,6 +159,19 @@ class RatingController extends AbstractController
     #[Route('/{id}', name: 'app_rating_delete', methods: ['POST'])]
     public function delete(Request $request, Rating $rating, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         if ($this->isCsrfTokenValid('delete' . $rating->getId(), $request->request->get('_token'))) {
             $entityManager->remove($rating);
             $entityManager->flush();
@@ -143,6 +183,18 @@ class RatingController extends AbstractController
     #[Route('/generateCritic/{id}', name:'generateCritic', methods: ['POST'])]
     public function generateCritic(Request $request, EntityManagerInterface $em): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
 
         // Récupère le nombre de critique à générer
         $critic_count = $request->request->get('critic_count');

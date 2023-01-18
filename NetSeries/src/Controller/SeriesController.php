@@ -150,7 +150,7 @@ class SeriesController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        if ($userActual->isAdmin()) {
+        if (!$userActual->isAdmin()) {
             return $this->redirectToRoute('app_home');
         }
 
@@ -266,7 +266,7 @@ class SeriesController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        if ($userActual->isAdmin()) {
+        if (!$userActual->isAdmin()) {
             return $this->redirectToRoute('app_home');
         }
 

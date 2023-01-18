@@ -32,6 +32,18 @@ class SeasonController extends AbstractController
     #[Route('/new/{idSeries}', name: 'app_season_new', methods: ['GET', 'POST'])]
     public function new(int $idSeries, Request $request, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        //Si une personne n'est pas connecté ou que ce n'est pas un on lui demande de ce connecté
+        if (!$userActual) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if (!$userActual->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
          //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
 
@@ -67,6 +79,18 @@ class SeasonController extends AbstractController
     #[Route('/{id}/edit', name: 'app_season_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Season $season, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        //Si une personne n'est pas connecté ou que ce n'est pas un on lui demande de ce connecté
+        if (!$userActual) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if (!$userActual->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         $form = $this->createForm(SeasonType::class, $season);
         $form->handleRequest($request);
 
@@ -85,6 +109,18 @@ class SeasonController extends AbstractController
     #[Route('/{id}', name: 'app_season_delete', methods: ['POST'])]
     public function delete(Request $request, Season $season, EntityManagerInterface $entityManager): Response
     {
+        /** @var \App\Entity\User */
+        $userActual = $this->getUser();
+
+        //Si une personne n'est pas connecté ou que ce n'est pas un on lui demande de ce connecté
+        if (!$userActual) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        if (!$userActual->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
          //On récupère la série associé à la saison
         $serie = $season->getSeries();
 

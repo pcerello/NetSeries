@@ -17,6 +17,19 @@ class GenreController extends AbstractController
     #[Route('/{idSeries}', name: 'app_genre_index', methods: ['GET'])]
     public function index(int $idSeries, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSeries]);
 
@@ -32,6 +45,19 @@ class GenreController extends AbstractController
     #[Route('/new/{idSerie}', name: 'app_genre_new', methods: ['GET', 'POST'])]
     public function new(int $idSerie, Request $request, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 
@@ -68,6 +94,19 @@ class GenreController extends AbstractController
     #[Route('/{id}/{idSerie}/edit/', name: 'app_genre_edit', methods: ['GET', 'POST'])]
     public function edit(int $idSerie, Request $request, Genre $genre, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 
@@ -91,6 +130,19 @@ class GenreController extends AbstractController
     #[Route('/{id}/{idSerie}', name: 'app_genre_delete', methods: ['POST'])]
     public function delete(int $idSerie, Request $request, Genre $genre, EntityManagerInterface $entityManager): Response
     {
+        /** @var App\Entity\User */
+        $user = $this->getUser();
+
+        //Si pas de compte connecté alors on lui dit de ce connecté
+        if (!$user) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Si l'utilisateur n'est pas un admin alors il peut pas venir sur la page des notes
+        if (!$user->isAdmin()) {
+            return $this->redirectToRoute('app_home');
+        }
+
         //On récupère la série associé à l'id mis dans l'URL
         $serie = $entityManager->getRepository(Series::class)->findOneBy(['id' => $idSerie]);
 

@@ -20,6 +20,7 @@ class EpisodeController extends AbstractController
     #[Route('/{idSeason}', name: 'app_episode_index', methods: ['GET'])]
     public function index(int $idSeason, EpisodeRepository $episodeRepository, EntityManagerInterface $entityManager): Response
     {
+        
         //On récupère la saison associé à l'id mis dans l'URL
         $season = $entityManager->getRepository(Season::class)->findOneBy(['id' => $idSeason]);
 
