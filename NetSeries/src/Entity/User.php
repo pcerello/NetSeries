@@ -416,7 +416,7 @@ class User implements PasswordAuthenticatedUserInterface, UserInterface
         return $this->followUser->contains($user);
     }
 
-    
+
 
     /**
      * @param \Datetime $lastActivityAt

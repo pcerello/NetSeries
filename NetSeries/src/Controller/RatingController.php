@@ -57,7 +57,7 @@ class RatingController extends AbstractController
     #[Route('/new/{idSerie}', name: 'app_rating_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        
+
         /** @var \App\Entity\User */
         $user = $this->getUser();
 
@@ -72,12 +72,12 @@ class RatingController extends AbstractController
 
         # Récupère la série avec l'ID passé en paramètre de l'URL
         $series = $entityManager->getRepository(Series::class)->find($request->get('idSerie'));
-        
+
 
         //Crée une nouvelle rating/note d'un utilisateur sur une série
         $rating = new Rating();
 
-        
+
 
         # Associe la note à la série et à l'utilisateur
         $rating->setSeries($series);

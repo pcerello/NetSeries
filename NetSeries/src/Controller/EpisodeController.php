@@ -32,7 +32,7 @@ class EpisodeController extends AbstractController
         if (!$user->isAdmin()) {
             return $this->redirectToRoute('app_home');
         }
-        
+
         //On récupère la saison associé à l'id mis dans l'URL
         $season = $entityManager->getRepository(Season::class)->findOneBy(['id' => $idSeason]);
 

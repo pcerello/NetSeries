@@ -131,7 +131,7 @@ class SeriesController extends AbstractController
 
         // Récupération de tous les genres
         $genres = $entityManager->getRepository(\App\Entity\Genre::class)->findAll();
-        
+
         return $this->render('series/index.html.twig', [
             'series' => $series,
             'genres' => $genres,

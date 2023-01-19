@@ -47,30 +47,26 @@ class UserController extends AbstractController
         // Récupère le repository des séries
         $qrUser = $entityManager->getRepository(User::class)->createQueryBuilder('search');
 
-        
+
 
         // Crée une requête pour sélectionner toutes les séries
         $qrUser->orderBy('search.email', 'ASC')
             ->where('search.email LIKE :search')
             ->setParameter('search', '%' . $request->query->get('search') . '%');
-            
+
 
         //On regarde si on trie par date récent ou non
         if ($request->query->get('order') == 'NameDESC') {
             $qrUser->orderBy('search.email', 'DESC');
         } elseif ($request->query->get('order') == 'DateASC') {
             $qrUser->orderBy('search.last_activity_at', 'DESC');
-        }
-        elseif ($request->query->get('order') == 'DateDESC') {
+        } elseif ($request->query->get('order') == 'DateDESC') {
             $qrUser->orderBy('search.last_activity_at', 'ASC');
-        }
-        elseif ($request->query->get('order') == 'DateCreateASC') {
+        } elseif ($request->query->get('order') == 'DateCreateASC') {
             $qrUser->orderBy('search.registerDate', 'DESC');
-        }
-        elseif ($request->query->get('order') == 'DateCreateDESC') {
+        } elseif ($request->query->get('order') == 'DateCreateDESC') {
             $qrUser->orderBy('search.registerDate', 'ASC');
-        }
-        else {
+        } else {
             $qrUser->orderBy('search.email', 'ASC');
         }
 
@@ -182,13 +178,13 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        if ($userActual->isAdmin() && $userActual->getId() != $user->getId()){
+        if ($userActual->isAdmin() && $userActual->getId() != $user->getId()) {
             $form = $this->createForm(UserPasswordByAdminType::class, $user);
         } else {
             $form = $this->createForm(UserType::class, $user);
         }
         $form->handleRequest($request);
-        
+
 
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('plainPassword')->getData() != null) {
@@ -234,7 +230,7 @@ class UserController extends AbstractController
         ]);
     }
 
-    
+
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $user, EntityManagerInterface $entityManager): Response
@@ -337,7 +333,7 @@ class UserController extends AbstractController
         // Taille du lot pour l'insertion en base de données pour une meilleur optimisation
         $batchSize = 20;
 
-        // Sélectionne un pays 
+        // Sélectionne un pays
         $randomCountry = $em->getRepository(Country::class)->findOneBy(['name' => 'France']);
 
 
@@ -361,7 +357,6 @@ class UserController extends AbstractController
                 $this->entityManager->flush();
                 $this->entityManager->clear();
                 $randomCountry = $em->getRepository(Country::class)->findOneBy(['name' => 'France']);
-
             }
         }
 
@@ -470,7 +465,8 @@ class UserController extends AbstractController
 
 
     #[Route('/disconect/{id}', name: 'app_user_disconect', methods: ['GET'])]
-    public function disconect(User $user, EntityManagerInterface $em){
+    public function disconect(User $user, EntityManagerInterface $em)
+    {
         // Set lastActivityAt to null
         /** @var App\Entity\User $user */
         $user = $this->getUser();
