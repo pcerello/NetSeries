@@ -233,6 +233,9 @@ a.series:hover > .description > :first-child {                /* modèle de boî
  
 /* Big screen devices (889px and above) */
 @media only screen and (max-width: 1100px) {
+    body{
+        overflow-y: scroll;
+    }
     div.content {
         flex-direction: column;
         width: 80%;
