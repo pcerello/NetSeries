@@ -182,7 +182,7 @@ class UserController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        if ($userActual->isAdmin() && !$userActual->getId() != $user->getId()){
+        if ($userActual->isAdmin() && $userActual->getId() != $user->getId()){
             $form = $this->createForm(UserPasswordByAdminType::class, $user);
         } else {
             $form = $this->createForm(UserType::class, $user);
