@@ -174,7 +174,7 @@
                 {% for i in 0..10 %}
                     <tr class="composant">
                         <th>{{i/2}} ⭐ </th>
-                        <td style="--size: calc({{criticByValue[i]}} / {{i}})"> {{criticByValue[i]}} </td>
+                        <td style="--size: calc({{criticByValue[i]}} / {{ i == 0 ? 1 : i }})"> {{criticByValue[i]}} </td>
                     </tr>
                 {% endfor %}
             </tbody>
