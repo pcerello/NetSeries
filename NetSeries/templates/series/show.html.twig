@@ -30,7 +30,7 @@
             {% endif %}
 
             {# On regarde si la moyenne des notes des utilisateur pour une série est à 0 #}
-            {% if series.getAverageRating() == 0 %}
+            {% if series.getRatings()|length == 0 %}
                 {# Alors on affiche que sa moyenne et de 0 #}
                 <p><strong> Note :</strong> No note </p>
             {% else %}

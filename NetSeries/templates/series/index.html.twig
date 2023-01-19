@@ -86,7 +86,8 @@
                             <div id="note-User">
                                 <p><strong> Note users:</strong>
                                     <img src="https://cdn-icons-png.flaticon.com/512/6063/6063500.png">
-                                    {% if series.getAverageRating() == 0 %}
+
+                                    {% if series.getRatings()|length == 0 %}
                                         No note </p>
                                     {% else %}
                                         {{ series.getAverageRating() }}/5 </p>
@@ -96,9 +97,9 @@
                                             <p>{{ series.getRatingsModerate()|length }}
                                                 
                                                 {% if series.getRatingsModerate()|length == 1 %}
-                                                rating</p>
+                                                    rating</p>
                                                 {% else %}
-                                                ratings</p>
+                                                    ratings</p>
                                                 {% endif %}
                                         </div>
                                     {% endif %}
