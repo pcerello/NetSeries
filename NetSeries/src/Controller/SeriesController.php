@@ -162,7 +162,7 @@ class SeriesController extends AbstractController
         if ($request->query->get('title')) {
             $title = $request->query->get('title');
             $title = str_replace(' ', '+', $title);
-            $url = "http://www.omdbapi.com/?t=" . $title . "&apikey=7a8be84b&type=series";
+            $url = "http://www.omdbapi.com/?t=" . $title . "&apikey=7a8be84b&type=series&plot=full";
 
 
             $curl = curl_init();

@@ -53,6 +53,12 @@
     {# On affiche les autres informations de la série concerné #}
     <div id="infoSerieSecondaire">
         <p><strong>Director : </strong>{{ series.Director }}</p>
+    <p><strong>Actors : </strong>
+        {% for actors in series.getActor() %}
+            {{ actors.getName() }}, 
+
+        {% endfor %}
+        </p>
 
         <p><strong>Award(s) : </strong>{{ series.awards }}</p>
 
