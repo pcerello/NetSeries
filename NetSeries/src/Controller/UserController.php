@@ -337,14 +337,9 @@ class UserController extends AbstractController
         // Taille du lot pour l'insertion en base de données pour une meilleur optimisation
         $batchSize = 20;
 
-        // Récupère tous les pays
-        $countries = $this->entityManager->getRepository(Country::class)->findAll();
+        // Sélectionne un pays 
+        $randomCountry = $em->getRepository(Country::class)->findOneBy(['name' => 'France']);
 
-        // Mélange les pays
-        shuffle($countries);
-
-        // Sélectionne un pays aléatoire
-        $randomCountry = array_pop($countries);
 
         // Un même mot de passe pour tous les utilisateurs
         $passwordAllUser = password_hash($faker->password(), PASSWORD_DEFAULT);
@@ -361,10 +356,19 @@ class UserController extends AbstractController
             // Ajoute le pays aléatoire à l'utilisateur
             $user->setCountry($randomCountry);
 
-            // mise à jour de la base de données
-            $em->persist($user);
-            $em->flush();
+            $this->entityManager->persist($user);
+            if (($i % $batchSize) === 0) {
+                $this->entityManager->flush();
+                $this->entityManager->clear();
+                $randomCountry = $em->getRepository(Country::class)->findOneBy(['name' => 'France']);
+
+            }
         }
+
+        // flush all persisted users
+        $this->entityManager->flush();
+        $this->entityManager->clear();
+
 
         // redirige vers la page d'index des utilisateurs
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
