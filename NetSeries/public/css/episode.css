@@ -45,6 +45,53 @@
 }
 
 
+
+#editSerie img{
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.5rem;
+}
+
+
+#editSerie{
+    padding: 1rem;
+    text-decoration: none;
+    color: black;
+    font-size: 1.5rem;
+    font-weight: 1000;
+    border: 2px solid rgb(85, 80, 80);
+    width: 25%;
+    border-radius: 16px;
+    text-align: center;
+    margin: 0.5em 2em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+}
+
+a#editSerie img {
+    width: 2rem;
+    height: 2rem;
+    margin-right: 0.5rem;
+}
+
+a#editSerie p {
+    font-size: 1rem;
+    margin: 0.5rem;
+}
+
+a#editSerie:hover {
+    border: 2px solid #fcfcfc;
+    background-color: #fcfcfc;
+    color: #000000;
+    filter : invert(100%) sepia(0%) saturate(7500%) hue-rotate(254deg) brightness(105%) contrast(108%);
+}
+
+
+
+
 /*first child of the column*/
 .graph .composant:nth-child(1) {
     display: none;

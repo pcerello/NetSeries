@@ -62,14 +62,8 @@
 
     </div>
 
-    {# On regarde si un utilisateur est connecté et qu'il est admin pour pouvoir modifier une série #}
-    {% if app.user and app.user.isAdmin() %}
-        <a href="{{ path('app_series_edit', {'id' : series.id} ) }}"> Edit serie</a>
-    {% endif %}
-
 </div>
 
-    
 
     <table class="table">
         <tbody>
@@ -152,6 +146,13 @@
         </tbody>
     </table>
 
+    {# On regarde si un utilisateur est connecté et qu'il est admin pour pouvoir modifier une série #}
+    {% if app.user and app.user.isAdmin() %}
+        {# Permet de modifier une série #}
+        <a id="editSerie" href="{{ path('app_series_edit', {'id' : series.id} ) }}">
+            <img src="https://cdn-icons-png.flaticon.com/512/3488/3488796.png"><p> Edit serie</p></a>
+    {% endif %}
+    
     {# On regarde si un utilisateur est connecté #}
     {% if app.user %}
         {# On test si l'utilisateur à déjà mis un commentaire/appréciation/critique sur cette séries #}
