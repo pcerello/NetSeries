@@ -521,7 +521,9 @@ class Series
      */
     public function followedSeries(User $user)
     {
-
+        if ($this->getFirstEpisode() == null) {
+            return "Non commencée";
+        }
         $firstEpisode = $this->getFirstEpisode();
         $lastEpisode = $this->getLastEpisode();
         if ($lastEpisode->getUser()->contains($user)) {
@@ -534,6 +536,9 @@ class Series
 
     public function getFirstEpisode(): ?Episode
     {
+        if ($this->seasons->isEmpty()) {
+            return null;
+        }
         $firstSeason = $this->seasons->first();
         $firstEpisode = $firstSeason->getEpisodes()->first();
         return $firstEpisode;
